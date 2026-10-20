@@ -1,0 +1,327 @@
+<template>
+  <scroll class="page" scroll-y="true">
+    <text class="month" onclick="goToday">{{monthTitle}}</text>
+    <text class="span">{{hijriTitle}}</text>
+    <div class="header">
+      <div class="nav" onclick="shift(-1)">
+        <text class="nav-text">‹</text>
+      </div>
+      <div class="nav" onclick="shift(1)">
+        <text class="nav-text">›</text>
+      </div>
+    </div>
+
+    <div class="week">
+      <div class="cell" for="{{wd in weekdays}}">
+        <text class="weekday {{$idx === 0 ? 'sunday' : ''}}">{{wd}}</text>
+      </div>
+    </div>
+    <div class="week" for="{{week in weeks}}">
+      <div class="cell {{cell.day === selected ? 'cell-selected' : ''}} {{cell.today ? 'cell-today' : ''}}"
+        for="{{cell in week.cells}}" onclick="select(cell.day)">
+        <text if="{{cell.day}}" class="day {{cell.sunday ? 'sunday' : ''}} {{cell.holiday ? 'holiday' : ''}} {{cell.today ? 'today-text' : ''}}">{{cell.day}}</text>
+        <text if="{{cell.day}}" class="hday {{cell.fast}} {{cell.today ? 'today-text' : ''}}">{{cell.hijriDay}}</text>
+      </div>
+    </div>
+
+    <div class="card">
+      <text class="detail-date">{{detailDate}}</text>
+      <text class="detail-hijri">{{detailHijri}}</text>
+      <text if="{{detailHoliday}}" class="detail-holiday">{{detailHoliday}}</text>
+      <text class="detail-fast {{detailFastStyle}}">{{detailFast}}</text>
+    </div>
+
+    <div class="legend">
+      <div class="legend-row">
+        <div class="dot dot-holiday"></div>
+        <text class="legend-text">{{t.legendHoliday}}</text>
+      </div>
+      <div class="legend-row">
+        <div class="dot dot-fast"></div>
+        <text class="legend-text">{{t.legendFast}}</text>
+      </div>
+      <div class="legend-row">
+        <div class="dot dot-forbidden"></div>
+        <text class="legend-text">{{t.legendForbidden}}</text>
+      </div>
+    </div>
+  </scroll>
+</template>
+
+<script>
+import { monthGrid, hijriSpan, dayInfo } from '../../common/calendar.js'
+import { loadHijriOffset } from '../../common/hijri.js'
+import { STRINGS, loadLanguage, formatFullDate } from '../../common/i18n.js'
+
+export default {
+  private: {
+    t: STRINGS.id,
+    weekdays: STRINGS.id.weekdaysShort,
+    monthTitle: '',
+    hijriTitle: '',
+    weeks: [],
+    selected: 0,
+    detailDate: '',
+    detailHijri: '',
+    detailHoliday: '',
+    detailFast: '',
+    detailFastStyle: ''
+  },
+
+  onInit() {
+    this.offset = 0
+    const now = new Date()
+    this.year = now.getFullYear()
+    this.month = now.getMonth()
+    this.selected = now.getDate()
+    this.render()
+    loadLanguage((lang) => {
+      this.t = STRINGS[lang]
+      this.weekdays = this.t.weekdaysShort
+      this.render()
+    })
+    loadHijriOffset((offset) => {
+      this.offset = offset
+      this.render()
+    })
+  },
+
+  shift(n) {
+    const d = new Date(this.year, this.month + n, 1)
+    this.year = d.getFullYear()
+    this.month = d.getMonth()
+    this.selected = 1
+    this.render()
+  },
+
+  goToday() {
+    const now = new Date()
+    this.year = now.getFullYear()
+    this.month = now.getMonth()
+    this.selected = now.getDate()
+    this.render()
+  },
+
+  select(day) {
+    if (!day) return
+    this.selected = day
+    this.renderDetail()
+  },
+
+  render() {
+    const t = this.t
+    this.monthTitle =
+      t === STRINGS.zh
+        ? this.year + '年' + t.months[this.month]
+        : t.months[this.month] + ' ' + this.year
+
+    const span = hijriSpan(this.year, this.month, this.offset)
+    const name = (h) => t.hijriMonths[h.month - 1]
+    if (span.length === 1) this.hijriTitle = name(span[0]) + ' ' + span[0].year + ' H'
+    else if (span[0].year === span[1].year) {
+      this.hijriTitle = name(span[0]) + ' – ' + name(span[1]) + ' ' + span[1].year + ' H'
+    } else {
+      this.hijriTitle = name(span[0]) + ' ' + span[0].year + ' – ' + name(span[1]) + ' ' + span[1].year + ' H'
+    }
+
+    this.weeks = monthGrid(this.year, this.month, this.offset, new Date())
+    this.renderDetail()
+  },
+
+  renderDetail() {
+    const t = this.t
+    const date = new Date(this.year, this.month, this.selected)
+    const info = dayInfo(date, this.offset)
+    this.detailDate = t.weekdays[date.getDay()] + ', ' + formatFullDate(t, date)
+    this.detailHijri = info.hijri.day + ' ' + t.hijriMonths[info.hijri.month - 1] + ' ' + info.hijri.year + ' H'
+    this.detailHoliday = info.holiday ? t.holidayNames[info.holiday] : ''
+    this.detailFast = info.fasts.map((f) => t.fasts[f]).join(', ')
+    if (info.fasts[0] === 'none') this.detailFastStyle = 'fast-none'
+    else if (info.fasts[0] === 'eid' || info.fasts[0] === 'tashriq') this.detailFastStyle = 'fast-forbidden'
+    else this.detailFastStyle = ''
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 24px 8px;
+  background-color: #000000;
+}
+
+.header {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 176px;
+  margin-bottom: 10px;
+}
+
+.nav {
+  justify-content: center;
+  align-items: center;
+  width: 84px;
+  height: 44px;
+  border-radius: 22px;
+  background-color: #1c1c1e;
+}
+
+.nav-text {
+  font-size: 26px;
+  font-weight: bold;
+  color: #ff9f0a;
+}
+
+.month {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.span {
+  width: 176px;
+  font-size: 13px;
+  color: #ff9f0a;
+  text-align: center;
+  margin: 4px 0 10px 0;
+}
+
+.week {
+  flex-direction: row;
+  width: 175px;
+}
+
+.cell {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  height: 36px;
+  border-radius: 8px;
+}
+
+.cell-selected {
+  background-color: #2c2c2e;
+}
+
+.cell-today {
+  background-color: #ff9f0a;
+}
+
+.weekday {
+  font-size: 12px;
+  color: #8e8e93;
+}
+
+.day {
+  font-size: 15px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.hday {
+  font-size: 11px;
+  color: #636366;
+}
+
+.sunday {
+  color: #ff6b8a;
+}
+
+.holiday {
+  color: #ff9f0a;
+}
+
+.fast {
+  color: #30d158;
+}
+
+.forbidden {
+  color: #ff453a;
+}
+
+.today-text {
+  color: #000000;
+}
+
+.card {
+  flex-direction: column;
+  width: 176px;
+  padding: 12px 14px;
+  margin-top: 10px;
+  border-radius: 22px;
+  background-color: #1c1c1e;
+}
+
+.detail-date {
+  font-size: 15px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.detail-hijri {
+  font-size: 14px;
+  color: #ff9f0a;
+}
+
+.detail-holiday {
+  font-size: 15px;
+  font-weight: bold;
+  color: #ff6b8a;
+  margin-top: 4px;
+}
+
+.detail-fast {
+  font-size: 14px;
+  color: #30d158;
+  margin-top: 4px;
+}
+
+.fast-none {
+  color: #8e8e93;
+}
+
+.fast-forbidden {
+  color: #ff453a;
+}
+
+.legend {
+  flex-direction: column;
+  width: 176px;
+  padding: 10px 14px 0 14px;
+}
+
+.legend-row {
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  margin-right: 8px;
+}
+
+.dot-holiday {
+  background-color: #ff9f0a;
+}
+
+.dot-fast {
+  background-color: #30d158;
+}
+
+.dot-forbidden {
+  background-color: #ff453a;
+}
+
+.legend-text {
+  font-size: 13px;
+  color: #8e8e93;
+}
+</style>

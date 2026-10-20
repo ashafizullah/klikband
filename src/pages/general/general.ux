@@ -20,7 +20,10 @@ import { textWidth, startMarquees } from '../../common/text.js'
 const LABEL_WIDTH = 96
 
 // Add general tools here; `key` refers to STRINGS in common/i18n.js
-const MENU = [{ key: 'countdown', color: '#FF9F0A' }]
+const MENU = [
+  { key: 'calendar', color: '#FF453A' },
+  { key: 'countdown', color: '#FF9F0A' }
+]
 
 function buildMenu(lang) {
   const t = STRINGS[lang]

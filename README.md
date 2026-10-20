@@ -5,7 +5,7 @@
 <h1 align="center">KlikBand</h1>
 
 <p align="center">
-  A free, open-source quick app for Xiaomi Smart Band 9 (may also work on other Xiaomi Vela bands such as Band 10, untested): prayer times, guided dhikr, tasbih, Hijri date, Islamic holidays and a day counter. Fully offline, no account.
+  A free, open-source quick app for Xiaomi Smart Band 9 (may also work on other Xiaomi Vela bands such as Band 10, untested): prayer times, guided dhikr, tasbih, Hijri date, Islamic holidays, a calendar and a day counter. Fully offline, no account.
 </p>
 
 <p align="center">
@@ -45,6 +45,7 @@
   - **Asmaul Husna**: the 99 Names of Allah with meanings
   - **Daily Duas**: short daily prayers in Latin transliteration with meanings
 - **General**
+  - **Calendar**: monthly calendar with Hijri dates, Islamic holidays and fasting days marked; tap a day for details
   - **Day Counter**: days until or since your own dates, with monthly or yearly repeat
 - **Settings**: city (46 Indonesian cities, WIB/WITA/WIT) and language (Indonesian, English, 中文)
 
@@ -153,6 +154,7 @@ src/
 │   ├── dhikrmorningevening.js  # morning and evening dhikr
 │   ├── fasting.js       # sunnah and forbidden fasting days
 │   ├── holidays.js      # Islamic holiday dates
+│   ├── calendar.js      # monthly calendar grid
 │   ├── countdown.js     # day counter entries and date math
 │   ├── text.js          # marquee helpers for long labels
 │   └── icons/           # menu icons

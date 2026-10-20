@@ -1,0 +1,136 @@
+<template>
+  <div class="page">
+    <text class="judul">{{t.tasbih}}</text>
+    <div class="tombol-hitung" onclick="tambah">
+      <text class="angka">{{hitungan}}</text>
+      <text class="target">/ {{target}}</text>
+    </div>
+    <text class="putaran">{{t.putaran}} {{putaran}}</text>
+    <div class="aksi">
+      <text class="tombol" onclick="gantiTarget">{{t.target}}</text>
+      <text class="tombol" onclick="reset">{{t.reset}}</text>
+    </div>
+  </div>
+</template>
+
+<script>
+import vibrator from '@system.vibrator'
+import storage from '@system.storage'
+import { TEKS, muatBahasa } from '../../common/i18n.js'
+
+const PILIHAN_TARGET = [33, 99, 100]
+
+export default {
+  private: {
+    t: TEKS.id,
+    hitungan: 0,
+    target: 33,
+    putaran: 0
+  },
+
+  onInit() {
+    muatBahasa((kode) => (this.t = TEKS[kode]))
+    storage.get({
+      key: 'tasbih',
+      success: (data) => {
+        if (!data) return
+        const s = JSON.parse(data)
+        this.hitungan = s.hitungan
+        this.target = s.target
+        this.putaran = s.putaran
+      }
+    })
+  },
+
+  simpan() {
+    storage.set({
+      key: 'tasbih',
+      value: JSON.stringify({ hitungan: this.hitungan, target: this.target, putaran: this.putaran })
+    })
+  },
+
+  tambah() {
+    this.hitungan += 1
+    if (this.hitungan >= this.target) {
+      this.hitungan = 0
+      this.putaran += 1
+      vibrator.vibrate({ mode: 'long' })
+    } else {
+      vibrator.vibrate({ mode: 'short' })
+    }
+    this.simpan()
+  },
+
+  gantiTarget() {
+    const i = PILIHAN_TARGET.indexOf(this.target)
+    this.target = PILIHAN_TARGET[(i + 1) % PILIHAN_TARGET.length]
+    this.reset()
+  },
+
+  reset() {
+    this.hitungan = 0
+    this.putaran = 0
+    this.simpan()
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 24px 12px;
+  background-color: #000000;
+}
+
+.judul {
+  font-size: 22px;
+  color: #7ee2b8;
+  margin-bottom: 20px;
+}
+
+.tombol-hitung {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 168px;
+  height: 168px;
+  border-radius: 84px;
+  background-color: #0f3d2e;
+}
+
+.angka {
+  font-size: 56px;
+  color: #ffffff;
+}
+
+.target {
+  font-size: 20px;
+  color: #7ee2b8;
+}
+
+.putaran {
+  font-size: 20px;
+  color: #cccccc;
+  margin-top: 16px;
+  margin-bottom: 24px;
+}
+
+.aksi {
+  flex-direction: row;
+  justify-content: space-between;
+  width: 168px;
+}
+
+.tombol {
+  width: 80px;
+  height: 48px;
+  border-radius: 24px;
+  text-align: center;
+  font-size: 18px;
+  color: #ffffff;
+  background-color: #1f1f1f;
+}
+</style>

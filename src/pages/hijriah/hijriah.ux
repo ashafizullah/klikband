@@ -1,0 +1,142 @@
+<template>
+  <div class="page">
+    <text class="judul">{{t.hijriah}}</text>
+    <text class="hari">{{hari}}</text>
+    <text class="tanggal">{{tanggal}}</text>
+    <text class="bulan">{{bulan}}</text>
+    <text class="tahun">{{tahun}} H</text>
+    <text class="masehi">{{masehi}}</text>
+    <div class="koreksi">
+      <text class="tombol" onclick="geser(-1)">−1</text>
+      <text class="koreksi-nilai">{{koreksiTeks}}</text>
+      <text class="tombol" onclick="geser(1)">+1</text>
+    </div>
+    <text class="catatan">{{t.koreksiCatatan}}</text>
+  </div>
+</template>
+
+<script>
+import storage from '@system.storage'
+import { keHijriah } from '../../common/hijri.js'
+import { TEKS, muatBahasa } from '../../common/i18n.js'
+
+export default {
+  private: {
+    t: TEKS.id,
+    koreksi: 0,
+    koreksiTeks: '0 hari',
+    hari: '',
+    tanggal: '',
+    bulan: '',
+    tahun: '',
+    masehi: ''
+  },
+
+  onInit() {
+    this.tampilkan()
+    muatBahasa((kode) => {
+      this.t = TEKS[kode]
+      this.tampilkan()
+    })
+    storage.get({
+      key: 'koreksiHijriah',
+      success: (data) => {
+        if (!data) return
+        this.koreksi = parseInt(data, 10) || 0
+        this.tampilkan()
+      }
+    })
+  },
+
+  geser(n) {
+    this.koreksi = Math.max(-2, Math.min(2, this.koreksi + n))
+    storage.set({ key: 'koreksiHijriah', value: String(this.koreksi) })
+    this.tampilkan()
+  },
+
+  tampilkan() {
+    const now = new Date()
+    const h = keHijriah(new Date(now.getFullYear(), now.getMonth(), now.getDate() + this.koreksi))
+    const t = this.t
+    this.hari = t.namaHari[now.getDay()]
+    this.tanggal = String(h.hari)
+    this.bulan = t.bulanHijriah[h.bulan - 1]
+    this.tahun = String(h.tahun)
+    this.masehi = now.getDate() + ' ' + t.namaBulan[now.getMonth()] + ' ' + now.getFullYear()
+    this.koreksiTeks = (this.koreksi > 0 ? '+' : '') + this.koreksi + ' ' + t.hari
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 24px 12px;
+  background-color: #000000;
+}
+
+.judul {
+  font-size: 22px;
+  color: #7ee2b8;
+  margin-bottom: 24px;
+}
+
+.hari {
+  font-size: 20px;
+  color: #cccccc;
+}
+
+.tanggal {
+  font-size: 72px;
+  color: #ffffff;
+}
+
+.bulan {
+  font-size: 24px;
+  color: #7ee2b8;
+}
+
+.tahun {
+  font-size: 22px;
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.masehi {
+  font-size: 18px;
+  color: #8a8a8a;
+  margin-bottom: 32px;
+}
+
+.koreksi {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 168px;
+}
+
+.tombol {
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  text-align: center;
+  font-size: 20px;
+  color: #ffffff;
+  background-color: #1f1f1f;
+}
+
+.koreksi-nilai {
+  font-size: 18px;
+  color: #cccccc;
+}
+
+.catatan {
+  font-size: 14px;
+  color: #8a8a8a;
+  text-align: center;
+  margin-top: 10px;
+}
+</style>

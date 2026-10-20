@@ -1,0 +1,81 @@
+<template>
+  <scroll class="page" scroll-y="true">
+    <text class="judul">KlikBand</text>
+    <div class="menu" for="{{menu}}" onclick="buka(item.uri)">
+      <text class="menu-ikon" style="background-color: {{item.warna}};">{{item.ikon}}</text>
+      <text class="menu-label">{{item.label}}</text>
+    </div>
+  </scroll>
+</template>
+
+<script>
+import router from '@system.router'
+import { TEKS, muatBahasa } from '../../common/i18n.js'
+
+// Tambah kategori baru di sini; `kunci` merujuk ke TEKS di common/i18n.js
+const MENU = [
+  { kunci: 'islam', ikon: '☪', warna: '#0f3d2e', uri: '/pages/islam' },
+  { kunci: 'pengaturan', ikon: '⚙', warna: '#2a2a2a', uri: '/pages/pengaturan' }
+]
+
+export default {
+  private: {
+    menu: []
+  },
+
+  // onShow juga dipanggil saat kembali dari Pengaturan, jadi bahasa ikut berganti
+  onShow() {
+    muatBahasa((kode) => {
+      const t = TEKS[kode]
+      this.menu = MENU.map((m) => ({ label: t[m.kunci], ikon: m.ikon, warna: m.warna, uri: m.uri }))
+    })
+  },
+
+  buka(uri) {
+    router.push({ uri })
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 24px 12px;
+  background-color: #000000;
+}
+
+.judul {
+  font-size: 26px;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.menu {
+  flex-direction: row;
+  align-items: center;
+  width: 168px;
+  height: 64px;
+  padding: 0 12px;
+  margin-bottom: 10px;
+  border-radius: 16px;
+  background-color: #1a1a1a;
+}
+
+.menu-ikon {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  text-align: center;
+  font-size: 22px;
+  color: #ffffff;
+  margin-right: 12px;
+}
+
+.menu-label {
+  font-size: 22px;
+  color: #ffffff;
+}
+</style>

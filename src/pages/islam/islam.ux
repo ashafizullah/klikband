@@ -1,0 +1,74 @@
+<template>
+  <scroll class="page" scroll-y="true">
+    <text class="judul">{{judul}}</text>
+    <div class="menu" for="{{menu}}" onclick="buka(item.uri)">
+      <text class="menu-label">{{item.label}}</text>
+      <text class="menu-panah">›</text>
+    </div>
+  </scroll>
+</template>
+
+<script>
+import router from '@system.router'
+import { TEKS, muatBahasa } from '../../common/i18n.js'
+
+const MENU = ['sholat', 'tasbih', 'hijriah', 'asmaul', 'doa']
+
+export default {
+  private: {
+    judul: '',
+    menu: []
+  },
+
+  onShow() {
+    muatBahasa((kode) => {
+      const t = TEKS[kode]
+      this.judul = t.islam
+      this.menu = MENU.map((k) => ({ label: t[k], uri: '/pages/' + k }))
+    })
+  },
+
+  buka(uri) {
+    router.push({ uri })
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 24px 12px;
+  background-color: #000000;
+}
+
+.judul {
+  font-size: 24px;
+  color: #7ee2b8;
+  margin-bottom: 16px;
+}
+
+.menu {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 168px;
+  height: 56px;
+  padding: 0 14px;
+  margin-bottom: 8px;
+  border-radius: 14px;
+  background-color: #0f3d2e;
+}
+
+.menu-label {
+  font-size: 20px;
+  color: #ffffff;
+}
+
+.menu-panah {
+  font-size: 24px;
+  color: #7ee2b8;
+}
+</style>

@@ -1,0 +1,87 @@
+<template>
+  <scroll class="page" scroll-y="true">
+    <text class="judul">{{judul}}</text>
+    <text class="sub">{{subjudul}}</text>
+    <div class="opsi {{item.kode === aktif ? 'opsi-aktif' : ''}}" for="{{pilihan}}" onclick="pilih(item.kode)">
+      <text class="opsi-label">{{item.label}}</text>
+      <text class="centang">{{item.kode === aktif ? '✓' : ''}}</text>
+    </div>
+  </scroll>
+</template>
+
+<script>
+import { BAHASA, TEKS, muatBahasa, simpanBahasa } from '../../common/i18n.js'
+
+export default {
+  private: {
+    pilihan: BAHASA,
+    aktif: 'id',
+    judul: '',
+    subjudul: ''
+  },
+
+  onInit() {
+    muatBahasa((kode) => this.terapkan(kode))
+  },
+
+  pilih(kode) {
+    simpanBahasa(kode)
+    this.terapkan(kode)
+  },
+
+  terapkan(kode) {
+    this.aktif = kode
+    this.judul = TEKS[kode].pengaturan
+    this.subjudul = TEKS[kode].bahasa
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 24px 12px;
+  background-color: #000000;
+}
+
+.judul {
+  font-size: 24px;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.sub {
+  font-size: 18px;
+  color: #8a8a8a;
+  margin-bottom: 16px;
+}
+
+.opsi {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 168px;
+  height: 56px;
+  padding: 0 14px;
+  margin-bottom: 8px;
+  border-radius: 14px;
+  background-color: #1a1a1a;
+}
+
+.opsi-aktif {
+  background-color: #0f3d2e;
+}
+
+.opsi-label {
+  font-size: 20px;
+  color: #ffffff;
+}
+
+.centang {
+  font-size: 22px;
+  color: #7ee2b8;
+}
+</style>

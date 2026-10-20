@@ -1,0 +1,56 @@
+{
+  "package": "com.klikband.app",
+  "name": "KlikBand",
+  "versionName": "1.0.0",
+  "versionCode": 1,
+  "minPlatformVersion": 1200,
+  "icon": "/common/logo.png",
+  "simulationVersion": "default",
+  "deviceTypeList": [
+    "watch"
+  ],
+  "features": [
+    {
+      "name": "system.router"
+    },
+    {
+      "name": "system.storage"
+    },
+    {
+      "name": "system.vibrator"
+    }
+  ],
+  "config": {
+    "logLevel": "log",
+    "designWidth": 192
+  },
+  "router": {
+    "entry": "pages/index",
+    "pages": {
+      "pages/index": {
+        "component": "index"
+      },
+      "pages/islam": {
+        "component": "islam"
+      },
+      "pages/sholat": {
+        "component": "sholat"
+      },
+      "pages/tasbih": {
+        "component": "tasbih"
+      },
+      "pages/hijriah": {
+        "component": "hijriah"
+      },
+      "pages/asmaul": {
+        "component": "asmaul"
+      },
+      "pages/doa": {
+        "component": "doa"
+      },
+      "pages/pengaturan": {
+        "component": "pengaturan"
+      }
+    }
+  }
+}

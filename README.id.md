@@ -7,6 +7,9 @@ Quick app Xiaomi Vela untuk **Xiaomi Smart Band 9**. Proyek komunitas, tidak ber
 ## Fitur
 
 - **Islam**
+  - **Hari Ini**: tanggal Masehi dan Hijriah, sholat berikutnya, serta puasa sunnah hari ini dan besok
+  - **Dzikir Sholat**: penghitung berpanduan sesuai [Rumaysho](https://rumaysho.com/1997-dzikir-setelah-shalat.html)
+  - **Dzikir Pagi Petang**: penghitung berpanduan sesuai [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html)
   - **Jadwal Sholat**: metode Kemenag RI, dihitung offline di band
   - **Tasbih**: penghitung ketuk dengan target 33/99/100 dan getar
   - **Hijriah**: kalender Hijriah aritmetika dengan koreksi manual ±2 hari
@@ -58,6 +61,9 @@ src/
 │   ├── cities.js        # daftar kota dan pengaturan kota
 │   ├── asmaulhusna.js   # data 99 Asmaul Husna
 │   ├── duas.js          # data doa harian
+│   ├── dhikr.js         # dzikir setelah sholat
+│   ├── dhikrmorningevening.js  # dzikir pagi dan petang
+│   ├── fasting.js       # hari puasa sunnah dan hari dilarang puasa
 │   ├── text.js          # bantuan marquee untuk label panjang
 │   └── icons/           # ikon menu
 └── pages/               # satu folder per layar

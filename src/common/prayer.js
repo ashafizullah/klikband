@@ -70,6 +70,26 @@ export function prayerTimes(date, location) {
 
 export const PRAYER_ORDER = ['imsak', 'fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha']
 
+// The next prayer from `now`. After Isha it rolls over to tomorrow's schedule,
+// so `times` always holds the day that contains the next prayer.
+export function nextPrayer(now, location) {
+  const nowMinutes = now.getHours() * 60 + now.getMinutes()
+  let day = now
+  let times = prayerTimes(day, location)
+  let key = PRAYER_ORDER.find((k) => k !== 'sunrise' && times[k] > nowMinutes)
+  let remaining
+
+  if (key) {
+    remaining = times[key] - nowMinutes
+  } else {
+    day = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
+    times = prayerTimes(day, location)
+    key = 'fajr'
+    remaining = times.fajr + 24 * 60 - nowMinutes
+  }
+  return { key, day, times, remaining, nowMinutes, tomorrow: day !== now }
+}
+
 export function formatMinutes(m) {
   const h = Math.floor(m / 60) % 24
   const min = m % 60

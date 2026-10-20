@@ -1,8 +1,8 @@
 {
   "package": "com.klikband.app",
   "name": "KlikBand",
-  "versionName": "1.4.4",
-  "versionCode": 26,
+  "versionName": "1.5.0",
+  "versionCode": 28,
   "minPlatformVersion": 1200,
   "icon": "/common/logo.png",
   "simulationVersion": "default",
@@ -36,8 +36,17 @@
       "pages/islam": {
         "component": "islam"
       },
+      "pages/today": {
+        "component": "today"
+      },
       "pages/prayer": {
         "component": "prayer"
+      },
+      "pages/dhikr": {
+        "component": "dhikr"
+      },
+      "pages/morningevening": {
+        "component": "morningevening"
       },
       "pages/tasbih": {
         "component": "tasbih"

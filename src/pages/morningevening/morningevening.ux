@@ -1,0 +1,116 @@
+<template>
+  <div class="page">
+    <text class="title">{{t.morningevening}}</text>
+    <div class="card {{suggested === 'morning' ? 'card-suggested' : ''}}" onclick="openSet('morning')">
+      <div class="icon icon-morning">
+        <image class="icon-image" src="/common/icons/today.png"></image>
+      </div>
+      <div class="text">
+        <text class="label">{{t.morning}}</text>
+        <text class="time">{{t.morningTime}}</text>
+      </div>
+    </div>
+    <div class="card {{suggested === 'evening' ? 'card-suggested' : ''}}" onclick="openSet('evening')">
+      <div class="icon icon-evening">
+        <image class="icon-image" src="/common/icons/islam.png"></image>
+      </div>
+      <div class="text">
+        <text class="label">{{t.evening}}</text>
+        <text class="time">{{t.eveningTime}}</text>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import router from '@system.router'
+import { STRINGS, loadLanguage } from '../../common/i18n.js'
+
+export default {
+  private: {
+    t: STRINGS.id,
+    // Highlight evening from noon onwards, morning otherwise
+    suggested: new Date().getHours() >= 12 ? 'evening' : 'morning'
+  },
+
+  onInit() {
+    loadLanguage((lang) => (this.t = STRINGS[lang]))
+  },
+
+  openSet(set) {
+    router.push({ uri: '/pages/dhikr', params: { set } })
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 24px 8px;
+  background-color: #000000;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.card {
+  flex-direction: row;
+  align-items: center;
+  width: 176px;
+  height: 96px;
+  padding: 0 14px;
+  margin-bottom: 10px;
+  border-radius: 28px;
+  background-color: #1c1c1e;
+}
+
+.card-suggested {
+  background-color: #23234a;
+}
+
+.icon {
+  justify-content: center;
+  align-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 26px;
+  margin-right: 12px;
+}
+
+.icon-morning {
+  background-color: #ff9f0a;
+}
+
+.icon-evening {
+  background-color: #5e5ce6;
+}
+
+.icon-image {
+  width: 30px;
+  height: 30px;
+}
+
+.text {
+  flex-direction: column;
+  width: 84px;
+}
+
+.label {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.time {
+  font-size: 13px;
+  color: #8e8e93;
+}
+</style>

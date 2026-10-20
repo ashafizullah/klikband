@@ -7,6 +7,9 @@
 ## 功能
 
 - **伊斯兰**
+  - **今日**：公历和伊斯兰历日期、下一次礼拜，以及今明两天的副功斋
+  - **礼拜后记念**：按 [Rumaysho](https://rumaysho.com/1997-dzikir-setelah-shalat.html) 顺序引导计数
+  - **早晚记念**：按 [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html) 顺序引导计数
   - **礼拜时间**：采用印度尼西亚宗教部（Kemenag）算法，在手环上离线计算
   - **赞珠**：点按计数，可设 33/99/100 目标，并有振动提示
   - **伊斯兰历**：算术伊斯兰历，可手动校正 ±2 天
@@ -58,6 +61,9 @@ src/
 │   ├── cities.js        # 城市列表和城市设置
 │   ├── asmaulhusna.js   # 九十九尊名数据
 │   ├── duas.js          # 日常祈祷数据
+│   ├── dhikr.js         # 礼拜后记念
+│   ├── dhikrmorningevening.js  # 早晚记念
+│   ├── fasting.js       # 副功斋与禁斋日
 │   ├── text.js          # 长标签滚动显示辅助函数
 │   └── icons/           # 菜单图标
 └── pages/               # 每个页面一个文件夹

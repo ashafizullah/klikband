@@ -1,0 +1,216 @@
+<template>
+  <scroll class="page" scroll-y="true">
+    <text class="title">{{t.today}}</text>
+
+    <div class="card">
+      <text class="date">{{gregorian}}</text>
+      <text class="hijri">{{hijri}}</text>
+    </div>
+
+    <div class="hero">
+      <text class="hero-label">{{nextLabel}}</text>
+      <text class="hero-time">{{nextTime}}</text>
+      <div class="pill">
+        <text class="pill-text">{{countdown}}</text>
+      </div>
+      <text class="city">{{city}}</text>
+    </div>
+
+    <div class="card">
+      <text class="section">{{t.fasting}}</text>
+      <text class="when">{{t.todayLabel}}</text>
+      <text class="fast {{todayStyle}}">{{todayFasts}}</text>
+      <div class="divider"></div>
+      <text class="when">{{t.tomorrowLabel}}</text>
+      <text class="fast {{tomorrowStyle}}">{{tomorrowFasts}}</text>
+    </div>
+  </scroll>
+</template>
+
+<script>
+import { nextPrayer, formatMinutes } from '../../common/prayer.js'
+import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
+import { CITIES, TIME_ZONES, loadCity } from '../../common/cities.js'
+import { toHijriWithOffset, loadHijriOffset } from '../../common/hijri.js'
+import { fastsFor } from '../../common/fasting.js'
+
+// Style for a fasting line: highlighted when there is a fast, red when fasting is not allowed
+function fastStyle(keys) {
+  if (keys[0] === 'none') return 'fast-none'
+  if (keys[0] === 'eid' || keys[0] === 'tashriq') return 'fast-forbidden'
+  return ''
+}
+
+export default {
+  private: {
+    t: STRINGS.id,
+    gregorian: '',
+    hijri: '',
+    nextLabel: '',
+    nextTime: '',
+    countdown: '',
+    city: '',
+    todayFasts: '',
+    todayStyle: '',
+    tomorrowFasts: '',
+    tomorrowStyle: ''
+  },
+
+  onInit() {
+    this.cityData = CITIES[0]
+    this.offset = 0
+    this.refresh()
+    loadLanguage((lang) => {
+      this.t = STRINGS[lang]
+      this.refresh()
+    })
+    loadCity((city) => {
+      this.cityData = city
+      this.refresh()
+    })
+    loadHijriOffset((offset) => {
+      this.offset = offset
+      this.refresh()
+    })
+    this.timer = setInterval(() => this.refresh(), 30 * 1000)
+  },
+
+  onDestroy() {
+    clearInterval(this.timer)
+  },
+
+  refresh() {
+    const t = this.t
+    const now = new Date()
+    const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
+
+    const h = toHijriWithOffset(now, this.offset)
+    this.gregorian = formatDate(t, now) + ' ' + now.getFullYear()
+    this.hijri = h.day + ' ' + t.hijriMonths[h.month - 1] + ' ' + h.year + ' H'
+
+    const next = nextPrayer(now, this.cityData)
+    this.nextLabel = t.prayers[next.key]
+    this.nextTime = formatMinutes(next.times[next.key])
+    this.countdown = formatDuration(t, next.remaining)
+    this.city = this.cityData.name + ' · ' + TIME_ZONES[this.cityData.tz]
+
+    const todayKeys = fastsFor(now, h)
+    const tomorrowKeys = fastsFor(tomorrow, toHijriWithOffset(tomorrow, this.offset))
+    this.todayFasts = todayKeys.map((k) => t.fasts[k]).join(', ')
+    this.todayStyle = fastStyle(todayKeys)
+    this.tomorrowFasts = tomorrowKeys.map((k) => t.fasts[k]).join(', ')
+    this.tomorrowStyle = fastStyle(tomorrowKeys)
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 24px 8px;
+  background-color: #000000;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.card {
+  flex-direction: column;
+  width: 176px;
+  padding: 14px;
+  margin-bottom: 8px;
+  border-radius: 22px;
+  background-color: #1c1c1e;
+}
+
+.date {
+  font-size: 17px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.hijri {
+  font-size: 15px;
+  color: #ff9f0a;
+  margin-top: 2px;
+}
+
+.hero {
+  flex-direction: column;
+  align-items: center;
+  width: 176px;
+  padding: 14px 0 14px 0;
+  margin-bottom: 8px;
+  border-radius: 24px;
+  background-color: #0d3b2c;
+}
+
+.hero-label {
+  font-size: 18px;
+  font-weight: bold;
+  color: #34d399;
+}
+
+.hero-time {
+  font-size: 48px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.pill {
+  padding: 4px 12px;
+  border-radius: 14px;
+  background-color: #145c44;
+}
+
+.pill-text {
+  font-size: 15px;
+  color: #ffffff;
+}
+
+.city {
+  font-size: 13px;
+  color: #8ee6c0;
+  margin-top: 8px;
+}
+
+.section {
+  font-size: 15px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.when {
+  font-size: 13px;
+  color: #8e8e93;
+}
+
+.fast {
+  font-size: 16px;
+  font-weight: bold;
+  color: #34d399;
+}
+
+.fast-none {
+  font-weight: normal;
+  color: #636366;
+}
+
+.fast-forbidden {
+  color: #ff6b6b;
+}
+
+.divider {
+  height: 1px;
+  margin: 8px 0;
+  background-color: #2c2c2e;
+}
+</style>

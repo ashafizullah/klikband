@@ -1,3 +1,5 @@
+import storage from '@system.storage'
+
 // Tabular (arithmetic) Hijri calendar. May differ by ±1 day from official
 // dates, which are set month by month from moon sighting or local reckoning.
 
@@ -20,4 +22,22 @@ export function toHijri(date) {
     month,
     year: 30 * n + j - 30
   }
+}
+
+// Hijri date for `date` with the user's manual correction (days) applied
+export function toHijriWithOffset(date, offset) {
+  return toHijri(new Date(date.getFullYear(), date.getMonth(), date.getDate() + offset))
+}
+
+// Manual correction of ±2 days to match the official calendar
+export function loadHijriOffset(cb) {
+  storage.get({
+    key: 'hijriOffset',
+    success: (data) => cb(parseInt(data, 10) || 0),
+    fail: () => cb(0)
+  })
+}
+
+export function saveHijriOffset(offset) {
+  storage.set({ key: 'hijriOffset', value: String(offset) })
 }

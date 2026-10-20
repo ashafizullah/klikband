@@ -7,6 +7,9 @@ A Xiaomi Vela quick app for the **Xiaomi Smart Band 9**. Community project, not 
 ## Features
 
 - **Islam**
+  - **Today**: Gregorian and Hijri date, next prayer, and sunnah fasts for today and tomorrow
+  - **Post-prayer Dhikr**: guided counter following [Rumaysho](https://rumaysho.com/1997-dzikir-setelah-shalat.html)
+  - **Morning & Evening Dhikr**: guided counter following [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html)
   - **Prayer Times**: Indonesian Ministry of Religious Affairs (Kemenag) method, computed offline on the band
   - **Tasbih**: tap counter with a 33/99/100 target and vibration
   - **Hijri Date**: arithmetic Hijri calendar with a ±2 day manual correction
@@ -58,6 +61,9 @@ src/
 │   ├── cities.js        # city list and city setting
 │   ├── asmaulhusna.js   # 99 Names data
 │   ├── duas.js          # daily duas data
+│   ├── dhikr.js         # post-prayer dhikr
+│   ├── dhikrmorningevening.js  # morning and evening dhikr
+│   ├── fasting.js       # sunnah and forbidden fasting days
 │   ├── text.js          # marquee helpers for long labels
 │   └── icons/           # menu icons
 └── pages/               # one folder per screen

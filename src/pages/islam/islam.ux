@@ -20,7 +20,10 @@ import { textWidth, startMarquees } from '../../common/text.js'
 const LABEL_WIDTH = 96
 
 const MENU = [
+  { key: 'today', color: '#0A84FF' },
   { key: 'prayer', color: '#1FA77A' },
+  { key: 'dhikr', color: '#30B0C7' },
+  { key: 'morningevening', color: '#5E5CE6' },
   { key: 'tasbih', color: '#3D7BFF' },
   { key: 'hijri', color: '#FF9F0A' },
   { key: 'asmaulhusna', color: '#BF5AF2' },

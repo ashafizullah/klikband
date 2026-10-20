@@ -1,0 +1,258 @@
+<template>
+  <scroll id="scroller" class="page" scroll-y="true">
+    <text class="title">{{title}}</text>
+
+    <div if="{{!finished}}" class="content">
+      <text class="step">{{step + 1}} / {{total}}</text>
+      <div if="{{note}}" class="note">
+        <text class="note-text">{{note}}</text>
+      </div>
+      <text class="latin {{longText ? 'latin-long' : ''}}">{{latin}}</text>
+      <text class="meaning">{{meaning}}</text>
+
+      <div class="circle" onclick="increment">
+        <text class="count">{{count}}</text>
+        <text class="target">/ {{target}}</text>
+      </div>
+
+      <div class="actions">
+        <div class="button" onclick="restart">
+          <text class="button-text">{{t.reset}}</text>
+        </div>
+        <div class="button button-main" onclick="advance">
+          <text class="button-text">{{t.next}}</text>
+        </div>
+      </div>
+    </div>
+
+    <div else class="content">
+      <div class="circle circle-done" onclick="restart">
+        <text class="count">✓</text>
+      </div>
+      <text class="done">{{t.done}}</text>
+      <div class="button button-main button-wide" onclick="restart">
+        <text class="button-text">{{t.repeat}}</text>
+      </div>
+    </div>
+  </scroll>
+</template>
+
+<script>
+import vibrator from '@system.vibrator'
+import PRAYER_DHIKR from '../../common/dhikr.js'
+import { morningEveningDhikr } from '../../common/dhikrmorningevening.js'
+import { STRINGS, loadLanguage } from '../../common/i18n.js'
+
+// Which dhikr set to show, from the router param `set`
+const SETS = {
+  prayer: { steps: () => PRAYER_DHIKR, title: 'dhikr' },
+  morning: { steps: () => morningEveningDhikr('morning'), title: 'dhikrMorning' },
+  evening: { steps: () => morningEveningDhikr('evening'), title: 'dhikrEvening' }
+}
+
+export default {
+  protected: {
+    set: 'prayer'
+  },
+
+  private: {
+    t: STRINGS.id,
+    lang: 'id',
+    title: '',
+    total: 0,
+    step: 0,
+    count: 0,
+    target: 0,
+    latin: '',
+    meaning: '',
+    note: '',
+    longText: false,
+    finished: false
+  },
+
+  onInit() {
+    this.config = SETS[this.set] || SETS.prayer
+    this.steps = this.config.steps()
+    this.total = this.steps.length
+    this.render()
+    loadLanguage((lang) => {
+      this.lang = lang
+      this.t = STRINGS[lang]
+      this.render()
+    })
+  },
+
+  render() {
+    const item = this.steps[this.step]
+    this.title = this.t[this.config.title]
+    this.target = item.count
+    this.latin = item.latin
+    this.meaning = item.meaning[this.lang]
+    this.note = item.note ? item.note[this.lang] : ''
+    this.longText = item.latin.length > 40
+  },
+
+  increment() {
+    this.count += 1
+    if (this.count >= this.target) {
+      this.advance()
+    } else {
+      vibrator.vibrate({ mode: 'short' })
+    }
+  },
+
+  // Move to the next step (also used to skip a step)
+  advance() {
+    vibrator.vibrate({ mode: 'long' })
+    this.count = 0
+    if (this.step + 1 >= this.steps.length) {
+      this.finished = true
+    } else {
+      this.step += 1
+      this.render()
+    }
+    this.scrollTop()
+  },
+
+  restart() {
+    this.step = 0
+    this.count = 0
+    this.finished = false
+    this.render()
+    this.scrollTop()
+  },
+
+  scrollTop() {
+    const scroller = this.$element('scroller')
+    if (scroller && scroller.scrollTo) scroller.scrollTo({ top: 0, behavior: 'instant' })
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 24px 8px;
+  background-color: #000000;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.content {
+  flex-direction: column;
+  align-items: center;
+  width: 176px;
+}
+
+.step {
+  font-size: 15px;
+  color: #8e8e93;
+  margin-bottom: 8px;
+}
+
+.note {
+  padding: 3px 10px;
+  margin-bottom: 8px;
+  border-radius: 12px;
+  background-color: #3a2a0a;
+}
+
+.note-text {
+  font-size: 13px;
+  color: #ffc56b;
+}
+
+.latin {
+  width: 176px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+}
+
+.latin-long {
+  font-size: 16px;
+}
+
+.meaning {
+  width: 176px;
+  font-size: 14px;
+  color: #8e8e93;
+  text-align: center;
+  margin-top: 6px;
+  margin-bottom: 14px;
+}
+
+.circle {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 140px;
+  height: 140px;
+  border-radius: 70px;
+  border-width: 6px;
+  border-color: #1fa77a;
+  background-color: #0d3b2c;
+}
+
+.circle-done {
+  margin-top: 40px;
+}
+
+.count {
+  font-size: 52px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.target {
+  font-size: 17px;
+  color: #34d399;
+}
+
+.actions {
+  flex-direction: row;
+  justify-content: space-between;
+  width: 176px;
+  margin-top: 16px;
+}
+
+.button {
+  justify-content: center;
+  align-items: center;
+  width: 84px;
+  height: 48px;
+  border-radius: 24px;
+  background-color: #1c1c1e;
+}
+
+.button-main {
+  background-color: #145c44;
+}
+
+.button-wide {
+  width: 176px;
+  margin-top: 16px;
+}
+
+.button-text {
+  font-size: 17px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.done {
+  font-size: 22px;
+  font-weight: bold;
+  color: #34d399;
+  margin-top: 14px;
+}
+</style>

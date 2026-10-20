@@ -131,6 +131,15 @@ src/
 
 Untuk mengganti kota bawaan, ubah entri pertama di `src/common/cities.js`.
 
+## Penafian
+
+**Gunakan dengan risiko sendiri.** Software ini diberikan "apa adanya", tanpa jaminan apa pun (lihat [LICENSE](LICENSE)).
+
+- Memasang aplikasi lewat Gadgetbridge tidak didukung resmi oleh Xiaomi. Proses pairing bisa membuat band perlu di-reset atau dipasangkan ulang.
+- Jadwal sholat dan tanggal Hijriah adalah hasil perhitungan. Bisa berbeda beberapa menit atau ±1 hari dari ketetapan resmi; tetap ikuti jadwal masjid setempat atau Kemenag.
+- Bacaan dzikir dan doa mengikuti sumber yang dicantumkan, tetapi transliterasi dan terjemahannya mungkin ada kekeliruan. Koreksi dipersilakan.
+- KlikBand adalah proyek komunitas dan tidak berafiliasi dengan maupun didukung oleh Xiaomi.
+
 ## Lisensi
 
 [MIT](LICENSE)

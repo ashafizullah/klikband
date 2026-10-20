@@ -131,6 +131,15 @@ src/
 
 To change the default city, edit the first entry in `src/common/cities.js`.
 
+## Disclaimer
+
+**Use at your own risk.** This software is provided "as is", without warranty of any kind (see [LICENSE](LICENSE)).
+
+- Installing apps through Gadgetbridge is not supported by Xiaomi. Pairing may require resetting or re-pairing the band.
+- Prayer times and Hijri dates are calculated. They may differ by a few minutes or ±1 day from official announcements; follow your local mosque or authority.
+- Dhikr and dua texts follow the cited sources, but the transliterations and translations may contain mistakes. Corrections are welcome.
+- KlikBand is a community project and is not affiliated with or endorsed by Xiaomi.
+
 ## License
 
 [MIT](LICENSE)

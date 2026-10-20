@@ -9,14 +9,13 @@
     <text class="status" style="color: {{count >= rounds ? '#30d158' : '#ffffff'}};">{{status}}</text>
     <text if="{{hint}}" class="hint">{{hint}}</text>
 
-    <div class="actions">
-      <div class="button" onclick="undo">
-        <text class="button-text" style="color: {{count > 0 ? '#ffffff' : '#636366'}};">{{t.undo}}</text>
-      </div>
-      <!-- Inline colors: a changing class broke button sizes on the band -->
-      <div class="button" style="background-color: {{confirming ? '#ff453a' : '#1c1c1e'}};" onclick="reset">
-        <text class="button-text">{{confirming ? t.sure : t.reset}}</text>
-      </div>
+    <!-- One full-width button per row, easier to tap on the band -->
+    <div class="button" onclick="undo">
+      <text class="button-text" style="color: {{count > 0 ? '#ffffff' : '#636366'}};">{{t.undo}}</text>
+    </div>
+    <!-- Inline colors: a changing class broke button sizes on the band -->
+    <div class="button" style="background-color: {{confirming ? '#ff453a' : '#1c1c1e'}};" onclick="reset">
+      <text class="button-text">{{confirming ? t.sure : t.reset}}</text>
     </div>
 
     <div class="card" for="{{readings}}">
@@ -180,27 +179,21 @@ export default {
   color: #8e8e93;
   text-align: center;
   margin-top: 4px;
-}
-
-.actions {
-  flex-direction: row;
-  justify-content: space-between;
-  width: 176px;
-  height: 48px;
-  margin: 14px 0;
+  margin-bottom: 12px;
 }
 
 .button {
   justify-content: center;
   align-items: center;
-  width: 84px;
+  width: 176px;
   height: 48px;
+  margin-bottom: 8px;
   border-radius: 24px;
   background-color: #1c1c1e;
 }
 
 .button-text {
-  width: 84px;
+  width: 176px;
   text-align: center;
   font-size: 17px;
   font-weight: bold;

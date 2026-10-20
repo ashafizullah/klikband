@@ -17,14 +17,13 @@
       </div>
     </div>
 
-    <div class="actions">
-      <div class="button" onclick="undo">
-        <text class="button-text" style="color: {{canUndo ? '#ffffff' : '#636366'}};">{{t.undo}}</text>
-      </div>
-      <!-- Inline colors: a changing class here broke the button size on the band -->
-      <div class="button" style="background-color: {{confirming ? '#ff453a' : '#1c1c1e'}};" onclick="reset">
-        <text class="button-text">{{confirming ? t.sure : t.reset}}</text>
-      </div>
+    <!-- One full-width button per row, easier to tap on the band -->
+    <div class="button" onclick="undo">
+      <text class="button-text" style="color: {{canUndo ? '#ffffff' : '#636366'}};">{{t.undo}}</text>
+    </div>
+    <!-- Inline colors: a changing class here broke the button size on the band -->
+    <div class="button" style="background-color: {{confirming ? '#ff453a' : '#1c1c1e'}};" onclick="reset">
+      <text class="button-text">{{confirming ? t.sure : t.reset}}</text>
     </div>
   </div>
 </template>
@@ -193,7 +192,7 @@ export default {
   justify-content: center;
   align-items: center;
   width: 176px;
-  height: 142px;
+  height: 128px;
   flex-shrink: 0;
   margin: 4px 0;
   border-radius: 26px;
@@ -221,25 +220,19 @@ export default {
   font-weight: bold;
 }
 
-.actions {
-  flex-direction: row;
-  justify-content: space-between;
-  width: 176px;
-  height: 48px;
-  flex-shrink: 0;
-}
-
 .button {
   justify-content: center;
   align-items: center;
-  width: 84px;
+  width: 176px;
   height: 48px;
+  flex-shrink: 0;
+  margin-top: 8px;
   border-radius: 24px;
   background-color: #1c1c1e;
 }
 
 .button-text {
-  width: 84px;
+  width: 176px;
   text-align: center;
   font-size: 17px;
   font-weight: bold;

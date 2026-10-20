@@ -15,13 +15,15 @@
         <text class="target">/ {{target}}</text>
       </div>
 
-      <div class="actions">
-        <div class="button" onclick="restart">
-          <text class="button-text">{{t.reset}}</text>
-        </div>
-        <div class="button button-main" onclick="advance">
-          <text class="button-text">{{t.next}}</text>
-        </div>
+      <!-- One full-width button per row, easier to tap on the band -->
+      <div class="button button-main button-row" onclick="advance">
+        <text class="button-text">{{t.next}}</text>
+      </div>
+      <div class="button button-row" onclick="back">
+        <text class="button-text" style="color: {{step > 0 ? '#ffffff' : '#636366'}};">{{t.previous}}</text>
+      </div>
+      <div class="button button-row" onclick="restart">
+        <text class="button-text">{{t.reset}}</text>
       </div>
     </div>
 
@@ -114,6 +116,15 @@ export default {
     this.scrollTop()
   },
 
+  // Back to the previous step, starting its count again
+  back() {
+    if (this.step === 0) return
+    this.step -= 1
+    this.count = 0
+    this.render()
+    this.scrollTop()
+  },
+
   restart() {
     this.step = 0
     this.count = 0
@@ -201,6 +212,7 @@ export default {
   border-width: 6px;
   border-color: #1fa77a;
   background-color: #0d3b2c;
+  margin-bottom: 8px;
 }
 
 .circle-done {
@@ -218,13 +230,6 @@ export default {
   color: #34d399;
 }
 
-.actions {
-  flex-direction: row;
-  justify-content: space-between;
-  width: 176px;
-  margin-top: 16px;
-}
-
 .button {
   justify-content: center;
   align-items: center;
@@ -236,6 +241,11 @@ export default {
 
 .button-main {
   background-color: #145c44;
+}
+
+.button-row {
+  width: 176px;
+  margin-top: 8px;
 }
 
 .button-wide {

@@ -87,6 +87,7 @@ export const STRINGS = {
     done: 'Selesai',
     repeat: 'Ulangi',
     next: 'Lanjut',
+    previous: 'Sebelumnya',
     fasts: {
       ramadan: 'Puasa Ramadhan',
       monday: 'Puasa Senin',
@@ -212,6 +213,7 @@ export const STRINGS = {
     done: 'Done',
     repeat: 'Repeat',
     next: 'Next',
+    previous: 'Previous',
     fasts: {
       ramadan: 'Ramadan fast',
       monday: 'Monday fast',
@@ -336,6 +338,7 @@ export const STRINGS = {
     done: '完成',
     repeat: '重来',
     next: '下一步',
+    previous: '上一步',
     fasts: {
       ramadan: '斋月斋戒',
       monday: '周一副功斋',

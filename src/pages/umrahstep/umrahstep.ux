@@ -20,13 +20,12 @@
       <text class="button-text">{{t.countRounds}}</text>
     </div>
 
-    <div class="actions">
-      <div class="button" onclick="go(-1)">
-        <text class="button-text" style="color: {{index > 0 ? '#ffffff' : '#636366'}};">‹</text>
-      </div>
-      <div class="button" onclick="go(1)">
-        <text class="button-text" style="color: {{index < total - 1 ? '#ffffff' : '#636366'}};">›</text>
-      </div>
+    <!-- One full-width button per row, easier to tap on the band -->
+    <div class="button button-wide" onclick="go(1)">
+      <text class="button-text" style="color: {{index < total - 1 ? '#ffffff' : '#636366'}};">{{t.next}}</text>
+    </div>
+    <div class="button button-wide" onclick="go(-1)">
+      <text class="button-text" style="color: {{index > 0 ? '#ffffff' : '#636366'}};">{{t.previous}}</text>
     </div>
   </scroll>
 </template>
@@ -150,13 +149,6 @@ export default {
 .meaning {
   font-size: 14px;
   color: #8e8e93;
-}
-
-.actions {
-  flex-direction: row;
-  justify-content: space-between;
-  width: 176px;
-  margin-top: 4px;
 }
 
 .button {

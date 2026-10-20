@@ -5,7 +5,7 @@
 <h1 align="center">KlikBand</h1>
 
 <p align="center">
-  A free, open-source quick app for Xiaomi Smart Band 9: prayer times, guided dhikr, tasbih, Hijri date, Islamic holidays and a day counter. Fully offline, no account.
+  A free, open-source quick app for Xiaomi Smart Band 9 (may also work on other Xiaomi Vela bands such as Band 10, untested): prayer times, guided dhikr, tasbih, Hijri date, Islamic holidays and a day counter. Fully offline, no account.
 </p>
 
 <p align="center">
@@ -51,6 +51,8 @@
 ## Limitations
 
 The Smart Band 9 has no GPS, and Xiaomi does not offer the location (`system.geolocation`) or internet (`system.fetch`) APIs on this band. Everything runs offline, and the city is picked manually.
+
+The layout is designed for the Band 9 screen (192×490). Other Xiaomi Vela bands such as Band 10 may work but are untested; wider or round screens (Band 9 Pro, Xiaomi/REDMI watches) will not look right.
 
 ## Build
 

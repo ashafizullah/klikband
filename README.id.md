@@ -5,7 +5,7 @@
 <h1 align="center">KlikBand</h1>
 
 <p align="center">
-  Quick app gratis dan open source untuk Xiaomi Smart Band 9: jadwal sholat, dzikir berpanduan, tasbih, kalender Hijriah, hari besar Islam, dan hitung hari. Sepenuhnya offline, tanpa akun.
+  Quick app gratis dan open source untuk Xiaomi Smart Band 9 (mungkin juga jalan di band Xiaomi Vela lain seperti Band 10, belum diuji): jadwal sholat, dzikir berpanduan, tasbih, kalender Hijriah, hari besar Islam, dan hitung hari. Sepenuhnya offline, tanpa akun.
 </p>
 
 <p align="center">
@@ -51,6 +51,8 @@
 ## Batasan
 
 Smart Band 9 tidak punya GPS, dan Xiaomi tidak menyediakan API lokasi (`system.geolocation`) maupun internet (`system.fetch`) di band ini. Semua berjalan offline, dan kota dipilih manual.
+
+Tata letaknya dirancang untuk layar Band 9 (192×490). Band Xiaomi Vela lain seperti Band 10 mungkin bisa, tetapi belum diuji; layar yang lebih lebar atau bulat (Band 9 Pro, jam Xiaomi/REDMI) tidak akan tampil rapi.
 
 ## Build
 

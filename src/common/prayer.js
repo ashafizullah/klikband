@@ -77,17 +77,17 @@ export function nextPrayer(now, location) {
   let day = now
   let times = prayerTimes(day, location)
   let key = PRAYER_ORDER.find((k) => k !== 'sunrise' && times[k] > nowMinutes)
-  let remaining
-
-  if (key) {
-    remaining = times[key] - nowMinutes
-  } else {
+  if (!key) {
     day = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
     times = prayerTimes(day, location)
     key = 'fajr'
-    remaining = times.fajr + 24 * 60 - nowMinutes
   }
-  return { key, day, times, remaining, nowMinutes, tomorrow: day !== now }
+  return { key, day, times, nowMinutes, tomorrow: day !== now }
+}
+
+// Moment a prayer starts: `minutes` after midnight of `day`
+export function prayerDate(day, minutes) {
+  return new Date(day.getFullYear(), day.getMonth(), day.getDate(), 0, minutes)
 }
 
 export function formatMinutes(m) {

@@ -137,6 +137,7 @@ export const STRINGS = {
     city: 'Kota',
     hourUnit: 'j',
     minuteUnit: 'm',
+    secondUnit: 'd',
     target: 'Target',
     reset: 'Reset',
     round: 'Putaran',
@@ -264,6 +265,7 @@ export const STRINGS = {
     city: 'City',
     hourUnit: 'h',
     minuteUnit: 'm',
+    secondUnit: 's',
     target: 'Target',
     reset: 'Reset',
     round: 'Round',
@@ -391,6 +393,7 @@ export const STRINGS = {
     city: '城市',
     hourUnit: '时',
     minuteUnit: '分',
+    secondUnit: '秒',
     target: '目标',
     reset: '重置',
     round: '轮',
@@ -411,9 +414,16 @@ export function formatDate(t, date) {
   return t.weekdays[date.getDay()] + ', ' + date.getDate() + ' ' + t.months[date.getMonth()]
 }
 
-// Countdown text, e.g. "dalam 2j 15m" / "in 2h 15m" / "还有 2时 15分"
-export function formatDuration(t, minutes) {
-  return t.in + ' ' + Math.floor(minutes / 60) + t.hourUnit + ' ' + (minutes % 60) + t.minuteUnit
+// Countdown text, e.g. "dalam 2j 05m 09d" / "in 2h 05m 09s" / "还有 2时 05分 09秒".
+// Minutes and seconds are zero-padded so the text keeps its width while ticking.
+export function formatDuration(t, seconds) {
+  const pad = (n) => (n < 10 ? '0' : '') + n
+  const h = Math.floor(seconds / 3600)
+  const m = Math.floor(seconds / 60) % 60
+  const s = seconds % 60
+  const parts = [pad(m) + t.minuteUnit, pad(s) + t.secondUnit]
+  if (h > 0) parts.unshift(h + t.hourUnit)
+  return t.in + ' ' + parts.join(' ')
 }
 
 // "110 hari lagi" / "19 hari lalu" / "Hari ini"

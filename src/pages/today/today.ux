@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { nextPrayer, formatMinutes } from '../../common/prayer.js'
+import { nextPrayer, prayerDate, formatMinutes } from '../../common/prayer.js'
 import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
 import { CITIES, TIME_ZONES, loadCity } from '../../common/cities.js'
 import { toHijriWithOffset, loadHijriOffset } from '../../common/hijri.js'
@@ -72,11 +72,20 @@ export default {
       this.offset = offset
       this.refresh()
     })
-    this.timer = setInterval(() => this.refresh(), 30 * 1000)
+    // The countdown ticks every second; the rest only changes at the next prayer
+    this.timer = setInterval(() => this.tick(), 1000)
   },
 
   onDestroy() {
     clearInterval(this.timer)
+  },
+
+  tick() {
+    const seconds = Math.ceil((this.target - Date.now()) / 1000)
+    // Full refresh at the next prayer, and once a minute for the date
+    this.ticks = (this.ticks || 0) + 1
+    if (seconds <= 0 || this.ticks % 60 === 0) this.refresh()
+    else this.countdown = formatDuration(this.t, seconds)
   },
 
   refresh() {
@@ -91,7 +100,8 @@ export default {
     const next = nextPrayer(now, this.cityData)
     this.nextLabel = t.prayers[next.key]
     this.nextTime = formatMinutes(next.times[next.key])
-    this.countdown = formatDuration(t, next.remaining)
+    this.target = prayerDate(next.day, next.times[next.key]).getTime()
+    this.tick()
     this.city = this.cityData.name + ' · ' + TIME_ZONES[this.cityData.tz]
 
     const todayKeys = fastsFor(now, h)

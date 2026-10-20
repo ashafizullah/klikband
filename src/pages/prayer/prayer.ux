@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { PRAYER_ORDER, nextPrayer, formatMinutes } from '../../common/prayer.js'
+import { PRAYER_ORDER, nextPrayer, prayerDate, formatMinutes } from '../../common/prayer.js'
 import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
 import { CITIES, TIME_ZONES, loadCity } from '../../common/cities.js'
 
@@ -49,24 +49,34 @@ export default {
       this.city = city
       this.refresh()
     })
-    this.timer = setInterval(() => this.refresh(), 30 * 1000)
+    // The countdown ticks every second; the rest only changes at the next prayer
+    this.timer = setInterval(() => this.tick(), 1000)
   },
 
   onDestroy() {
     clearInterval(this.timer)
   },
 
+  tick() {
+    const seconds = Math.ceil((this.target - Date.now()) / 1000)
+    // Full refresh at the next prayer, and once a minute for the date
+    this.ticks = (this.ticks || 0) + 1
+    if (seconds <= 0 || this.ticks % 60 === 0) this.refresh()
+    else this.countdown = formatDuration(this.t, seconds)
+  },
+
   refresh() {
     const t = this.t
     // After Isha this is tomorrow's schedule, so the card and the list match
-    const { key: next, day, times, remaining, nowMinutes, tomorrow } = nextPrayer(new Date(), this.city)
+    const { key: next, day, times, nowMinutes, tomorrow } = nextPrayer(new Date(), this.city)
 
     this.title = t.prayer
     this.location = this.city.name + ' · ' + TIME_ZONES[this.city.tz]
     this.dateText = formatDate(t, day)
     this.nextLabel = t.prayers[next]
     this.nextTime = formatMinutes(times[next])
-    this.countdown = formatDuration(t, remaining)
+    this.target = prayerDate(day, times[next]).getTime()
+    this.tick()
     this.rows = PRAYER_ORDER.map((k) => ({
       label: t.prayers[k],
       time: formatMinutes(times[k]),

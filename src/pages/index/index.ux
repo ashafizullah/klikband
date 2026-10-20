@@ -1,37 +1,61 @@
 <template>
   <scroll class="page" scroll-y="true">
-    <text class="judul">KlikBand</text>
-    <div class="menu" for="{{menu}}" onclick="buka(item.uri)">
-      <text class="menu-ikon" style="background-color: {{item.warna}};">{{item.ikon}}</text>
-      <text class="menu-label">{{item.label}}</text>
+    <text class="title">KlikBand</text>
+    <div class="card" for="{{menu}}" onclick="openPage($item.uri)">
+      <div class="icon" style="background-color: {{$item.color}};">
+        <image class="icon-image" src="{{$item.icon}}"></image>
+      </div>
+      <marquee if="{{$item.long}}" id="m{{$idx}}" class="label" scrollamount="30" text-offset="40">{{$item.label}}</marquee>
+      <text else class="label">{{$item.label}}</text>
     </div>
   </scroll>
 </template>
 
 <script>
 import router from '@system.router'
-import { TEKS, muatBahasa } from '../../common/i18n.js'
+import { STRINGS, loadLanguage } from '../../common/i18n.js'
+import { textWidth, startMarquees } from '../../common/text.js'
 
-// Tambah kategori baru di sini; `kunci` merujuk ke TEKS di common/i18n.js
+// Label area: 176 card - 28 padding - 44 icon - 12 gap
+const LABEL_WIDTH = 92
+
+// Add new categories here; `key` refers to STRINGS in common/i18n.js
 const MENU = [
-  { kunci: 'islam', ikon: '☪', warna: '#0f3d2e', uri: '/pages/islam' },
-  { kunci: 'pengaturan', ikon: '⚙', warna: '#2a2a2a', uri: '/pages/pengaturan' }
+  { key: 'islam', color: '#1FA77A' },
+  { key: 'settings', color: '#636366' },
+  { key: 'about', color: '#FF9F0A' }
 ]
+
+function buildMenu(lang) {
+  const t = STRINGS[lang]
+  return MENU.map((m) => ({
+    label: t[m.key],
+    long: textWidth(t[m.key], 22) > LABEL_WIDTH,
+    icon: '/common/icons/' + m.key + '.png',
+    color: m.color,
+    uri: '/pages/' + m.key
+  }))
+}
 
 export default {
   private: {
-    menu: []
+    menu: buildMenu('id')
   },
 
-  // onShow juga dipanggil saat kembali dari Pengaturan, jadi bahasa ikut berganti
+  onInit() {
+    loadLanguage((lang) => (this.menu = buildMenu(lang)))
+  },
+
+  // Also runs when returning from Settings, so a language change shows up
   onShow() {
-    muatBahasa((kode) => {
-      const t = TEKS[kode]
-      this.menu = MENU.map((m) => ({ label: t[m.kunci], ikon: m.ikon, warna: m.warna, uri: m.uri }))
-    })
+    loadLanguage((lang) => (this.menu = buildMenu(lang)))
   },
 
-  buka(uri) {
+  onReady() {
+    startMarquees(this, MENU.length)
+  },
+
+  openPage(uri) {
     router.push({ uri })
   }
 }
@@ -43,39 +67,46 @@ export default {
   align-items: center;
   width: 192px;
   height: 490px;
-  padding: 24px 12px;
+  padding: 36px 8px 24px 8px;
   background-color: #000000;
 }
 
-.judul {
-  font-size: 26px;
+.title {
+  font-size: 24px;
+  font-weight: bold;
   color: #ffffff;
   margin-bottom: 16px;
 }
 
-.menu {
+.card {
   flex-direction: row;
   align-items: center;
-  width: 168px;
-  height: 64px;
-  padding: 0 12px;
-  margin-bottom: 10px;
-  border-radius: 16px;
-  background-color: #1a1a1a;
+  width: 176px;
+  height: 72px;
+  padding: 0 14px;
+  margin-bottom: 8px;
+  border-radius: 24px;
+  background-color: #1c1c1e;
 }
 
-.menu-ikon {
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
-  text-align: center;
-  font-size: 22px;
-  color: #ffffff;
+.icon {
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
   margin-right: 12px;
 }
 
-.menu-label {
+.icon-image {
+  width: 26px;
+  height: 26px;
+}
+
+.label {
+  width: 92px;
   font-size: 22px;
+  font-weight: bold;
   color: #ffffff;
 }
 </style>

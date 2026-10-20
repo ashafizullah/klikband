@@ -1,0 +1,195 @@
+<template>
+  <scroll class="page" scroll-y="true">
+    <text class="title">{{title}}</text>
+    <text class="subtitle">{{location}}</text>
+    <text class="subtitle subtitle-last">{{dateText}}</text>
+
+    <div class="hero">
+      <text class="hero-label">{{nextLabel}}</text>
+      <text class="hero-time">{{nextTime}}</text>
+      <div class="pill">
+        <text class="pill-text">{{countdown}}</text>
+      </div>
+    </div>
+
+    <div class="list">
+      <div class="row {{$item.next ? 'row-next' : ''}}" for="{{rows}}">
+        <text class="name {{$item.style}}">{{$item.label}}</text>
+        <text class="time {{$item.style}}">{{$item.time}}</text>
+      </div>
+    </div>
+  </scroll>
+</template>
+
+<script>
+import { PRAYER_ORDER, prayerTimes, formatMinutes } from '../../common/prayer.js'
+import { STRINGS, loadLanguage, formatDate } from '../../common/i18n.js'
+import { CITIES, TIME_ZONES, loadCity } from '../../common/cities.js'
+
+export default {
+  private: {
+    title: '',
+    location: '',
+    dateText: '',
+    nextLabel: '',
+    nextTime: '',
+    countdown: '',
+    rows: []
+  },
+
+  onInit() {
+    this.t = STRINGS.id
+    this.city = CITIES[0]
+    this.refresh()
+    loadLanguage((lang) => {
+      this.t = STRINGS[lang]
+      this.refresh()
+    })
+    loadCity((city) => {
+      this.city = city
+      this.refresh()
+    })
+    this.timer = setInterval(() => this.refresh(), 30 * 1000)
+  },
+
+  onDestroy() {
+    clearInterval(this.timer)
+  },
+
+  refresh() {
+    const t = this.t
+    const now = new Date()
+    const nowMinutes = now.getHours() * 60 + now.getMinutes()
+    let day = now
+    let times = prayerTimes(day, this.city)
+    let next = PRAYER_ORDER.find((k) => k !== 'sunrise' && times[k] > nowMinutes)
+    let remaining
+
+    if (next) {
+      remaining = times[next] - nowMinutes
+    } else {
+      // After Isha: show all of tomorrow's times so the card and the list match
+      day = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
+      times = prayerTimes(day, this.city)
+      next = 'fajr'
+      remaining = times.fajr + 24 * 60 - nowMinutes
+    }
+    const tomorrow = day !== now
+
+    this.title = t.prayer
+    this.location = this.city.name + ' · ' + TIME_ZONES[this.city.tz]
+    this.dateText = formatDate(t, day)
+    this.nextLabel = t.prayers[next]
+    this.nextTime = formatMinutes(times[next])
+    this.countdown =
+      t.in + ' ' + Math.floor(remaining / 60) + t.hourUnit + ' ' + (remaining % 60) + t.minuteUnit
+    this.rows = PRAYER_ORDER.map((k) => ({
+      label: t.prayers[k],
+      time: formatMinutes(times[k]),
+      next: k === next,
+      // Past times are dimmed, the next one is highlighted
+      style: k === next ? 'text-next' : !tomorrow && times[k] <= nowMinutes ? 'text-past' : ''
+    }))
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 24px 8px;
+  background-color: #000000;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: #8e8e93;
+  margin-top: 2px;
+}
+
+.subtitle-last {
+  margin-bottom: 12px;
+}
+
+.hero {
+  flex-direction: column;
+  align-items: center;
+  width: 176px;
+  padding: 14px 0 16px 0;
+  margin-bottom: 8px;
+  border-radius: 24px;
+  background-color: #0d3b2c;
+}
+
+.hero-label {
+  font-size: 18px;
+  font-weight: bold;
+  color: #34d399;
+}
+
+.hero-time {
+  font-size: 52px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.pill {
+  padding: 4px 12px;
+  border-radius: 14px;
+  background-color: #145c44;
+}
+
+.pill-text {
+  font-size: 15px;
+  color: #ffffff;
+}
+
+.list {
+  flex-direction: column;
+  width: 176px;
+  padding: 6px;
+  border-radius: 24px;
+  background-color: #1c1c1e;
+}
+
+.row {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 16px;
+}
+
+.row-next {
+  background-color: #0d3b2c;
+}
+
+.name {
+  font-size: 18px;
+  color: #ffffff;
+}
+
+.time {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.text-next {
+  color: #34d399;
+}
+
+.text-past {
+  color: #636366;
+}
+</style>

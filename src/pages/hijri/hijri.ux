@@ -1,0 +1,172 @@
+<template>
+  <div class="page">
+    <text class="title">{{t.hijri}}</text>
+    <div class="card">
+      <text class="weekday">{{weekday}}</text>
+      <text class="day">{{day}}</text>
+      <text class="month">{{month}}</text>
+      <text class="year">{{year}} H</text>
+    </div>
+    <text class="gregorian">{{gregorian}}</text>
+    <div class="offset">
+      <div class="button" onclick="shift(-1)">
+        <text class="button-text">−</text>
+      </div>
+      <text class="offset-value">{{offsetText}}</text>
+      <div class="button" onclick="shift(1)">
+        <text class="button-text">+</text>
+      </div>
+    </div>
+    <text class="note">{{t.hijriNote}}</text>
+  </div>
+</template>
+
+<script>
+import storage from '@system.storage'
+import { toHijri } from '../../common/hijri.js'
+import { STRINGS, loadLanguage } from '../../common/i18n.js'
+
+export default {
+  private: {
+    t: STRINGS.id,
+    offset: 0,
+    offsetText: '0 hari',
+    weekday: '',
+    day: '',
+    month: '',
+    year: '',
+    gregorian: ''
+  },
+
+  onInit() {
+    this.render()
+    loadLanguage((lang) => {
+      this.t = STRINGS[lang]
+      this.render()
+    })
+    storage.get({
+      key: 'hijriOffset',
+      success: (data) => {
+        if (!data) return
+        this.offset = parseInt(data, 10) || 0
+        this.render()
+      }
+    })
+  },
+
+  // Manual correction of ±2 days to match the official calendar
+  shift(n) {
+    this.offset = Math.max(-2, Math.min(2, this.offset + n))
+    storage.set({ key: 'hijriOffset', value: String(this.offset) })
+    this.render()
+  },
+
+  render() {
+    const now = new Date()
+    const h = toHijri(new Date(now.getFullYear(), now.getMonth(), now.getDate() + this.offset))
+    const t = this.t
+    this.weekday = t.weekdays[now.getDay()]
+    this.day = String(h.day)
+    this.month = t.hijriMonths[h.month - 1]
+    this.year = String(h.year)
+    this.gregorian = now.getDate() + ' ' + t.months[now.getMonth()] + ' ' + now.getFullYear()
+    this.offsetText = (this.offset > 0 ? '+' : '') + this.offset + ' ' + t.day
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 24px 8px;
+  background-color: #000000;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.card {
+  flex-direction: column;
+  align-items: center;
+  width: 176px;
+  padding: 16px 8px 18px 8px;
+  border-radius: 24px;
+  background-color: #3a2a0a;
+}
+
+.weekday {
+  font-size: 17px;
+  color: #ffc56b;
+}
+
+.day {
+  font-size: 72px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.month {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ff9f0a;
+  text-align: center;
+}
+
+.year {
+  font-size: 17px;
+  color: #ffffff;
+  margin-top: 2px;
+}
+
+.gregorian {
+  font-size: 16px;
+  color: #8e8e93;
+  margin-top: 12px;
+  margin-bottom: 20px;
+}
+
+.offset {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 176px;
+  padding: 6px;
+  border-radius: 30px;
+  background-color: #1c1c1e;
+}
+
+.button {
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  background-color: #2c2c2e;
+}
+
+.button-text {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.offset-value {
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.note {
+  font-size: 13px;
+  color: #636366;
+  text-align: center;
+  margin-top: 10px;
+  width: 168px;
+}
+</style>

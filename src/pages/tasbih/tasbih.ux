@@ -1,14 +1,26 @@
 <template>
   <div class="page">
-    <text class="judul">{{t.tasbih}}</text>
-    <div class="tombol-hitung" onclick="tambah">
-      <text class="angka">{{hitungan}}</text>
-      <text class="target">/ {{target}}</text>
+    <text class="title">{{t.tasbih}}</text>
+
+    <!-- The middle section fills the remaining height, keeping the counter centered -->
+    <div class="middle">
+      <div class="circle" onclick="increment">
+        <text class="count">{{count}}</text>
+        <text class="target">/ {{target}}</text>
+      </div>
+      <div class="bar">
+        <div class="bar-fill" style="width: {{barWidth}}px;"></div>
+      </div>
+      <text class="round">{{t.round}} {{round}}</text>
     </div>
-    <text class="putaran">{{t.putaran}} {{putaran}}</text>
-    <div class="aksi">
-      <text class="tombol" onclick="gantiTarget">{{t.target}}</text>
-      <text class="tombol" onclick="reset">{{t.reset}}</text>
+
+    <div class="actions">
+      <div class="button" onclick="nextTarget">
+        <text class="button-text">{{t.target}}</text>
+      </div>
+      <div class="button" onclick="reset">
+        <text class="button-text">{{t.reset}}</text>
+      </div>
     </div>
   </div>
 </template>
@@ -16,61 +28,69 @@
 <script>
 import vibrator from '@system.vibrator'
 import storage from '@system.storage'
-import { TEKS, muatBahasa } from '../../common/i18n.js'
+import { STRINGS, loadLanguage } from '../../common/i18n.js'
 
-const PILIHAN_TARGET = [33, 99, 100]
+const TARGETS = [33, 99, 100]
+const BAR_WIDTH = 140
 
 export default {
   private: {
-    t: TEKS.id,
-    hitungan: 0,
+    t: STRINGS.id,
+    count: 0,
     target: 33,
-    putaran: 0
+    round: 0,
+    barWidth: 0
   },
 
   onInit() {
-    muatBahasa((kode) => (this.t = TEKS[kode]))
+    loadLanguage((lang) => (this.t = STRINGS[lang]))
     storage.get({
       key: 'tasbih',
       success: (data) => {
         if (!data) return
         const s = JSON.parse(data)
-        this.hitungan = s.hitungan
+        this.count = s.count
         this.target = s.target
-        this.putaran = s.putaran
+        this.round = s.round
+        this.updateBar()
       }
     })
   },
 
-  simpan() {
+  save() {
+    this.updateBar()
     storage.set({
       key: 'tasbih',
-      value: JSON.stringify({ hitungan: this.hitungan, target: this.target, putaran: this.putaran })
+      value: JSON.stringify({ count: this.count, target: this.target, round: this.round })
     })
   },
 
-  tambah() {
-    this.hitungan += 1
-    if (this.hitungan >= this.target) {
-      this.hitungan = 0
-      this.putaran += 1
+  updateBar() {
+    this.barWidth = Math.round((this.count / this.target) * BAR_WIDTH)
+  },
+
+  increment() {
+    this.count += 1
+    if (this.count >= this.target) {
+      this.count = 0
+      this.round += 1
       vibrator.vibrate({ mode: 'long' })
     } else {
       vibrator.vibrate({ mode: 'short' })
     }
-    this.simpan()
+    this.save()
   },
 
-  gantiTarget() {
-    const i = PILIHAN_TARGET.indexOf(this.target)
-    this.target = PILIHAN_TARGET[(i + 1) % PILIHAN_TARGET.length]
+  nextTarget() {
+    const i = TARGETS.indexOf(this.target)
+    this.target = TARGETS[(i + 1) % TARGETS.length]
     this.reset()
   },
 
   reset() {
-    this.hitungan = 0
-    this.putaran = 0
-    this.simpan()
+    this.count = 0
+    this.round = 0
+    this.save()
   }
 }
 </script>
@@ -81,56 +101,85 @@ export default {
   align-items: center;
   width: 192px;
   height: 490px;
-  padding: 24px 12px;
+  padding: 36px 8px 24px 8px;
   background-color: #000000;
 }
 
-.judul {
+.title {
   font-size: 22px;
-  color: #7ee2b8;
-  margin-bottom: 20px;
+  font-weight: bold;
+  color: #ffffff;
 }
 
-.tombol-hitung {
+.middle {
+  flex: 1;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 168px;
-  height: 168px;
-  border-radius: 84px;
-  background-color: #0f3d2e;
+  width: 176px;
 }
 
-.angka {
-  font-size: 56px;
+.circle {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 164px;
+  height: 164px;
+  border-radius: 82px;
+  border-width: 6px;
+  border-color: #3d7bff;
+  background-color: #10203f;
+}
+
+.count {
+  font-size: 60px;
+  font-weight: bold;
   color: #ffffff;
 }
 
 .target {
-  font-size: 20px;
-  color: #7ee2b8;
+  font-size: 18px;
+  color: #8ab4ff;
 }
 
-.putaran {
-  font-size: 20px;
-  color: #cccccc;
-  margin-top: 16px;
-  margin-bottom: 24px;
+.bar {
+  width: 140px;
+  height: 6px;
+  margin-top: 20px;
+  border-radius: 3px;
+  background-color: #2c2c2e;
 }
 
-.aksi {
+.bar-fill {
+  height: 6px;
+  border-radius: 3px;
+  background-color: #3d7bff;
+}
+
+.round {
+  font-size: 17px;
+  color: #8e8e93;
+  margin-top: 10px;
+}
+
+.actions {
   flex-direction: row;
   justify-content: space-between;
-  width: 168px;
+  width: 176px;
 }
 
-.tombol {
-  width: 80px;
+.button {
+  justify-content: center;
+  align-items: center;
+  width: 84px;
   height: 48px;
   border-radius: 24px;
-  text-align: center;
-  font-size: 18px;
+  background-color: #1c1c1e;
+}
+
+.button-text {
+  font-size: 17px;
+  font-weight: bold;
   color: #ffffff;
-  background-color: #1f1f1f;
 }
 </style>

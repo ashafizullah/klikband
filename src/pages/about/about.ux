@@ -1,0 +1,100 @@
+<template>
+  <scroll class="page" scroll-y="true">
+    <image class="logo" src="/common/logo.png"></image>
+    <text class="name">KlikBand</text>
+    <text class="version">{{t.version}} {{version}}</text>
+
+    <div class="card">
+      <text class="description">{{t.description}}</text>
+    </div>
+
+    <div class="card">
+      <text class="label">GitHub</text>
+      <text class="value">ashafizullah/klikband</text>
+      <div class="divider"></div>
+      <text class="label">{{t.license}}</text>
+      <text class="value">MIT</text>
+    </div>
+  </scroll>
+</template>
+
+<script>
+import app from '@system.app'
+import { STRINGS, loadLanguage } from '../../common/i18n.js'
+
+export default {
+  private: {
+    t: STRINGS.id,
+    version: ''
+  },
+
+  onInit() {
+    loadLanguage((lang) => (this.t = STRINGS[lang]))
+    try {
+      this.version = app.getInfo().versionName
+    } catch (e) {
+      this.version = '-'
+    }
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 24px 8px;
+  background-color: #000000;
+}
+
+.logo {
+  width: 72px;
+  height: 72px;
+  margin-bottom: 10px;
+}
+
+.name {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.version {
+  font-size: 15px;
+  color: #8e8e93;
+  margin-bottom: 16px;
+}
+
+.card {
+  flex-direction: column;
+  width: 176px;
+  padding: 14px;
+  margin-bottom: 8px;
+  border-radius: 22px;
+  background-color: #1c1c1e;
+}
+
+.description {
+  font-size: 15px;
+  color: #ffffff;
+}
+
+.label {
+  font-size: 13px;
+  color: #8e8e93;
+}
+
+.value {
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.divider {
+  height: 1px;
+  margin: 10px 0;
+  background-color: #2c2c2e;
+}
+</style>

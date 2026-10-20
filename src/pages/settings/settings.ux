@@ -1,0 +1,131 @@
+<template>
+  <scroll class="page" scroll-y="true">
+    <text class="title">{{title}}</text>
+
+    <text class="section">{{cityLabel}}</text>
+    <div class="group">
+      <div class="option" onclick="openCities">
+        <text class="option-label">{{cityName}}</text>
+        <text class="chevron">›</text>
+      </div>
+    </div>
+
+    <text class="section section-next">{{languageLabel}}</text>
+    <div class="group">
+      <div class="option" for="{{languages}}" onclick="select($item.code)">
+        <text class="option-label">{{$item.label}}</text>
+        <div class="radio {{$item.code === active ? 'radio-active' : ''}}"></div>
+      </div>
+    </div>
+  </scroll>
+</template>
+
+<script>
+import router from '@system.router'
+import { LANGUAGES, STRINGS, loadLanguage, saveLanguage } from '../../common/i18n.js'
+import { CITIES, loadCity } from '../../common/cities.js'
+
+export default {
+  private: {
+    languages: LANGUAGES,
+    active: 'id',
+    title: STRINGS.id.settings,
+    languageLabel: STRINGS.id.language,
+    cityLabel: STRINGS.id.city,
+    cityName: CITIES[0].name
+  },
+
+  onInit() {
+    loadLanguage((lang) => this.apply(lang))
+  },
+
+  // Also runs when returning from the city picker
+  onShow() {
+    loadCity((city) => (this.cityName = city.name))
+  },
+
+  openCities() {
+    router.push({ uri: '/pages/cities' })
+  },
+
+  select(code) {
+    saveLanguage(code)
+    this.apply(code)
+  },
+
+  apply(lang) {
+    this.active = lang
+    this.title = STRINGS[lang].settings
+    this.languageLabel = STRINGS[lang].language
+    this.cityLabel = STRINGS[lang].city
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 24px 8px;
+  background-color: #000000;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.section {
+  width: 168px;
+  font-size: 15px;
+  color: #8e8e93;
+  margin-bottom: 6px;
+}
+
+.section-next {
+  margin-top: 14px;
+}
+
+.group {
+  flex-direction: column;
+  width: 176px;
+  padding: 4px 0;
+  border-radius: 22px;
+  background-color: #1c1c1e;
+}
+
+.option {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 52px;
+  padding: 0 16px;
+}
+
+.option-label {
+  font-size: 18px;
+  color: #ffffff;
+}
+
+.chevron {
+  font-size: 22px;
+  color: #8e8e93;
+}
+
+.radio {
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  border-width: 2px;
+  border-color: #636366;
+}
+
+.radio-active {
+  border-width: 6px;
+  border-color: #1fa77a;
+}
+</style>

@@ -1,34 +1,67 @@
 <template>
   <scroll class="page" scroll-y="true">
-    <text class="judul">{{judul}}</text>
-    <div class="menu" for="{{menu}}" onclick="buka(item.uri)">
-      <text class="menu-label">{{item.label}}</text>
-      <text class="menu-panah">›</text>
+    <text class="title">{{title}}</text>
+    <div class="card" for="{{menu}}" onclick="openPage($item.uri)">
+      <div class="icon" style="background-color: {{$item.color}};">
+        <image class="icon-image" src="{{$item.icon}}"></image>
+      </div>
+      <marquee if="{{$item.long}}" id="m{{$idx}}" class="label" scrollamount="30" text-offset="40">{{$item.label}}</marquee>
+      <text else class="label">{{$item.label}}</text>
     </div>
   </scroll>
 </template>
 
 <script>
 import router from '@system.router'
-import { TEKS, muatBahasa } from '../../common/i18n.js'
+import { STRINGS, loadLanguage } from '../../common/i18n.js'
+import { textWidth, startMarquees } from '../../common/text.js'
 
-const MENU = ['sholat', 'tasbih', 'hijriah', 'asmaul', 'doa']
+// Label area: 176 card - 24 padding - 40 icon - 10 gap
+const LABEL_WIDTH = 102
+
+const MENU = [
+  { key: 'prayer', color: '#1FA77A' },
+  { key: 'tasbih', color: '#3D7BFF' },
+  { key: 'hijri', color: '#FF9F0A' },
+  { key: 'asmaulhusna', color: '#BF5AF2' },
+  { key: 'duas', color: '#FF6B6B' }
+]
+
+function buildMenu(lang) {
+  const t = STRINGS[lang]
+  return MENU.map((m) => ({
+    label: t[m.key],
+    long: textWidth(t[m.key], 19) > LABEL_WIDTH,
+    icon: '/common/icons/' + m.key + '.png',
+    color: m.color,
+    uri: '/pages/' + m.key
+  }))
+}
 
 export default {
   private: {
-    judul: '',
-    menu: []
+    title: STRINGS.id.islam,
+    menu: buildMenu('id')
+  },
+
+  onInit() {
+    loadLanguage((lang) => this.apply(lang))
   },
 
   onShow() {
-    muatBahasa((kode) => {
-      const t = TEKS[kode]
-      this.judul = t.islam
-      this.menu = MENU.map((k) => ({ label: t[k], uri: '/pages/' + k }))
-    })
+    loadLanguage((lang) => this.apply(lang))
   },
 
-  buka(uri) {
+  onReady() {
+    startMarquees(this, MENU.length)
+  },
+
+  apply(lang) {
+    this.title = STRINGS[lang].islam
+    this.menu = buildMenu(lang)
+  },
+
+  openPage(uri) {
     router.push({ uri })
   }
 }
@@ -40,35 +73,46 @@ export default {
   align-items: center;
   width: 192px;
   height: 490px;
-  padding: 24px 12px;
+  padding: 36px 8px 24px 8px;
   background-color: #000000;
 }
 
-.judul {
+.title {
   font-size: 24px;
-  color: #7ee2b8;
+  font-weight: bold;
+  color: #ffffff;
   margin-bottom: 16px;
 }
 
-.menu {
+.card {
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
-  width: 168px;
-  height: 56px;
-  padding: 0 14px;
+  width: 176px;
+  height: 64px;
+  padding: 0 12px;
   margin-bottom: 8px;
-  border-radius: 14px;
-  background-color: #0f3d2e;
+  border-radius: 22px;
+  background-color: #1c1c1e;
 }
 
-.menu-label {
-  font-size: 20px;
+.icon {
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  margin-right: 10px;
+}
+
+.icon-image {
+  width: 24px;
+  height: 24px;
+}
+
+.label {
+  width: 102px;
+  font-size: 19px;
+  font-weight: bold;
   color: #ffffff;
-}
-
-.menu-panah {
-  font-size: 24px;
-  color: #7ee2b8;
 }
 </style>

@@ -1,0 +1,100 @@
+<template>
+  <scroll class="page" scroll-y="true">
+    <text class="title">{{title}}</text>
+    <div class="group">
+      <div class="option" for="{{items}}" onclick="select($item.name)">
+        <div class="text">
+          <text class="name">{{$item.name}}</text>
+          <text class="zone">{{$item.zone}}</text>
+        </div>
+        <div class="radio {{$item.name === active ? 'radio-active' : ''}}"></div>
+      </div>
+    </div>
+  </scroll>
+</template>
+
+<script>
+import router from '@system.router'
+import { CITIES, TIME_ZONES, loadCity, saveCity } from '../../common/cities.js'
+import { STRINGS, loadLanguage } from '../../common/i18n.js'
+
+export default {
+  private: {
+    title: STRINGS.id.city,
+    active: CITIES[0].name,
+    items: CITIES.map((c) => ({ name: c.name, zone: TIME_ZONES[c.tz] }))
+  },
+
+  onInit() {
+    loadLanguage((lang) => (this.title = STRINGS[lang].city))
+    loadCity((city) => (this.active = city.name))
+  },
+
+  select(name) {
+    this.active = name
+    saveCity(name)
+    router.back()
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 24px 8px;
+  background-color: #000000;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.group {
+  flex-direction: column;
+  width: 176px;
+  padding: 4px 0;
+  border-radius: 22px;
+  background-color: #1c1c1e;
+}
+
+.option {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 56px;
+  padding: 0 16px;
+}
+
+.text {
+  flex-direction: column;
+}
+
+.name {
+  font-size: 17px;
+  color: #ffffff;
+}
+
+.zone {
+  font-size: 13px;
+  color: #8e8e93;
+}
+
+.radio {
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  border-width: 2px;
+  border-color: #636366;
+}
+
+.radio-active {
+  border-width: 6px;
+  border-color: #1fa77a;
+}
+</style>

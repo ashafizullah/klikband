@@ -1,4 +1,4 @@
-// 99 Asmaul Husna: [nama, arti id, arti en, arti zh]
+// The 99 Names of Allah: [name, meaning id, meaning en, meaning zh]
 export default [
   ['Ar-Rahman', 'Maha Pengasih', 'The Most Gracious', '普慈的'],
   ['Ar-Rahim', 'Maha Penyayang', 'The Most Merciful', '特慈的'],

@@ -43,7 +43,7 @@
   - **伊斯兰历**：算术伊斯兰历，可手动校正 ±2 天
   - **伊斯兰节日**：8 个伊斯兰节日倒计时，按远近排序
   - **真主九十九尊名**：99 个尊名及其含义
-  - **日常祈祷**：常用短祈祷词的拉丁转写及含义
+  - **先知的祈祷**：按 [Almanhaj](https://almanhaj.or.id/83989-doa-doa-nabi-shallallahu-alaihi-wa-sallam.html) 收录先知 ﷺ 的 47 段祈祷，附拉丁转写、含义和辑录者
   - **副朝指南**：按 [Almanhaj](https://almanhaj.or.id/2252-tata-cara-umrah.html) 的副朝步骤，附念词及环绕/奔走圈数计数
 - **通用**
   - **日历**：月历，显示伊斯兰历日期，并标注伊斯兰节日和斋戒日；点按日期查看详情
@@ -151,7 +151,7 @@ src/
 │   ├── hijri.js         # 伊斯兰历换算
 │   ├── cities.js        # 城市列表和城市设置
 │   ├── asmaulhusna.js   # 九十九尊名数据
-│   ├── duas.js          # 日常祈祷数据
+│   ├── duas.js          # 先知的祈祷数据
 │   ├── umrah.js         # 副朝指南数据
 │   ├── dhikr.js         # 礼拜后记念
 │   ├── dhikrmorningevening.js  # 早晚记念

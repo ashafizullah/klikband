@@ -43,7 +43,7 @@
   - **Hijriah**: kalender Hijriah aritmetika dengan koreksi manual ±2 hari
   - **Hari Besar Islam**: hitung mundur 8 hari besar Islam, diurutkan dari yang terdekat
   - **Asmaul Husna**: 99 nama Allah beserta artinya
-  - **Doa Harian**: doa-doa pendek dalam bacaan Latin beserta artinya
+  - **Doa-doa Nabi**: 47 doa Nabi ﷺ sesuai [Almanhaj](https://almanhaj.or.id/83989-doa-doa-nabi-shallallahu-alaihi-wa-sallam.html), dengan bacaan Latin, arti dan perawinya
   - **Panduan Umrah**: tata cara umrah langkah demi langkah sesuai [Almanhaj](https://almanhaj.or.id/2252-tata-cara-umrah.html), lengkap dengan bacaan dan penghitung putaran thawaf/sa'i
 - **Umum**
   - **Kalender**: kalender bulanan dengan tanggal Hijriah, hari besar Islam dan hari puasa ditandai; ketuk tanggal untuk detail
@@ -151,7 +151,7 @@ src/
 │   ├── hijri.js         # konversi kalender Hijriah
 │   ├── cities.js        # daftar kota dan pengaturan kota
 │   ├── asmaulhusna.js   # data 99 Asmaul Husna
-│   ├── duas.js          # data doa harian
+│   ├── duas.js          # data doa-doa Nabi
 │   ├── umrah.js         # data panduan umrah
 │   ├── dhikr.js         # dzikir setelah sholat
 │   ├── dhikrmorningevening.js  # dzikir pagi dan petang

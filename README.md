@@ -43,7 +43,7 @@
   - **Hijri Date**: arithmetic Hijri calendar with a ±2 day manual correction
   - **Islamic Holidays**: countdown to 8 Islamic holidays, nearest first
   - **Asmaul Husna**: the 99 Names of Allah with meanings
-  - **Daily Duas**: short daily prayers in Latin transliteration with meanings
+  - **Prophet's Duas**: 47 duas of the Prophet ﷺ following [Almanhaj](https://almanhaj.or.id/83989-doa-doa-nabi-shallallahu-alaihi-wa-sallam.html), with Latin transliteration, meaning and narrator
   - **Umrah Guide**: step-by-step umrah following [Almanhaj](https://almanhaj.or.id/2252-tata-cara-umrah.html), with duas and a tawaf/sa'i round counter
 - **General**
   - **Calendar**: monthly calendar with Hijri dates, Islamic holidays and fasting days marked; tap a day for details
@@ -151,7 +151,7 @@ src/
 │   ├── hijri.js         # Hijri calendar conversion
 │   ├── cities.js        # city list and city setting
 │   ├── asmaulhusna.js   # 99 Names data
-│   ├── duas.js          # daily duas data
+│   ├── duas.js          # Prophet's duas data
 │   ├── umrah.js         # umrah guide steps and readings
 │   ├── dhikr.js         # post-prayer dhikr
 │   ├── dhikrmorningevening.js  # morning and evening dhikr

@@ -1,31 +1,80 @@
 <template>
-  <scroll class="page" scroll-y="true">
-    <text class="title">{{title}}</text>
-    <div class="card" for="{{items}}">
-      <text class="name">{{$item.title[lang]}}</text>
-      <text class="latin">{{$item.latin}}</text>
+  <scroll id="scroller" class="page" scroll-y="true">
+    <text class="title">{{t.duas}}</text>
+    <text class="step">{{index + 1}} / {{total}}</text>
+
+    <div class="card">
+      <text class="latin">{{latin}}</text>
       <div class="divider"></div>
-      <text class="meaning">{{$item.meaning[lang]}}</text>
+      <text class="meaning">{{meaning}}</text>
+      <text if="{{source}}" class="source">{{source}}</text>
     </div>
+
+    <!-- One full-width button per row, easier to tap on the band -->
+    <div class="button button-main" onclick="go(1)">
+      <text class="button-text" style="color: {{index < total - 1 ? '#ffffff' : '#636366'}};">{{t.next}}</text>
+    </div>
+    <div class="button" onclick="go(-1)">
+      <text class="button-text" style="color: {{index > 0 ? '#ffffff' : '#636366'}};">{{t.previous}}</text>
+    </div>
+    <text class="note">{{t.source}}: Almanhaj.or.id</text>
   </scroll>
 </template>
 
 <script>
+import storage from '@system.storage'
 import DUAS from '../../common/duas.js'
 import { STRINGS, loadLanguage } from '../../common/i18n.js'
 
 export default {
   private: {
-    items: DUAS,
-    title: STRINGS.id.duas,
-    lang: 'id'
+    t: STRINGS.id,
+    lang: 'id',
+    index: 0,
+    total: DUAS.length,
+    latin: '',
+    meaning: '',
+    source: ''
   },
 
   onInit() {
+    this.render()
     loadLanguage((lang) => {
-      this.title = STRINGS[lang].duas
       this.lang = lang
+      this.t = STRINGS[lang]
+      this.render()
     })
+    // Reopen at the last dua read
+    storage.get({
+      key: 'duaIndex',
+      success: (data) => {
+        const i = parseInt(data, 10)
+        if (i >= 0 && i < DUAS.length) {
+          this.index = i
+          this.render()
+        }
+      }
+    })
+  },
+
+  render() {
+    const dua = DUAS[this.index]
+    const t = this.t
+    this.latin = dua.latin
+    this.meaning = dua.meaning[this.lang]
+    if (!dua.source) this.source = ''
+    else if (t === STRINGS.zh) this.source = dua.source + ' ' + t.narrated
+    else this.source = t.narrated + ' ' + dua.source
+  },
+
+  go(n) {
+    const next = this.index + n
+    if (next < 0 || next >= this.total) return
+    this.index = next
+    storage.set({ key: 'duaIndex', value: String(next) })
+    this.render()
+    const scroller = this.$element('scroller')
+    if (scroller && scroller.scrollTo) scroller.scrollTo({ top: 0, behavior: 'instant' })
   }
 }
 </script>
@@ -41,10 +90,17 @@ export default {
 }
 
 .title {
+  width: 176px;
   font-size: 22px;
   font-weight: bold;
   color: #ffffff;
-  margin-bottom: 16px;
+  text-align: center;
+}
+
+.step {
+  font-size: 14px;
+  color: #ff6b6b;
+  margin-bottom: 12px;
 }
 
 .card {
@@ -54,13 +110,6 @@ export default {
   margin-bottom: 8px;
   border-radius: 22px;
   background-color: #1c1c1e;
-}
-
-.name {
-  font-size: 16px;
-  font-weight: bold;
-  color: #ff6b6b;
-  margin-bottom: 6px;
 }
 
 .latin {
@@ -77,5 +126,39 @@ export default {
 .meaning {
   font-size: 14px;
   color: #8e8e93;
+}
+
+.source {
+  font-size: 13px;
+  color: #ff6b6b;
+  margin-top: 8px;
+}
+
+.button {
+  justify-content: center;
+  align-items: center;
+  width: 176px;
+  height: 48px;
+  margin-bottom: 8px;
+  border-radius: 24px;
+  background-color: #1c1c1e;
+}
+
+.button-main {
+  background-color: #5c1f1f;
+}
+
+.button-text {
+  font-size: 17px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.note {
+  width: 168px;
+  font-size: 13px;
+  color: #636366;
+  text-align: center;
+  margin-top: 4px;
 }
 </style>

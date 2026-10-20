@@ -47,7 +47,7 @@
 - **General**
   - **Calendar**: monthly calendar with Hijri dates, Islamic holidays and fasting days marked; tap a day for details
   - **Day Counter**: days until or since your own dates, with monthly or yearly repeat
-  - **Scoreboard**: two-side point counter for badminton, padel and other games, with undo
+  - **Scoreboard**: two-side counter with free points, badminton (21 points, best of 3) or padel/tennis scoring (15-30-40, deuce, sets, tiebreak), with undo
 - **Settings**: city (46 Indonesian cities, WIB/WITA/WIT) and language (Indonesian, English, 中文)
 
 ## Limitations

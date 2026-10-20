@@ -1,14 +1,19 @@
 <template>
   <div class="page">
-    <text class="title">{{t.score}}</text>
+    <!-- Tap to change the mode; locked once the match has started -->
+    <div class="mode" onclick="nextMode">
+      <text class="mode-text" style="color: {{canChangeMode ? '#ffffff' : '#636366'}};">{{modeName}}</text>
+    </div>
 
     <!-- The middle section fills the remaining height, so the buttons stay put -->
     <div class="middle">
       <div class="side side-a" onclick="add('a')">
-        <text class="points">{{a}}</text>
+        <text class="points">{{aPoints}}</text>
+        <text if="{{aDetail}}" class="detail" style="color: {{winner === 'a' ? '#30d158' : '#8ab4ff'}};">{{aDetail}}</text>
       </div>
       <div class="side side-b" onclick="add('b')">
-        <text class="points">{{b}}</text>
+        <text class="points">{{bPoints}}</text>
+        <text if="{{bDetail}}" class="detail" style="color: {{winner === 'b' ? '#30d158' : '#ff9a94'}};">{{bDetail}}</text>
       </div>
     </div>
 
@@ -28,8 +33,9 @@
 import vibrator from '@system.vibrator'
 import storage from '@system.storage'
 import { STRINGS, loadLanguage } from '../../common/i18n.js'
+import { MODES, newMatch, addPoint, pointsText, detailText } from '../../common/score.js'
 
-// Taps kept for undo
+// Match states kept for undo
 const MAX_HISTORY = 50
 // Reset needs a second tap within this time
 const CONFIRM_MS = 3000
@@ -37,25 +43,46 @@ const CONFIRM_MS = 3000
 export default {
   private: {
     t: STRINGS.id,
-    a: 0,
-    b: 0,
+    modeName: '',
+    aPoints: '0',
+    bPoints: '0',
+    aDetail: '',
+    bDetail: '',
+    winner: '',
     canUndo: false,
+    canChangeMode: true,
     confirming: false
   },
 
   onInit() {
+    this.match = newMatch('points')
     this.history = []
-    loadLanguage((lang) => (this.t = STRINGS[lang]))
+    this.render()
+    loadLanguage((lang) => {
+      this.t = STRINGS[lang]
+      this.render()
+    })
     storage.get({
       key: 'score',
       success: (data) => {
         if (!data) return
         try {
           const s = JSON.parse(data)
-          this.a = s.a
-          this.b = s.b
-          this.history = s.history || []
-          this.canUndo = this.history.length > 0
+          // Scores saved by 1.8.0 were { a, b, history }
+          if (s.match) {
+            this.match = s.match
+            this.history = s.history || []
+            // Test builds of 1.9.0 had no `past`
+            if (!this.match.past) {
+              this.match.past = []
+              this.history = []
+            }
+          } else {
+            this.match = newMatch('points')
+            this.match.a.p = s.a || 0
+            this.match.b.p = s.b || 0
+          }
+          this.render()
         } catch (e) {}
       }
     })
@@ -65,26 +92,48 @@ export default {
     clearTimeout(this.confirmTimer)
   },
 
-  save() {
+  render() {
+    const t = this.t
+    const m = this.match
+    this.modeName = t.scoreModes[m.mode]
+    this.aPoints = pointsText(m, 'a')
+    this.bPoints = pointsText(m, 'b')
+    this.aDetail = detailText(m, 'a', t)
+    this.bDetail = detailText(m, 'b', t)
+    this.winner = m.winner
     this.canUndo = this.history.length > 0
+    this.canChangeMode = JSON.stringify(m) === JSON.stringify(newMatch(m.mode))
+  },
+
+  save() {
+    this.render()
     storage.set({
       key: 'score',
-      value: JSON.stringify({ a: this.a, b: this.b, history: this.history })
+      value: JSON.stringify({ match: this.match, history: this.history })
     })
   },
 
   add(side) {
-    this[side] += 1
-    this.history.push(side)
+    if (this.match.winner) return
+    this.history.push(this.match)
     if (this.history.length > MAX_HISTORY) this.history.shift()
-    vibrator.vibrate({ mode: 'short' })
+    const result = addPoint(this.match, side)
+    this.match = result.state
+    vibrator.vibrate({ mode: result.event === 'point' ? 'short' : 'long' })
     this.save()
   },
 
   undo() {
-    const side = this.history.pop()
-    if (!side) return
-    this[side] = Math.max(0, this[side] - 1)
+    if (!this.history.length) return
+    this.match = this.history.pop()
+    this.save()
+  },
+
+  nextMode() {
+    if (!this.canChangeMode) return
+    const i = MODES.indexOf(this.match.mode)
+    this.match = newMatch(MODES[(i + 1) % MODES.length])
+    this.history = []
     this.save()
   },
 
@@ -96,8 +145,7 @@ export default {
     }
     clearTimeout(this.confirmTimer)
     this.confirming = false
-    this.a = 0
-    this.b = 0
+    this.match = newMatch(this.match.mode)
     this.history = []
     vibrator.vibrate({ mode: 'long' })
     this.save()
@@ -115,10 +163,21 @@ export default {
   background-color: #000000;
 }
 
-.title {
-  font-size: 22px;
+.mode {
+  justify-content: center;
+  align-items: center;
+  width: 140px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 18px;
+  background-color: #1c1c1e;
+}
+
+.mode-text {
+  width: 140px;
+  text-align: center;
+  font-size: 17px;
   font-weight: bold;
-  color: #ffffff;
 }
 
 .middle {
@@ -130,10 +189,11 @@ export default {
 }
 
 .side {
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 176px;
-  height: 148px;
+  height: 142px;
   flex-shrink: 0;
   margin: 4px 0;
   border-radius: 26px;
@@ -151,9 +211,14 @@ export default {
 }
 
 .points {
-  font-size: 76px;
+  font-size: 64px;
   font-weight: bold;
   color: #ffffff;
+}
+
+.detail {
+  font-size: 15px;
+  font-weight: bold;
 }
 
 .actions {

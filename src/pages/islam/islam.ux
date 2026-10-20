@@ -16,8 +16,8 @@ import router from '@system.router'
 import { STRINGS, loadLanguage } from '../../common/i18n.js'
 import { textWidth, startMarquees } from '../../common/text.js'
 
-// Label area: 176 card - 24 padding - 40 icon - 10 gap
-const LABEL_WIDTH = 102
+// Label area: 176 card - 24 padding - 46 icon - 10 gap
+const LABEL_WIDTH = 96
 
 const MENU = [
   { key: 'prayer', color: '#1FA77A' },
@@ -88,29 +88,29 @@ export default {
   flex-direction: row;
   align-items: center;
   width: 176px;
-  height: 64px;
+  height: 76px;
   padding: 0 12px;
   margin-bottom: 8px;
-  border-radius: 22px;
+  border-radius: 26px;
   background-color: #1c1c1e;
 }
 
 .icon {
   justify-content: center;
   align-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
+  width: 46px;
+  height: 46px;
+  border-radius: 23px;
   margin-right: 10px;
 }
 
 .icon-image {
-  width: 24px;
-  height: 24px;
+  width: 27px;
+  height: 27px;
 }
 
 .label {
-  width: 102px;
+  width: 96px;
   font-size: 19px;
   font-weight: bold;
   color: #ffffff;

@@ -1,8 +1,8 @@
 {
   "package": "com.klikband.app",
   "name": "KlikBand",
-  "versionName": "1.4.0",
-  "versionCode": 21,
+  "versionName": "1.4.4",
+  "versionCode": 26,
   "minPlatformVersion": 1200,
   "icon": "/common/logo.png",
   "simulationVersion": "default",

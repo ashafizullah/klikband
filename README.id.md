@@ -1,8 +1,36 @@
-# KlikBand
+<p align="center">
+  <img src="design/icon.png" width="128" alt="KlikBand icon">
+</p>
 
-[English](README.md) | **Bahasa Indonesia** | [中文](README.zh.md)
+<h1 align="center">KlikBand</h1>
 
-Quick app Xiaomi Vela untuk **Xiaomi Smart Band 9**. Proyek komunitas, tidak berafiliasi dengan Xiaomi.
+<p align="center">
+  Quick app gratis dan open source untuk Xiaomi Smart Band 9: jadwal sholat, dzikir berpanduan, tasbih, kalender Hijriah, hari besar Islam, dan hitung hari. Sepenuhnya offline, tanpa akun.
+</p>
+
+<p align="center">
+  <a href="https://github.com/ashafizullah/klikband/releases/latest"><img src="https://img.shields.io/github/v/release/ashafizullah/klikband?label=release" alt="Release"></a>
+  <a href="https://github.com/ashafizullah/klikband/releases"><img src="https://img.shields.io/github/downloads/ashafizullah/klikband/total?color=1fa77a" alt="Downloads"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/ashafizullah/klikband?color=blue" alt="MIT License"></a>
+  <br>
+  <img src="https://img.shields.io/badge/Xiaomi%20Vela-quick%20app-FF6900?logo=xiaomi&logoColor=white" alt="Xiaomi Vela quick app">
+  <img src="https://img.shields.io/badge/device-Xiaomi%20Smart%20Band%209-lightgrey" alt="Xiaomi Smart Band 9">
+  <a href="https://gadgetbridge.org/"><img src="https://img.shields.io/badge/install%20via-Gadgetbridge-3DDC84?logo=android&logoColor=white" alt="Install via Gadgetbridge"></a>
+  <img src="https://img.shields.io/badge/languages-EN%20%7C%20ID%20%7C%20%E4%B8%AD%E6%96%87-lightgrey" alt="English, Indonesian, Chinese">
+</p>
+
+<p align="center">
+  <a href="https://trakteer.id/adamshafizullah/tip"><img src="https://img.shields.io/badge/Buy%20me%20an%20AI%20token-Trakteer-C02E2E?style=for-the-badge" alt="Buy me an AI token on Trakteer"></a>
+</p>
+
+<p align="center">
+  Bagian dari <a href="https://klikapps.pages.dev"><b>Klik Apps</b></a>, kumpulan aplikasi gratis dan open source: <a href="https://klikapps.pages.dev">klikapps.pages.dev</a>
+</p>
+
+<p align="center">
+  <a href="README.md">English</a> | <b>Bahasa Indonesia</b> | <a href="README.zh.md">中文</a><br>
+  <sub>Proyek komunitas, tidak berafiliasi dengan Xiaomi.</sub>
+</p>
 
 ## Fitur
 

@@ -25,6 +25,41 @@ export const STRINGS = {
   id: {
     islam: 'Islam',
     settings: 'Pengaturan',
+    general: 'Umum',
+    holidays: 'Hari Besar Islam',
+    countdown: 'Hitung Hari',
+    add: 'Tambah',
+    save: 'Simpan',
+    remove: 'Hapus',
+    daysLeft: 'hari lagi',
+    daysAgo: 'hari lalu',
+    isToday: 'Hari ini',
+    empty: 'Belum ada tanggal',
+    labelField: 'Nama',
+    dayField: 'Tanggal',
+    monthField: 'Bulan',
+    yearField: 'Tahun',
+    repeatField: 'Ulang',
+    repeats: { none: 'Sekali', monthly: 'Tiap bulan', yearly: 'Tiap tahun' },
+    labels: {
+      birthday: 'Ulang tahun',
+      anniversary: 'Pernikahan',
+      payday: 'Gajian',
+      holiday: 'Liburan',
+      exam: 'Ujian',
+      event: 'Acara',
+      other: 'Lainnya'
+    },
+    holidayNames: {
+      islamicNewYear: 'Tahun Baru Islam',
+      ashura: 'Hari Asyura',
+      mawlid: 'Maulid Nabi',
+      isra: "Isra Mi'raj",
+      ramadan: 'Awal Ramadhan',
+      eidFitr: 'Idul Fitri',
+      arafah: 'Hari Arafah',
+      eidAdha: 'Idul Adha'
+    },
     today: 'Hari Ini',
     dhikr: 'Dzikir Sholat',
     morningevening: 'Dzikir Pagi Petang',
@@ -91,6 +126,41 @@ export const STRINGS = {
   en: {
     islam: 'Islam',
     settings: 'Settings',
+    general: 'General',
+    holidays: 'Islamic Holidays',
+    countdown: 'Day Counter',
+    add: 'Add',
+    save: 'Save',
+    remove: 'Delete',
+    daysLeft: 'days left',
+    daysAgo: 'days ago',
+    isToday: 'Today',
+    empty: 'No dates yet',
+    labelField: 'Label',
+    dayField: 'Day',
+    monthField: 'Month',
+    yearField: 'Year',
+    repeatField: 'Repeat',
+    repeats: { none: 'Once', monthly: 'Monthly', yearly: 'Yearly' },
+    labels: {
+      birthday: 'Birthday',
+      anniversary: 'Anniversary',
+      payday: 'Payday',
+      holiday: 'Holiday',
+      exam: 'Exam',
+      event: 'Event',
+      other: 'Other'
+    },
+    holidayNames: {
+      islamicNewYear: 'Islamic New Year',
+      ashura: 'Ashura',
+      mawlid: 'Mawlid an-Nabi',
+      isra: "Isra and Mi'raj",
+      ramadan: 'Start of Ramadan',
+      eidFitr: 'Eid al-Fitr',
+      arafah: 'Day of Arafah',
+      eidAdha: 'Eid al-Adha'
+    },
     today: 'Today',
     dhikr: 'Post-prayer Dhikr',
     morningevening: 'Morning & Evening Dhikr',
@@ -156,6 +226,41 @@ export const STRINGS = {
   },
   zh: {
     islam: '伊斯兰',
+    general: '通用',
+    holidays: '伊斯兰节日',
+    countdown: '倒数日',
+    add: '添加',
+    save: '保存',
+    remove: '删除',
+    daysLeft: '天后',
+    daysAgo: '天前',
+    isToday: '就是今天',
+    empty: '暂无日期',
+    labelField: '名称',
+    dayField: '日',
+    monthField: '月',
+    yearField: '年',
+    repeatField: '重复',
+    repeats: { none: '一次', monthly: '每月', yearly: '每年' },
+    labels: {
+      birthday: '生日',
+      anniversary: '纪念日',
+      payday: '发薪日',
+      holiday: '假期',
+      exam: '考试',
+      event: '活动',
+      other: '其他'
+    },
+    holidayNames: {
+      islamicNewYear: '伊斯兰新年',
+      ashura: '阿舒拉日',
+      mawlid: '圣纪节',
+      isra: '登霄节',
+      ramadan: '斋月开始',
+      eidFitr: '开斋节',
+      arafah: '阿拉法日',
+      eidAdha: '古尔邦节'
+    },
     today: '今日',
     dhikr: '礼拜后记念',
     morningevening: '早晚记念',
@@ -231,4 +336,16 @@ export function formatDate(t, date) {
 // Countdown text, e.g. "dalam 2j 15m" / "in 2h 15m" / "还有 2时 15分"
 export function formatDuration(t, minutes) {
   return t.in + ' ' + Math.floor(minutes / 60) + t.hourUnit + ' ' + (minutes % 60) + t.minuteUnit
+}
+
+// "110 hari lagi" / "19 hari lalu" / "Hari ini"
+export function formatDays(t, days) {
+  if (days === 0) return t.isToday
+  return Math.abs(days) + ' ' + (days > 0 ? t.daysLeft : t.daysAgo)
+}
+
+// "8 Feb 2027" / "2027年2月8日" style date
+export function formatFullDate(t, date) {
+  if (t === STRINGS.zh) return date.getFullYear() + '年' + t.months[date.getMonth()] + date.getDate() + '日'
+  return date.getDate() + ' ' + t.months[date.getMonth()] + ' ' + date.getFullYear()
 }

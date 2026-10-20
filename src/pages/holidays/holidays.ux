@@ -1,0 +1,111 @@
+<template>
+  <scroll class="page" scroll-y="true">
+    <text class="title">{{t.holidays}}</text>
+    <div class="card {{$idx === 0 ? 'card-next' : ''}}" for="{{items}}">
+      <text class="name">{{$item.name}}</text>
+      <text class="hijri">{{$item.hijri}}</text>
+      <text class="date">{{$item.date}}</text>
+      <text class="days">{{$item.days}}</text>
+    </div>
+    <text class="note">{{t.hijriNote}}</text>
+  </scroll>
+</template>
+
+<script>
+import { upcomingHolidays } from '../../common/holidays.js'
+import { loadHijriOffset } from '../../common/hijri.js'
+import { STRINGS, loadLanguage, formatDays, formatFullDate } from '../../common/i18n.js'
+
+export default {
+  private: {
+    t: STRINGS.id,
+    items: []
+  },
+
+  onInit() {
+    this.offset = 0
+    this.render()
+    loadLanguage((lang) => {
+      this.t = STRINGS[lang]
+      this.render()
+    })
+    loadHijriOffset((offset) => {
+      this.offset = offset
+      this.render()
+    })
+  },
+
+  render() {
+    const t = this.t
+    this.items = upcomingHolidays(new Date(), this.offset).map((h) => ({
+      name: t.holidayNames[h.key],
+      hijri: h.hijri.day + ' ' + t.hijriMonths[h.hijri.month - 1] + ' ' + h.hijri.year + ' H',
+      date: formatFullDate(t, h.date),
+      days: formatDays(t, h.days)
+    }))
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 24px 8px;
+  background-color: #000000;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.card {
+  flex-direction: column;
+  width: 176px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  border-radius: 22px;
+  background-color: #1c1c1e;
+}
+
+.card-next {
+  background-color: #4a1424;
+}
+
+.name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.hijri {
+  font-size: 14px;
+  color: #ff9f0a;
+}
+
+.date {
+  font-size: 14px;
+  color: #8e8e93;
+}
+
+.days {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ff6b8a;
+  margin-top: 4px;
+}
+
+.note {
+  width: 168px;
+  font-size: 13px;
+  color: #636366;
+  text-align: center;
+  margin-top: 4px;
+}
+</style>

@@ -1,0 +1,194 @@
+<template>
+  <scroll class="page" scroll-y="true">
+    <text class="title">{{index >= 0 ? t.countdown : t.add}}</text>
+
+    <div class="field" for="{{fields}}">
+      <text class="field-name">{{$item.name}}</text>
+      <div class="stepper">
+        <div class="step" onclick="change($item.key, -1)">
+          <text class="step-text">−</text>
+        </div>
+        <text class="value">{{$item.value}}</text>
+        <div class="step" onclick="change($item.key, 1)">
+          <text class="step-text">+</text>
+        </div>
+      </div>
+    </div>
+
+    <div class="button button-save" onclick="save">
+      <text class="button-text">{{t.save}}</text>
+    </div>
+    <div if="{{index >= 0}}" class="button button-delete" onclick="remove">
+      <text class="button-text button-text-delete">{{t.remove}}</text>
+    </div>
+  </scroll>
+</template>
+
+<script>
+import router from '@system.router'
+import { LABELS, REPEATS, loadCountdowns, saveCountdowns, daysInMonth } from '../../common/countdown.js'
+import { STRINGS, loadLanguage } from '../../common/i18n.js'
+
+export default {
+  // Index of the entry to edit, or -1 for a new one (router params arrive as strings)
+  protected: {
+    index: -1
+  },
+
+  private: {
+    t: STRINGS.id,
+    fields: []
+  },
+
+  onInit() {
+    this.index = parseInt(this.index, 10)
+    const now = new Date()
+    this.entry = { label: 'birthday', y: now.getFullYear(), m: now.getMonth(), d: now.getDate(), repeat: 'yearly' }
+    this.list = []
+    this.render()
+    loadLanguage((lang) => {
+      this.t = STRINGS[lang]
+      this.render()
+    })
+    loadCountdowns((list) => {
+      this.list = list
+      if (this.index >= 0 && list[this.index]) this.entry = Object.assign({}, list[this.index])
+      this.render()
+    })
+  },
+
+  render() {
+    const t = this.t
+    const e = this.entry
+    this.fields = [
+      { key: 'label', name: t.labelField, value: t.labels[e.label] },
+      { key: 'd', name: t.dayField, value: String(e.d) },
+      { key: 'm', name: t.monthField, value: t.months[e.m] },
+      { key: 'y', name: t.yearField, value: String(e.y) },
+      { key: 'repeat', name: t.repeatField, value: t.repeats[e.repeat] }
+    ]
+  },
+
+  change(key, n) {
+    const e = this.entry
+    if (key === 'label') e.label = cycle(LABELS, e.label, n)
+    if (key === 'repeat') e.repeat = cycle(REPEATS, e.repeat, n)
+    if (key === 'm') e.m = (e.m + n + 12) % 12
+    if (key === 'y') e.y = Math.max(1900, Math.min(2100, e.y + n))
+    const maxDay = daysInMonth(e.y, e.m)
+    if (key === 'd') e.d = ((e.d - 1 + n + maxDay) % maxDay) + 1
+    e.d = Math.min(e.d, maxDay)
+    this.render()
+  },
+
+  save() {
+    const list = this.list.slice()
+    if (this.index >= 0) list[this.index] = this.entry
+    else list.push(this.entry)
+    saveCountdowns(list)
+    router.back()
+  },
+
+  remove() {
+    const list = this.list.slice()
+    list.splice(this.index, 1)
+    saveCountdowns(list)
+    router.back()
+  }
+}
+
+// Next/previous value in a list, wrapping around
+function cycle(values, current, n) {
+  const i = values.indexOf(current)
+  return values[(i + n + values.length) % values.length]
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 24px 8px;
+  background-color: #000000;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.field {
+  flex-direction: column;
+  width: 176px;
+  margin-bottom: 8px;
+}
+
+.field-name {
+  font-size: 13px;
+  color: #8e8e93;
+  margin-left: 8px;
+  margin-bottom: 2px;
+}
+
+.stepper {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 176px;
+  padding: 4px;
+  border-radius: 26px;
+  background-color: #1c1c1e;
+}
+
+.step {
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  background-color: #2c2c2e;
+}
+
+.step-text {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.value {
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.button {
+  justify-content: center;
+  align-items: center;
+  width: 176px;
+  height: 52px;
+  margin-top: 6px;
+  border-radius: 26px;
+}
+
+.button-save {
+  background-color: #ff9f0a;
+}
+
+.button-delete {
+  background-color: #1c1c1e;
+}
+
+.button-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: #000000;
+}
+
+.button-text-delete {
+  color: #ff6b6b;
+}
+</style>

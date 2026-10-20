@@ -13,8 +13,11 @@ Quick app Xiaomi Vela untuk **Xiaomi Smart Band 9**. Proyek komunitas, tidak ber
   - **Jadwal Sholat**: metode Kemenag RI, dihitung offline di band
   - **Tasbih**: penghitung ketuk dengan target 33/99/100 dan getar
   - **Hijriah**: kalender Hijriah aritmetika dengan koreksi manual ±2 hari
+  - **Hari Besar Islam**: hitung mundur 8 hari besar Islam, diurutkan dari yang terdekat
   - **Asmaul Husna**: 99 nama Allah beserta artinya
   - **Doa Harian**: doa-doa pendek dalam bacaan Latin beserta artinya
+- **Umum**
+  - **Hitung Hari**: berapa hari menuju atau sejak tanggal pentingmu, bisa diulang bulanan atau tahunan
 - **Pengaturan**: kota (46 kota di Indonesia, WIB/WITA/WIT) dan bahasa (Indonesia, English, 中文)
 
 ## Batasan
@@ -64,6 +67,8 @@ src/
 │   ├── dhikr.js         # dzikir setelah sholat
 │   ├── dhikrmorningevening.js  # dzikir pagi dan petang
 │   ├── fasting.js       # hari puasa sunnah dan hari dilarang puasa
+│   ├── holidays.js      # tanggal hari besar Islam
+│   ├── countdown.js     # data dan perhitungan Hitung Hari
 │   ├── text.js          # bantuan marquee untuk label panjang
 │   └── icons/           # ikon menu
 └── pages/               # satu folder per layar

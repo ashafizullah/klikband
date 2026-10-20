@@ -13,8 +13,11 @@ A Xiaomi Vela quick app for the **Xiaomi Smart Band 9**. Community project, not 
   - **Prayer Times**: Indonesian Ministry of Religious Affairs (Kemenag) method, computed offline on the band
   - **Tasbih**: tap counter with a 33/99/100 target and vibration
   - **Hijri Date**: arithmetic Hijri calendar with a ±2 day manual correction
+  - **Islamic Holidays**: countdown to 8 Islamic holidays, nearest first
   - **Asmaul Husna**: the 99 Names of Allah with meanings
   - **Daily Duas**: short daily prayers in Latin transliteration with meanings
+- **General**
+  - **Day Counter**: days until or since your own dates, with monthly or yearly repeat
 - **Settings**: city (46 Indonesian cities, WIB/WITA/WIT) and language (Indonesian, English, 中文)
 
 ## Limitations
@@ -64,6 +67,8 @@ src/
 │   ├── dhikr.js         # post-prayer dhikr
 │   ├── dhikrmorningevening.js  # morning and evening dhikr
 │   ├── fasting.js       # sunnah and forbidden fasting days
+│   ├── holidays.js      # Islamic holiday dates
+│   ├── countdown.js     # day counter entries and date math
 │   ├── text.js          # marquee helpers for long labels
 │   └── icons/           # menu icons
 └── pages/               # one folder per screen

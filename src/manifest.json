@@ -1,8 +1,8 @@
 {
   "package": "com.klikband.app",
   "name": "KlikBand",
-  "versionName": "1.5.0",
-  "versionCode": 28,
+  "versionName": "1.6.0",
+  "versionCode": 29,
   "minPlatformVersion": 1200,
   "icon": "/common/logo.png",
   "simulationVersion": "default",
@@ -36,6 +36,9 @@
       "pages/islam": {
         "component": "islam"
       },
+      "pages/general": {
+        "component": "general"
+      },
       "pages/today": {
         "component": "today"
       },
@@ -54,11 +57,20 @@
       "pages/hijri": {
         "component": "hijri"
       },
+      "pages/holidays": {
+        "component": "holidays"
+      },
       "pages/asmaulhusna": {
         "component": "asmaulhusna"
       },
       "pages/duas": {
         "component": "duas"
+      },
+      "pages/countdown": {
+        "component": "countdown"
+      },
+      "pages/countdownedit": {
+        "component": "countdownedit"
       },
       "pages/settings": {
         "component": "settings"

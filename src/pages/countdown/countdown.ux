@@ -1,0 +1,142 @@
+<template>
+  <scroll class="page" scroll-y="true">
+    <text class="title">{{t.countdown}}</text>
+
+    <text if="{{items.length === 0}}" class="empty">{{t.empty}}</text>
+
+    <div class="card" for="{{items}}" onclick="edit($item.index)">
+      <text class="label">{{$item.label}}</text>
+      <text class="date">{{$item.date}}</text>
+      <text class="days {{$item.past ? 'days-past' : ''}}">{{$item.days}}</text>
+    </div>
+
+    <div if="{{canAdd}}" class="button" onclick="edit(-1)">
+      <text class="button-text">+ {{t.add}}</text>
+    </div>
+  </scroll>
+</template>
+
+<script>
+import router from '@system.router'
+import { loadCountdowns, daysUntil, targetDate, MAX_ENTRIES } from '../../common/countdown.js'
+import { STRINGS, loadLanguage, formatDays, formatFullDate } from '../../common/i18n.js'
+
+export default {
+  private: {
+    t: STRINGS.id,
+    items: [],
+    canAdd: true
+  },
+
+  onInit() {
+    this.list = []
+    loadLanguage((lang) => {
+      this.t = STRINGS[lang]
+      this.render()
+    })
+  },
+
+  // Also runs when returning from the editor
+  onShow() {
+    loadCountdowns((list) => {
+      this.list = list
+      this.render()
+    })
+  },
+
+  render() {
+    const t = this.t
+    const today = new Date()
+    // Nearest upcoming first, then past dates
+    this.items = this.list
+      .map((entry, index) => {
+        const days = daysUntil(entry, today)
+        return {
+          index,
+          sortKey: days >= 0 ? days : 100000 - days,
+          label: t.labels[entry.label] + (entry.repeat !== 'none' ? ' · ' + t.repeats[entry.repeat] : ''),
+          date: formatFullDate(t, targetDate(entry, today)),
+          days: formatDays(t, days),
+          past: days < 0
+        }
+      })
+      .sort((a, b) => a.sortKey - b.sortKey)
+    this.canAdd = this.list.length < MAX_ENTRIES
+  },
+
+  edit(index) {
+    router.push({ uri: '/pages/countdownedit', params: { index } })
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 24px 8px;
+  background-color: #000000;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.empty {
+  font-size: 16px;
+  color: #8e8e93;
+  margin: 20px 0;
+}
+
+.card {
+  flex-direction: column;
+  width: 176px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  border-radius: 22px;
+  background-color: #1c1c1e;
+}
+
+.label {
+  font-size: 17px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.date {
+  font-size: 14px;
+  color: #8e8e93;
+}
+
+.days {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ff9f0a;
+  margin-top: 4px;
+}
+
+.days-past {
+  color: #636366;
+}
+
+.button {
+  justify-content: center;
+  align-items: center;
+  width: 176px;
+  height: 52px;
+  margin-top: 4px;
+  border-radius: 26px;
+  background-color: #3a2a0a;
+}
+
+.button-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ff9f0a;
+}
+</style>

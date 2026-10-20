@@ -26,6 +26,7 @@ const MENU = [
   { key: 'morningevening', color: '#5E5CE6' },
   { key: 'tasbih', color: '#3D7BFF' },
   { key: 'hijri', color: '#FF9F0A' },
+  { key: 'holidays', color: '#FF375F' },
   { key: 'asmaulhusna', color: '#BF5AF2' },
   { key: 'duas', color: '#FF6B6B' }
 ]

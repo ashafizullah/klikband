@@ -5,7 +5,7 @@
 <h1 align="center">KlikBand</h1>
 
 <p align="center">
-  Quick app gratis dan open source untuk Xiaomi Smart Band 9 (mungkin juga jalan di band Xiaomi Vela lain seperti Band 10, belum diuji): jadwal sholat, dzikir berpanduan, tasbih, kalender Hijriah, hari besar Islam, kalender bulanan, dan hitung hari. Sepenuhnya offline, tanpa akun.
+  Quick app gratis dan open source untuk Xiaomi Smart Band 9 (mungkin juga jalan di band Xiaomi Vela lain seperti Band 10, belum diuji): jadwal sholat, dzikir berpanduan, tasbih, kalender Hijriah, hari besar Islam, kalender bulanan, hitung hari, dan papan skor. Sepenuhnya offline, tanpa akun.
 </p>
 
 <p align="center">
@@ -47,6 +47,7 @@
 - **Umum**
   - **Kalender**: kalender bulanan dengan tanggal Hijriah, hari besar Islam dan hari puasa ditandai; ketuk tanggal untuk detail
   - **Hitung Hari**: berapa hari menuju atau sejak tanggal pentingmu, bisa diulang bulanan atau tahunan
+  - **Papan Skor**: penghitung poin dua sisi untuk badminton, padel dan permainan lain, dengan tombol batal
 - **Pengaturan**: kota (46 kota di Indonesia, WIB/WITA/WIT) dan bahasa (Indonesia, English, 中文)
 
 ## Batasan

@@ -1,0 +1,183 @@
+<template>
+  <div class="page">
+    <text class="title">{{t.score}}</text>
+
+    <!-- The middle section fills the remaining height, so the buttons stay put -->
+    <div class="middle">
+      <div class="side side-a" onclick="add('a')">
+        <text class="points">{{a}}</text>
+      </div>
+      <div class="side side-b" onclick="add('b')">
+        <text class="points">{{b}}</text>
+      </div>
+    </div>
+
+    <div class="actions">
+      <div class="button" onclick="undo">
+        <text class="button-text" style="color: {{canUndo ? '#ffffff' : '#636366'}};">{{t.undo}}</text>
+      </div>
+      <!-- Inline colors: a changing class here broke the button size on the band -->
+      <div class="button" style="background-color: {{confirming ? '#ff453a' : '#1c1c1e'}};" onclick="reset">
+        <text class="button-text">{{confirming ? t.sure : t.reset}}</text>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import vibrator from '@system.vibrator'
+import storage from '@system.storage'
+import { STRINGS, loadLanguage } from '../../common/i18n.js'
+
+// Taps kept for undo
+const MAX_HISTORY = 50
+// Reset needs a second tap within this time
+const CONFIRM_MS = 3000
+
+export default {
+  private: {
+    t: STRINGS.id,
+    a: 0,
+    b: 0,
+    canUndo: false,
+    confirming: false
+  },
+
+  onInit() {
+    this.history = []
+    loadLanguage((lang) => (this.t = STRINGS[lang]))
+    storage.get({
+      key: 'score',
+      success: (data) => {
+        if (!data) return
+        try {
+          const s = JSON.parse(data)
+          this.a = s.a
+          this.b = s.b
+          this.history = s.history || []
+          this.canUndo = this.history.length > 0
+        } catch (e) {}
+      }
+    })
+  },
+
+  onDestroy() {
+    clearTimeout(this.confirmTimer)
+  },
+
+  save() {
+    this.canUndo = this.history.length > 0
+    storage.set({
+      key: 'score',
+      value: JSON.stringify({ a: this.a, b: this.b, history: this.history })
+    })
+  },
+
+  add(side) {
+    this[side] += 1
+    this.history.push(side)
+    if (this.history.length > MAX_HISTORY) this.history.shift()
+    vibrator.vibrate({ mode: 'short' })
+    this.save()
+  },
+
+  undo() {
+    const side = this.history.pop()
+    if (!side) return
+    this[side] = Math.max(0, this[side] - 1)
+    this.save()
+  },
+
+  reset() {
+    if (!this.confirming) {
+      this.confirming = true
+      this.confirmTimer = setTimeout(() => (this.confirming = false), CONFIRM_MS)
+      return
+    }
+    clearTimeout(this.confirmTimer)
+    this.confirming = false
+    this.a = 0
+    this.b = 0
+    this.history = []
+    vibrator.vibrate({ mode: 'long' })
+    this.save()
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 24px 8px;
+  background-color: #000000;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.middle {
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 176px;
+}
+
+.side {
+  justify-content: center;
+  align-items: center;
+  width: 176px;
+  height: 148px;
+  flex-shrink: 0;
+  margin: 4px 0;
+  border-radius: 26px;
+  border-width: 4px;
+}
+
+.side-a {
+  border-color: #3d7bff;
+  background-color: #10203f;
+}
+
+.side-b {
+  border-color: #ff453a;
+  background-color: #3f1210;
+}
+
+.points {
+  font-size: 76px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.actions {
+  flex-direction: row;
+  justify-content: space-between;
+  width: 176px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.button {
+  justify-content: center;
+  align-items: center;
+  width: 84px;
+  height: 48px;
+  border-radius: 24px;
+  background-color: #1c1c1e;
+}
+
+.button-text {
+  width: 84px;
+  text-align: center;
+  font-size: 17px;
+  font-weight: bold;
+  color: #ffffff;
+}
+</style>

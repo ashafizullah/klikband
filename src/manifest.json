@@ -1,8 +1,8 @@
 {
   "package": "com.klikband.app",
   "name": "KlikBand",
-  "versionName": "1.7.0",
-  "versionCode": 30,
+  "versionName": "1.8.0",
+  "versionCode": 31,
   "minPlatformVersion": 1200,
   "icon": "/common/logo.png",
   "simulationVersion": "default",
@@ -74,6 +74,9 @@
       },
       "pages/countdownedit": {
         "component": "countdownedit"
+      },
+      "pages/score": {
+        "component": "score"
       },
       "pages/settings": {
         "component": "settings"

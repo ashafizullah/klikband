@@ -5,7 +5,7 @@
 <h1 align="center">KlikBand</h1>
 
 <p align="center">
-  Quick app gratis dan open source untuk Xiaomi Smart Band 9 (mungkin juga jalan di band Xiaomi Vela lain seperti Band 10, belum diuji): jadwal sholat, dzikir berpanduan, tasbih, kalender Hijriah, hari besar Islam, kalender bulanan, hitung hari, dan papan skor. Sepenuhnya offline, tanpa akun.
+  Quick app gratis dan open source untuk Xiaomi Smart Band 9 (mungkin juga jalan di band Xiaomi Vela lain seperti Band 10, belum diuji): jadwal sholat, dzikir berpanduan, tasbih, kalender Hijriah, hari besar Islam, panduan umrah, kalender bulanan, hitung hari, dan papan skor. Sepenuhnya offline, tanpa akun.
 </p>
 
 <p align="center">
@@ -36,7 +36,7 @@
 
 - **Islam**
   - **Hari Ini**: tanggal Masehi dan Hijriah, sholat berikutnya, serta puasa sunnah hari ini dan besok
-  - **Dzikir Sholat**: penghitung berpanduan sesuai [Rumaysho](https://rumaysho.com/1997-dzikir-setelah-shalat.html)
+  - **Dzikir Sholat**: penghitung berpanduan sesuai [Almanhaj](https://almanhaj.or.id/97313-dzikir-setelah-shalat.html)
   - **Dzikir Pagi Petang**: penghitung berpanduan sesuai [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html)
   - **Jadwal Sholat**: metode Kemenag RI, dihitung offline di band
   - **Tasbih**: penghitung ketuk dengan target 33/99/100 dan getar
@@ -44,6 +44,7 @@
   - **Hari Besar Islam**: hitung mundur 8 hari besar Islam, diurutkan dari yang terdekat
   - **Asmaul Husna**: 99 nama Allah beserta artinya
   - **Doa Harian**: doa-doa pendek dalam bacaan Latin beserta artinya
+  - **Panduan Umrah**: tata cara umrah langkah demi langkah sesuai [Almanhaj](https://almanhaj.or.id/2252-tata-cara-umrah.html), lengkap dengan bacaan dan penghitung putaran thawaf/sa'i
 - **Umum**
   - **Kalender**: kalender bulanan dengan tanggal Hijriah, hari besar Islam dan hari puasa ditandai; ketuk tanggal untuk detail
   - **Hitung Hari**: berapa hari menuju atau sejak tanggal pentingmu, bisa diulang bulanan atau tahunan
@@ -151,6 +152,7 @@ src/
 │   ├── cities.js        # daftar kota dan pengaturan kota
 │   ├── asmaulhusna.js   # data 99 Asmaul Husna
 │   ├── duas.js          # data doa harian
+│   ├── umrah.js         # data panduan umrah
 │   ├── dhikr.js         # dzikir setelah sholat
 │   ├── dhikrmorningevening.js  # dzikir pagi dan petang
 │   ├── fasting.js       # hari puasa sunnah dan hari dilarang puasa

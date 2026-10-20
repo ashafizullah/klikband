@@ -1,0 +1,185 @@
+<template>
+  <scroll id="scroller" class="page" scroll-y="true">
+    <text class="step">{{index + 1}} / {{total}}</text>
+    <text class="title">{{title}}</text>
+
+    <div class="card">
+      <div class="point" for="{{points}}">
+        <text class="bullet">•</text>
+        <text class="point-text">{{$item}}</text>
+      </div>
+    </div>
+
+    <div class="card" for="{{readings}}">
+      <text class="latin">{{$item.latin}}</text>
+      <div class="divider"></div>
+      <text class="meaning">{{$item.meaning}}</text>
+    </div>
+
+    <div if="{{counter}}" class="button button-main button-wide" onclick="openCounter">
+      <text class="button-text">{{t.countRounds}}</text>
+    </div>
+
+    <div class="actions">
+      <div class="button" onclick="go(-1)">
+        <text class="button-text" style="color: {{index > 0 ? '#ffffff' : '#636366'}};">‹</text>
+      </div>
+      <div class="button" onclick="go(1)">
+        <text class="button-text" style="color: {{index < total - 1 ? '#ffffff' : '#636366'}};">›</text>
+      </div>
+    </div>
+  </scroll>
+</template>
+
+<script>
+import router from '@system.router'
+import { UMRAH_STEPS } from '../../common/umrah.js'
+import { STRINGS, loadLanguage } from '../../common/i18n.js'
+
+export default {
+  // Step to show (router params arrive as strings)
+  protected: {
+    index: 0
+  },
+
+  private: {
+    t: STRINGS.id,
+    lang: 'id',
+    total: UMRAH_STEPS.length,
+    title: '',
+    points: [],
+    readings: [],
+    counter: ''
+  },
+
+  onInit() {
+    this.index = parseInt(this.index, 10) || 0
+    this.render()
+    loadLanguage((lang) => {
+      this.lang = lang
+      this.t = STRINGS[lang]
+      this.render()
+    })
+  },
+
+  render() {
+    const step = UMRAH_STEPS[this.index]
+    const lang = this.lang
+    this.title = step.title[lang]
+    this.points = step.points[lang]
+    this.readings = (step.readings || []).map((r) => ({ latin: r.latin, meaning: r.meaning[lang] }))
+    this.counter = step.counter || ''
+  },
+
+  go(n) {
+    const next = this.index + n
+    if (next < 0 || next >= this.total) return
+    this.index = next
+    this.render()
+    const scroller = this.$element('scroller')
+    if (scroller && scroller.scrollTo) scroller.scrollTo({ top: 0, behavior: 'instant' })
+  },
+
+  openCounter() {
+    router.push({ uri: '/pages/umrahcount', params: { type: this.counter } })
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 24px 8px;
+  background-color: #000000;
+}
+
+.step {
+  font-size: 14px;
+  color: #30d158;
+}
+
+.title {
+  width: 176px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.card {
+  flex-direction: column;
+  width: 176px;
+  padding: 14px;
+  margin-bottom: 8px;
+  border-radius: 22px;
+  background-color: #1c1c1e;
+}
+
+.point {
+  flex-direction: row;
+  margin-bottom: 6px;
+}
+
+.bullet {
+  width: 12px;
+  font-size: 15px;
+  color: #30d158;
+}
+
+.point-text {
+  width: 136px;
+  font-size: 15px;
+  color: #ffffff;
+}
+
+.latin {
+  font-size: 17px;
+  color: #ffffff;
+}
+
+.divider {
+  height: 1px;
+  margin: 10px 0;
+  background-color: #2c2c2e;
+}
+
+.meaning {
+  font-size: 14px;
+  color: #8e8e93;
+}
+
+.actions {
+  flex-direction: row;
+  justify-content: space-between;
+  width: 176px;
+  margin-top: 4px;
+}
+
+.button {
+  justify-content: center;
+  align-items: center;
+  width: 84px;
+  height: 48px;
+  border-radius: 24px;
+  background-color: #1c1c1e;
+}
+
+.button-main {
+  background-color: #1f4d33;
+}
+
+.button-wide {
+  width: 176px;
+  margin-bottom: 8px;
+}
+
+.button-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffffff;
+}
+</style>

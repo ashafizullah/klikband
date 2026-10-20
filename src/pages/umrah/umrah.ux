@@ -1,0 +1,97 @@
+<template>
+  <scroll class="page" scroll-y="true">
+    <text class="title">{{t.umrah}}</text>
+    <div class="card" for="{{items}}" onclick="open($idx)">
+      <div class="number">
+        <text class="number-text">{{$idx + 1}}</text>
+      </div>
+      <text class="label">{{$item}}</text>
+    </div>
+    <text class="note">{{t.source}}: Almanhaj.or.id</text>
+  </scroll>
+</template>
+
+<script>
+import router from '@system.router'
+import { UMRAH_STEPS } from '../../common/umrah.js'
+import { STRINGS, loadLanguage } from '../../common/i18n.js'
+
+export default {
+  private: {
+    t: STRINGS.id,
+    items: UMRAH_STEPS.map((s) => s.title.id)
+  },
+
+  onInit() {
+    loadLanguage((lang) => {
+      this.t = STRINGS[lang]
+      this.items = UMRAH_STEPS.map((s) => s.title[lang])
+    })
+  },
+
+  open(index) {
+    router.push({ uri: '/pages/umrahstep', params: { index } })
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 24px 8px;
+  background-color: #000000;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.card {
+  flex-direction: row;
+  align-items: center;
+  width: 176px;
+  min-height: 60px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  border-radius: 22px;
+  background-color: #1c1c1e;
+}
+
+.number {
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  margin-right: 10px;
+  background-color: #2c4a3a;
+}
+
+.number-text {
+  font-size: 15px;
+  font-weight: bold;
+  color: #30d158;
+}
+
+.label {
+  width: 110px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.note {
+  width: 168px;
+  font-size: 13px;
+  color: #636366;
+  text-align: center;
+  margin-top: 4px;
+}
+</style>

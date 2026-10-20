@@ -5,7 +5,7 @@
 <h1 align="center">KlikBand</h1>
 
 <p align="center">
-  A free, open-source quick app for Xiaomi Smart Band 9 (may also work on other Xiaomi Vela bands such as Band 10, untested): prayer times, guided dhikr, tasbih, Hijri date, Islamic holidays, a calendar, a day counter and a scoreboard. Fully offline, no account.
+  A free, open-source quick app for Xiaomi Smart Band 9 (may also work on other Xiaomi Vela bands such as Band 10, untested): prayer times, guided dhikr, tasbih, Hijri date, Islamic holidays, an umrah guide, a calendar, a day counter and a scoreboard. Fully offline, no account.
 </p>
 
 <p align="center">
@@ -36,7 +36,7 @@
 
 - **Islam**
   - **Today**: Gregorian and Hijri date, next prayer, and sunnah fasts for today and tomorrow
-  - **Post-prayer Dhikr**: guided counter following [Rumaysho](https://rumaysho.com/1997-dzikir-setelah-shalat.html)
+  - **Post-prayer Dhikr**: guided counter following [Almanhaj](https://almanhaj.or.id/97313-dzikir-setelah-shalat.html)
   - **Morning & Evening Dhikr**: guided counter following [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html)
   - **Prayer Times**: Indonesian Ministry of Religious Affairs (Kemenag) method, computed offline on the band
   - **Tasbih**: tap counter with a 33/99/100 target and vibration
@@ -44,6 +44,7 @@
   - **Islamic Holidays**: countdown to 8 Islamic holidays, nearest first
   - **Asmaul Husna**: the 99 Names of Allah with meanings
   - **Daily Duas**: short daily prayers in Latin transliteration with meanings
+  - **Umrah Guide**: step-by-step umrah following [Almanhaj](https://almanhaj.or.id/2252-tata-cara-umrah.html), with duas and a tawaf/sa'i round counter
 - **General**
   - **Calendar**: monthly calendar with Hijri dates, Islamic holidays and fasting days marked; tap a day for details
   - **Day Counter**: days until or since your own dates, with monthly or yearly repeat
@@ -151,6 +152,7 @@ src/
 │   ├── cities.js        # city list and city setting
 │   ├── asmaulhusna.js   # 99 Names data
 │   ├── duas.js          # daily duas data
+│   ├── umrah.js         # umrah guide steps and readings
 │   ├── dhikr.js         # post-prayer dhikr
 │   ├── dhikrmorningevening.js  # morning and evening dhikr
 │   ├── fasting.js       # sunnah and forbidden fasting days

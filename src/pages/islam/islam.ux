@@ -28,7 +28,8 @@ const MENU = [
   { key: 'hijri', color: '#FF9F0A' },
   { key: 'holidays', color: '#FF375F' },
   { key: 'asmaulhusna', color: '#BF5AF2' },
-  { key: 'duas', color: '#FF6B6B' }
+  { key: 'duas', color: '#FF6B6B' },
+  { key: 'umrah', color: '#1FA77A' }
 ]
 
 function buildMenu(lang) {

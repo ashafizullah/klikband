@@ -5,7 +5,7 @@
 <h1 align="center">KlikBand</h1>
 
 <p align="center">
-  适用于小米手环 9 的免费开源快应用（也可能适用于小米手环 10 等其他 Xiaomi Vela 手环，未经测试）：礼拜时间、引导式记念、赞珠、伊斯兰历、伊斯兰节日、日历、倒数日和记分牌。完全离线，无需账号。
+  适用于小米手环 9 的免费开源快应用（也可能适用于小米手环 10 等其他 Xiaomi Vela 手环，未经测试）：礼拜时间、引导式记念、赞珠、伊斯兰历、伊斯兰节日、副朝指南、日历、倒数日和记分牌。完全离线，无需账号。
 </p>
 
 <p align="center">
@@ -36,7 +36,7 @@
 
 - **伊斯兰**
   - **今日**：公历和伊斯兰历日期、下一次礼拜，以及今明两天的副功斋
-  - **礼拜后记念**：按 [Rumaysho](https://rumaysho.com/1997-dzikir-setelah-shalat.html) 顺序引导计数
+  - **礼拜后记念**：按 [Almanhaj](https://almanhaj.or.id/97313-dzikir-setelah-shalat.html) 顺序引导计数
   - **早晚记念**：按 [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html) 顺序引导计数
   - **礼拜时间**：采用印度尼西亚宗教部（Kemenag）算法，在手环上离线计算
   - **赞珠**：点按计数，可设 33/99/100 目标，并有振动提示
@@ -44,6 +44,7 @@
   - **伊斯兰节日**：8 个伊斯兰节日倒计时，按远近排序
   - **真主九十九尊名**：99 个尊名及其含义
   - **日常祈祷**：常用短祈祷词的拉丁转写及含义
+  - **副朝指南**：按 [Almanhaj](https://almanhaj.or.id/2252-tata-cara-umrah.html) 的副朝步骤，附念词及环绕/奔走圈数计数
 - **通用**
   - **日历**：月历，显示伊斯兰历日期，并标注伊斯兰节日和斋戒日；点按日期查看详情
   - **倒数日**：距离或自某个日期的天数，可按月或按年重复
@@ -151,6 +152,7 @@ src/
 │   ├── cities.js        # 城市列表和城市设置
 │   ├── asmaulhusna.js   # 九十九尊名数据
 │   ├── duas.js          # 日常祈祷数据
+│   ├── umrah.js         # 副朝指南数据
 │   ├── dhikr.js         # 礼拜后记念
 │   ├── dhikrmorningevening.js  # 早晚记念
 │   ├── fasting.js       # 副功斋与禁斋日

@@ -1,0 +1,234 @@
+<template>
+  <scroll class="page" scroll-y="true">
+    <text class="title">{{title}}</text>
+
+    <div class="circle" onclick="increment">
+      <text class="count">{{count}}</text>
+      <text class="target">/ {{rounds}}</text>
+    </div>
+    <text class="status" style="color: {{count >= rounds ? '#30d158' : '#ffffff'}};">{{status}}</text>
+    <text if="{{hint}}" class="hint">{{hint}}</text>
+
+    <div class="actions">
+      <div class="button" onclick="undo">
+        <text class="button-text" style="color: {{count > 0 ? '#ffffff' : '#636366'}};">{{t.undo}}</text>
+      </div>
+      <!-- Inline colors: a changing class broke button sizes on the band -->
+      <div class="button" style="background-color: {{confirming ? '#ff453a' : '#1c1c1e'}};" onclick="reset">
+        <text class="button-text">{{confirming ? t.sure : t.reset}}</text>
+      </div>
+    </div>
+
+    <div class="card" for="{{readings}}">
+      <text class="latin">{{$item.latin}}</text>
+      <div class="divider"></div>
+      <text class="meaning">{{$item.meaning}}</text>
+    </div>
+  </scroll>
+</template>
+
+<script>
+import vibrator from '@system.vibrator'
+import storage from '@system.storage'
+import { COUNTERS } from '../../common/umrah.js'
+import { STRINGS, loadLanguage } from '../../common/i18n.js'
+
+// Reset needs a second tap within this time
+const CONFIRM_MS = 3000
+
+export default {
+  // 'thawaf' or 'sai'
+  protected: {
+    type: 'thawaf'
+  },
+
+  private: {
+    t: STRINGS.id,
+    title: '',
+    count: 0,
+    rounds: 7,
+    status: '',
+    hint: '',
+    readings: [],
+    confirming: false
+  },
+
+  onInit() {
+    if (!COUNTERS[this.type]) this.type = 'thawaf'
+    this.lang = 'id'
+    this.rounds = COUNTERS[this.type].rounds
+    this.render()
+    loadLanguage((lang) => {
+      this.lang = lang
+      this.t = STRINGS[lang]
+      this.render()
+    })
+    // Kept in storage so the count survives the screen turning off
+    storage.get({
+      key: 'umrah_' + this.type,
+      success: (data) => {
+        this.count = Math.min(parseInt(data, 10) || 0, this.rounds)
+        this.render()
+      }
+    })
+  },
+
+  onDestroy() {
+    clearTimeout(this.confirmTimer)
+  },
+
+  render() {
+    const t = this.t
+    const n = this.count
+    this.title = t[this.type]
+    this.readings = COUNTERS[this.type].readings.map((r) => ({ latin: r.latin, meaning: r.meaning[this.lang] }))
+    if (n >= this.rounds) {
+      this.status = t.done
+      this.hint = this.type === 'thawaf' ? t.thawafDone : t.saiDone
+    } else if (this.type === 'thawaf') {
+      this.status = t.round + ' ' + (n + 1)
+      this.hint = n < 3 ? t.ramlHint : t.walkHint
+    } else {
+      this.status = n % 2 === 0 ? t.shafa + ' → ' + t.marwah : t.marwah + ' → ' + t.shafa
+      this.hint = t.jogHint
+    }
+  },
+
+  save() {
+    storage.set({ key: 'umrah_' + this.type, value: String(this.count) })
+    this.render()
+  },
+
+  increment() {
+    if (this.count >= this.rounds) return
+    this.count += 1
+    vibrator.vibrate({ mode: this.count === this.rounds ? 'long' : 'short' })
+    this.save()
+  },
+
+  undo() {
+    if (this.count === 0) return
+    this.count -= 1
+    this.save()
+  },
+
+  reset() {
+    if (!this.confirming) {
+      this.confirming = true
+      this.confirmTimer = setTimeout(() => (this.confirming = false), CONFIRM_MS)
+      return
+    }
+    clearTimeout(this.confirmTimer)
+    this.confirming = false
+    this.count = 0
+    this.save()
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 24px 8px;
+  background-color: #000000;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.circle {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 150px;
+  border-radius: 75px;
+  border-width: 6px;
+  border-color: #30d158;
+  background-color: #10301c;
+}
+
+.count {
+  font-size: 60px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.target {
+  font-size: 18px;
+  color: #7ee2a0;
+}
+
+.status {
+  width: 176px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 12px;
+}
+
+.hint {
+  width: 176px;
+  font-size: 14px;
+  color: #8e8e93;
+  text-align: center;
+  margin-top: 4px;
+}
+
+.actions {
+  flex-direction: row;
+  justify-content: space-between;
+  width: 176px;
+  height: 48px;
+  margin: 14px 0;
+}
+
+.button {
+  justify-content: center;
+  align-items: center;
+  width: 84px;
+  height: 48px;
+  border-radius: 24px;
+  background-color: #1c1c1e;
+}
+
+.button-text {
+  width: 84px;
+  text-align: center;
+  font-size: 17px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.card {
+  flex-direction: column;
+  width: 176px;
+  padding: 14px;
+  margin-bottom: 8px;
+  border-radius: 22px;
+  background-color: #1c1c1e;
+}
+
+.latin {
+  font-size: 17px;
+  color: #ffffff;
+}
+
+.divider {
+  height: 1px;
+  margin: 10px 0;
+  background-color: #2c2c2e;
+}
+
+.meaning {
+  font-size: 14px;
+  color: #8e8e93;
+}
+</style>

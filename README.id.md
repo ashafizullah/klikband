@@ -35,22 +35,77 @@ npm run build      # hasil: dist/*.rpk
 
 ## Pasang ke band
 
-Sideload file `.rpk` lewat [Gadgetbridge](https://gadgetbridge.org/) di Android:
+KlikBand bukan firmware: memasangnya tidak mem-flash atau mengubah sistem band. KlikBand adalah quick app (`.rpk`) yang dipasang (sideload) lewat [Gadgetbridge](https://gadgetbridge.org/), aplikasi pendamping open source untuk Android. Sudah diuji dengan Gadgetbridge 0.95.1 di Xiaomi Smart Band 9 (global).
 
-1. Pasangkan band ke Mi Fitness, lalu ambil auth key band ([panduan](https://gadgetbridge.org/gadgets/wearables/xiaomi/)). Jangan unpair dari Mi Fitness setelahnya.
-2. Tutup paksa Mi Fitness, lalu tambahkan band di Gadgetbridge dengan auth key tersebut.
-3. Buka file `.rpk` dengan Gadgetbridge dan ketuk **Install**.
+### Yang dibutuhkan
 
-Kalau memasang lewat USB dengan `adb`, taruh file di folder milik Gadgetbridge supaya bisa dibaca:
+- HP **Android**. iPhone tidak didukung, karena Gadgetbridge hanya ada di Android.
+- Aplikasi **Mi Fitness**, hanya untuk mengambil auth key band.
+- Komputer dengan [`adb`](https://developer.android.com/tools/adb) dan kabel USB, untuk membaca key dan menyalin file. Di macOS: `brew install android-platform-tools`.
+- File `KlikBand.rpk`: unduh dari [Releases](https://github.com/ashafizullah/klikband/releases/latest), atau [build](#build) sendiri.
+
+### 1. Pasangkan band ke Mi Fitness
+
+Pasangkan band di Mi Fitness seperti biasa dan biarkan tersinkron. **Jangan unpair band di Mi Fitness setelahnya**, karena itu menghapus auth key.
+
+### 2. Ambil auth key
+
+1. Di HP, aktifkan **Opsi pengembang → USB debugging**, lalu sambungkan ke komputer.
+2. Salin log Mi Fitness dan cari key-nya:
+
+   ```
+   adb pull /sdcard/Android/data/com.xiaomi.wearable/files/log ./mifitness-log
+   grep -rhoaE 'encryptKey": "[0-9a-f]{32}' ./mifitness-log | tail -1
+   ```
+
+   Kalau Mi Fitness berjalan di dalam **Gbox** (HP Huawei/Honor tanpa layanan Google), lognya ada di
+   `/sdcard/Android/data/com.gbox.android/_root/sdcard/Android/data/com.xiaomi.wearable/files/log`.
+3. Pakai nilai 32 karakter yang **terakhir**. Setiap kali Mi Fitness memasangkan ulang band, key-nya berubah, jadi ambil yang terbaru.
+4. **Tutup paksa Mi Fitness** (dan Gbox, kalau dipakai) dan biarkan tertutup. Kalau tidak, Mi Fitness akan menyambung ulang ke band dan membuat key baru.
+5. Hapus salinan log tadi. Key ini seperti password band kamu.
+
+### 3. Pasang Gadgetbridge
+
+Pasang **Gadgetbridge** dari [F-Droid](https://f-droid.org/packages/nodomain.freeyourgadget.gadgetbridge/) sebagai aplikasi biasa (bukan di dalam Gbox). Jangan pakai "Bangle.js Gadgetbridge" dari Play Store, karena itu versi yang berbeda. Izinkan akses Bluetooth, Lokasi, dan Notifikasi saat diminta.
+
+### 4. Sambungkan band
+
+1. Di Gadgetbridge, ketuk **+**, pilih **Xiaomi Smart Band 9**, lalu masukkan auth key.
+2. Setujui permintaan pairing di HP (bisa jadi hanya muncul sebagai **notifikasi**) dan di band (ketuk ✓).
+3. Kalau Gadgetbridge memperingatkan perangkat "already bonded" dan pairing gagal, hapus band di **Pengaturan Android → Bluetooth** (bukan di Mi Fitness), lalu coba lagi. Kalau masih gagal, ambil ulang key-nya (langkah 2), karena Mi Fitness mungkin sudah menyambung ulang.
+
+### 5. Pasang KlikBand
+
+Gadgetbridge tidak bisa membaca file langsung dari folder Download, jadi taruh file `.rpk` di folder milik Gadgetbridge sendiri dan buka dari sana:
 
 ```
-adb push dist/*.rpk /sdcard/Android/data/nodomain.freeyourgadget.gadgetbridge/files/KlikBand.rpk
+adb push KlikBand.rpk /sdcard/Android/data/nodomain.freeyourgadget.gadgetbridge/files/KlikBand.rpk
 adb shell am start -a android.intent.action.VIEW -t application/octet-stream \
   -d file:///sdcard/Android/data/nodomain.freeyourgadget.gadgetbridge/files/KlikBand.rpk \
   -n nodomain.freeyourgadget.gadgetbridge/.activities.install.FileInstallerActivity
 ```
 
-Band menampilkan ikon bawaan untuk aplikasi yang dipasang dengan cara ini.
+Tanpa komputer, kamu juga bisa membuka file `.rpk` dari pengelola file dengan **Buka dengan → Gadgetbridge**.
+
+Ketuk **Install**. Tulisan merah "YOU ARE TRYING TO INSTALL A FIRMWARE" adalah peringatan umum Gadgetbridge untuk semua file selain watch face. Yang dikirim hanya aplikasinya, firmware tidak disentuh.
+
+Setelah itu KlikBand muncul di daftar aplikasi band, di bagian **More**.
+
+### Memperbarui atau menghapus
+
+- **Memperbarui:** pasang file `.rpk` baru dengan cara yang sama. Nilai `versionCode` di `src/manifest.json` harus lebih tinggi dari versi yang terpasang.
+- **Menghapus:** Gadgetbridge → kartu perangkat → **App Manager** (ikon kotak-kotak) → tekan lama KlikBand → hapus.
+
+### Mengatasi masalah
+
+| Masalah | Solusi |
+|---|---|
+| "No compatible device found" saat membuka `.rpk` | Gadgetbridge tidak bisa membaca file-nya. Salin ke folder Gadgetbridge (langkah 5), dan pastikan band berstatus **Connected**. |
+| Perangkat terdeteksi sebagai Bangle.js | Yang terpasang adalah Bangle.js Gadgetbridge. Pasang Gadgetbridge dari F-Droid. |
+| Tidak ada permintaan pairing | Tutup paksa Mi Fitness, biarkan layar band menyala, dan cek notifikasi HP. |
+| Auth key ditolak | Mi Fitness memasangkan ulang band dan membuat key baru. Ambil ulang key terbaru (langkah 2). |
+| Ikon aplikasi tidak berubah | Restart band: **Pengaturan → Sistem → Mulai ulang**. |
+| KlikBand ada di "More" | Band tidak mengizinkan aplikasi pasang sendiri dipindah ke daftar utama. |
 
 ## Struktur proyek
 

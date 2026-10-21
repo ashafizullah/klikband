@@ -54,6 +54,12 @@
       "pages/today": {
         "component": "today"
       },
+      "pages/clock": {
+        "component": "clock"
+      },
+      "pages/dhikrmenu": {
+        "component": "dhikrmenu"
+      },
       "pages/prayer": {
         "component": "prayer"
       },

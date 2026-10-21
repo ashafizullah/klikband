@@ -21,6 +21,7 @@ const LABEL_WIDTH = 84
 
 // Add new categories here; `key` refers to STRINGS in common/i18n.js
 const MENU = [
+  { key: 'clock', color: '#5E5CE6' },
   { key: 'islam', color: '#1FA77A' },
   { key: 'general', color: '#0A84FF' },
   { key: 'settings', color: '#636366' },

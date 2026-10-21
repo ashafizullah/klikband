@@ -89,6 +89,8 @@ export const STRINGS = {
       eidAdha: 'Idul Adha'
     },
     today: 'Hari Ini',
+    clock: 'Jam',
+    shortcuts: 'Pintasan',
     dhikr: 'Dzikir Sholat',
     morningevening: 'Dzikir Pagi Petang',
     dhikrMorning: 'Dzikir Pagi',
@@ -245,6 +247,8 @@ export const STRINGS = {
       eidAdha: 'Eid al-Adha'
     },
     today: 'Today',
+    clock: 'Clock',
+    shortcuts: 'Shortcuts',
     dhikr: 'Post-prayer Dhikr',
     morningevening: 'Morning & Evening Dhikr',
     dhikrMorning: 'Morning Dhikr',
@@ -400,6 +404,8 @@ export const STRINGS = {
       eidAdha: '古尔邦节'
     },
     today: '今日',
+    clock: '时钟',
+    shortcuts: '快捷方式',
     dhikr: '礼拜后记念',
     morningevening: '早晚记念',
     dhikrMorning: '早晨记念',

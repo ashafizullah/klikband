@@ -1,0 +1,358 @@
+<template>
+  <scroll class="page" scroll-y="true" onswipe="onSwipe">
+    <text class="date">{{gregorian}}</text>
+    <div class="time-row">
+      <text class="time">{{hours}}</text>
+      <text class="time colon">:</text>
+      <text class="time">{{minutes}}</text>
+    </div>
+    <div class="track">
+      <div class="seconds-fill" style="width: {{secondsBar}}px;"></div>
+    </div>
+    <div class="hijri-pill">
+      <text class="hijri">{{hijri}}</text>
+    </div>
+
+    <div class="hero">
+      <div class="hero-row">
+        <text class="hero-label">{{nextLabel}}</text>
+        <text class="hero-time">{{nextTime}}</text>
+      </div>
+      <div class="hero-track">
+        <div class="hero-fill" style="width: {{prayerBar}}px;"></div>
+      </div>
+      <text class="countdown">{{countdown}}</text>
+    </div>
+
+    <div class="schedule">
+      <div class="row {{$item.style}}" for="{{schedule}}">
+        <div class="dot {{$item.style}}-dot"></div>
+        <text class="row-label {{$item.style}}-text">{{$item.label}}</text>
+        <text class="row-time {{$item.style}}-text">{{$item.time}}</text>
+      </div>
+    </div>
+
+    <text class="footer">{{footer}}</text>
+  </scroll>
+</template>
+
+<script>
+import router from '@system.router'
+import vibrator from '@system.vibrator'
+import battery from '@system.battery'
+import { prayerTimes, nextPrayer, prayerDate, formatMinutes, PRAYER_ORDER } from '../../common/prayer.js'
+import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
+import { CITIES, loadCity } from '../../common/cities.js'
+import { toHijriWithOffset, loadHijriOffset } from '../../common/hijri.js'
+
+// The five daily prayers shown in the schedule
+const DAILY = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']
+
+// Inner widths of the seconds track and the hero card's progress track
+const SECONDS_WIDTH = 120
+const PRAYER_WIDTH = 148
+
+const pad = (n) => (n < 10 ? '0' : '') + n
+
+// When the stretch leading up to `next` began: the prayer before it,
+// or yesterday's Isha before Imsak
+function previousStart(now, next, location) {
+  const today = prayerTimes(now, location)
+  if (next.tomorrow) return prayerDate(now, today.isha)
+  const order = PRAYER_ORDER.filter((k) => k !== 'sunrise')
+  const i = order.indexOf(next.key)
+  if (i > 0) return prayerDate(now, today[order[i - 1]])
+  const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1)
+  return prayerDate(yesterday, prayerTimes(yesterday, location).isha)
+}
+
+export default {
+  private: {
+    gregorian: '',
+    hours: '',
+    minutes: '',
+    secondsBar: 0,
+    hijri: '',
+    nextLabel: '',
+    nextTime: '',
+    prayerBar: 0,
+    countdown: '',
+    schedule: [],
+    footer: ''
+  },
+
+  onInit() {
+    this.t = STRINGS.id
+    this.cityData = CITIES[0]
+    this.offset = 0
+    this.batteryText = ''
+    this.refresh()
+    loadLanguage((lang) => {
+      this.t = STRINGS[lang]
+      this.refresh()
+    })
+    loadCity((city) => {
+      this.cityData = city
+      this.refresh()
+    })
+    loadHijriOffset((offset) => {
+      this.offset = offset
+      this.refresh()
+    })
+    this.timer = setInterval(() => this.tick(), 1000)
+  },
+
+  // The screen turns off as usual; catch up right away when it wakes again
+  onShow() {
+    this.refresh()
+  },
+
+  onDestroy() {
+    clearInterval(this.timer)
+  },
+
+  // Listening for swipes takes over the system's swipe-back, so going back
+  // on a right swipe is done here; swiping left opens the shortcuts (dhikr, Qibla)
+  onSwipe(e) {
+    if (e.direction === 'left') router.push({ uri: '/pages/dhikrmenu' })
+    else if (e.direction === 'right') router.back()
+  },
+
+  tick() {
+    const now = new Date()
+    const left = Math.ceil((this.target - now.getTime()) / 1000)
+    // Buzz when the prayer time arrives while this page is open (short for Imsak)
+    if (left <= 0) vibrator.vibrate({ mode: this.nextKey === 'imsak' ? 'short' : 'long' })
+    // Full refresh at the next prayer and at every new minute
+    if (left <= 0 || now.getMinutes() !== this.minute) this.refresh()
+    else this.updateSeconds(now)
+  },
+
+  // Everything that moves every second: the seconds track, countdown and prayer progress
+  updateSeconds(now) {
+    const ms = now.getTime()
+    this.secondsBar = Math.round((SECONDS_WIDTH * now.getSeconds()) / 59)
+    this.countdown = formatDuration(this.t, Math.max(0, Math.ceil((this.target - ms) / 1000)))
+    const span = this.target - this.start
+    this.prayerBar = Math.round(PRAYER_WIDTH * Math.min(1, Math.max(0, (ms - this.start) / span)))
+  },
+
+  refresh() {
+    const t = this.t
+    const now = new Date()
+    this.minute = now.getMinutes()
+    this.hours = pad(now.getHours())
+    this.minutes = pad(now.getMinutes())
+    this.gregorian = formatDate(t, now)
+
+    const h = toHijriWithOffset(now, this.offset)
+    this.hijri = h.day + ' ' + t.hijriMonths[h.month - 1] + ' ' + h.year + ' H'
+
+    const next = nextPrayer(now, this.cityData)
+    this.nextKey = next.key
+    this.nextLabel = t.prayers[next.key]
+    this.nextTime = formatMinutes(next.times[next.key])
+    this.target = prayerDate(next.day, next.times[next.key]).getTime()
+    this.start = previousStart(now, next, this.cityData).getTime()
+    this.updateSeconds(now)
+
+    // Passed prayers are dimmed and the next one is highlighted; after Isha
+    // the list shows tomorrow, so nothing is dimmed
+    this.schedule = DAILY.map((k) => {
+      let style = 'upcoming'
+      if (k === next.key || (next.key === 'imsak' && k === 'fajr')) style = 'next'
+      else if (!next.tomorrow && next.times[k] <= next.nowMinutes) style = 'past'
+      return { label: t.prayers[k], time: formatMinutes(next.times[k]), style }
+    })
+
+    this.updateBattery()
+    this.footer = this.cityData.name + (this.batteryText ? ' · ' + this.batteryText : '')
+  },
+
+  // Only where the battery API exists (not on Smart Band 9 / 9 Pro)
+  updateBattery() {
+    try {
+      battery.getStatus({
+        success: (status) => {
+          this.batteryText = Math.round(status.level * 100) + '%'
+          this.footer = this.cityData.name + ' · ' + this.batteryText
+        }
+      })
+    } catch (e) {}
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 20px 8px;
+  background-color: #000000;
+}
+
+.date {
+  font-size: 16px;
+  font-weight: bold;
+  color: #8e8e93;
+}
+
+.time-row {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.time {
+  font-size: 64px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.colon {
+  color: #34d399;
+  margin: 0 2px 6px 2px;
+}
+
+.track {
+  width: 120px;
+  height: 4px;
+  border-radius: 2px;
+  margin-bottom: 12px;
+  background-color: #1c1c1e;
+}
+
+.seconds-fill {
+  height: 4px;
+  border-radius: 2px;
+  background-color: #34d399;
+}
+
+.hijri-pill {
+  padding: 4px 12px;
+  margin-bottom: 14px;
+  border-radius: 14px;
+  background-color: #2b1f08;
+}
+
+.hijri {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ff9f0a;
+}
+
+.hero {
+  flex-direction: column;
+  width: 176px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  border-radius: 24px;
+  background-color: #0d3b2c;
+}
+
+.hero-row {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hero-label {
+  font-size: 18px;
+  font-weight: bold;
+  color: #34d399;
+}
+
+.hero-time {
+  font-size: 30px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.hero-track {
+  width: 148px;
+  height: 6px;
+  margin: 8px 0 6px 0;
+  border-radius: 3px;
+  background-color: #145c44;
+}
+
+.hero-fill {
+  height: 6px;
+  border-radius: 3px;
+  background-color: #34d399;
+}
+
+.countdown {
+  font-size: 14px;
+  color: #8ee6c0;
+}
+
+.schedule {
+  flex-direction: column;
+  width: 176px;
+  padding: 6px;
+  border-radius: 24px;
+  background-color: #1c1c1e;
+}
+
+.row {
+  flex-direction: row;
+  align-items: center;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 14px;
+}
+
+.next {
+  background-color: #0d3b2c;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  margin-right: 8px;
+}
+
+.upcoming-dot {
+  background-color: #8e8e93;
+}
+
+.next-dot {
+  background-color: #34d399;
+}
+
+.past-dot {
+  background-color: #3a3a3c;
+}
+
+.row-label {
+  flex: 1;
+  font-size: 15px;
+}
+
+.row-time {
+  font-size: 15px;
+}
+
+.upcoming-text {
+  color: #ffffff;
+}
+
+.next-text {
+  font-weight: bold;
+  color: #34d399;
+}
+
+.past-text {
+  color: #636366;
+}
+
+.footer {
+  font-size: 13px;
+  color: #636366;
+  margin-top: 10px;
+}
+</style>

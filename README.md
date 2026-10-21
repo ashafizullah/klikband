@@ -5,7 +5,7 @@
 <h1 align="center">KlikBand</h1>
 
 <p align="center">
-  A free, open-source quick app for Xiaomi Smart Band 9 (may also work on other Xiaomi Vela bands such as Band 10, untested): prayer times, guided dhikr, tasbih, Hijri date, Islamic holidays, an umrah guide, a calendar, a day counter and a scoreboard. Fully offline, no account.
+  A free, open-source quick app for Xiaomi Smart Band 9 (may also work on other Xiaomi Vela bands such as Band 10, untested): a clock, prayer times, guided dhikr, tasbih, Hijri date, Islamic holidays, an umrah guide, a calendar, a day counter and a scoreboard. Fully offline, no account.
 </p>
 
 <p align="center">
@@ -34,6 +34,7 @@
 
 ## Features
 
+- **Clock**: a watch-face-style page with the time, Gregorian and Hijri date, the next prayer with a countdown and progress bar, and today's five prayers; swipe left for shortcuts to Post-prayer Dhikr, Morning & Evening Dhikr and Qibla
 - **Islam**
   - **Today**: Gregorian and Hijri date, next prayer, and sunnah fasts for today and tomorrow
   - **Post-prayer Dhikr**: guided counter following [Almanhaj](https://almanhaj.or.id/97313-dzikir-setelah-shalat.html)

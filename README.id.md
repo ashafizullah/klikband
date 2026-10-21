@@ -5,7 +5,7 @@
 <h1 align="center">KlikBand</h1>
 
 <p align="center">
-  Quick app gratis dan open source untuk Xiaomi Smart Band 9 (mungkin juga jalan di band Xiaomi Vela lain seperti Band 10, belum diuji): jadwal sholat, dzikir berpanduan, tasbih, kalender Hijriah, hari besar Islam, panduan umrah, kalender bulanan, hitung hari, dan papan skor. Sepenuhnya offline, tanpa akun.
+  Quick app gratis dan open source untuk Xiaomi Smart Band 9 (mungkin juga jalan di band Xiaomi Vela lain seperti Band 10, belum diuji): jam, jadwal sholat, dzikir berpanduan, tasbih, kalender Hijriah, hari besar Islam, panduan umrah, kalender bulanan, hitung hari, dan papan skor. Sepenuhnya offline, tanpa akun.
 </p>
 
 <p align="center">
@@ -34,6 +34,7 @@
 
 ## Fitur
 
+- **Jam**: halaman bergaya watch face berisi jam, tanggal Masehi dan Hijriah, sholat berikutnya dengan hitung mundur dan bar progres, serta jadwal 5 waktu hari ini; geser ke kiri untuk pintasan ke Dzikir Sholat, Dzikir Pagi Petang dan Arah Kiblat
 - **Islam**
   - **Hari Ini**: tanggal Masehi dan Hijriah, sholat berikutnya, serta puasa sunnah hari ini dan besok
   - **Dzikir Sholat**: penghitung berpanduan sesuai [Almanhaj](https://almanhaj.or.id/97313-dzikir-setelah-shalat.html)

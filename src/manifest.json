@@ -20,6 +20,9 @@
       "name": "system.vibrator"
     },
     {
+      "name": "system.prompt"
+    },
+    {
       "name": "system.app"
     },
     {

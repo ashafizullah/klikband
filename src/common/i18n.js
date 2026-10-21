@@ -163,6 +163,7 @@ export const STRINGS = {
       maghrib: 'Maghrib',
       isha: 'Isya'
     },
+    prayerTimeNow: 'Masuk waktu {name}',
     in: 'dalam',
     city: 'Kota',
     hourUnit: 'j',
@@ -321,6 +322,7 @@ export const STRINGS = {
       maghrib: 'Maghrib',
       isha: 'Isha'
     },
+    prayerTimeNow: "It's {name} time",
     in: 'in',
     city: 'City',
     hourUnit: 'h',
@@ -479,6 +481,7 @@ export const STRINGS = {
       maghrib: '昏礼',
       isha: '宵礼'
     },
+    prayerTimeNow: '{name}时间到了',
     in: '还有',
     city: '城市',
     hourUnit: '时',

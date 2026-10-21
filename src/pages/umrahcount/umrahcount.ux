@@ -31,6 +31,7 @@ import vibrator from '@system.vibrator'
 import storage from '@system.storage'
 import { COUNTERS } from '../../common/umrah.js'
 import { STRINGS, loadLanguage } from '../../common/i18n.js'
+import { keepScreenOn } from '../../common/screen.js'
 
 // Reset needs a second tap within this time
 const CONFIRM_MS = 3000
@@ -70,6 +71,14 @@ export default {
         this.render()
       }
     })
+  },
+
+  onShow() {
+    keepScreenOn(true)
+  },
+
+  onHide() {
+    keepScreenOn(false)
   },
 
   onDestroy() {

@@ -22,9 +22,11 @@
 </template>
 
 <script>
+import vibrator from '@system.vibrator'
 import { PRAYER_ORDER, nextPrayer, prayerDate, formatMinutes } from '../../common/prayer.js'
 import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
 import { CITIES, TIME_ZONES, loadCity } from '../../common/cities.js'
+import { keepScreenOn } from '../../common/screen.js'
 
 export default {
   private: {
@@ -53,6 +55,14 @@ export default {
     this.timer = setInterval(() => this.tick(), 1000)
   },
 
+  onShow() {
+    keepScreenOn(true)
+  },
+
+  onHide() {
+    keepScreenOn(false)
+  },
+
   onDestroy() {
     clearInterval(this.timer)
   },
@@ -61,6 +71,8 @@ export default {
     const seconds = Math.ceil((this.target - Date.now()) / 1000)
     // Full refresh at the next prayer, and once a minute for the date
     this.ticks = (this.ticks || 0) + 1
+    // Buzz when the prayer time arrives while this page is open (short for Imsak)
+    if (seconds <= 0) vibrator.vibrate({ mode: this.nextKey === 'imsak' ? 'short' : 'long' })
     if (seconds <= 0 || this.ticks % 60 === 0) this.refresh()
     else this.countdown = formatDuration(this.t, seconds)
   },
@@ -73,6 +85,7 @@ export default {
     this.title = t.prayer
     this.location = this.city.name + ' · ' + TIME_ZONES[this.city.tz]
     this.dateText = formatDate(t, day)
+    this.nextKey = next
     this.nextLabel = t.prayers[next]
     this.nextTime = formatMinutes(times[next])
     this.target = prayerDate(day, times[next]).getTime()

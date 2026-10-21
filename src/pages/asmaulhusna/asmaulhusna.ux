@@ -28,6 +28,7 @@
 <script>
 import ASMAUL_HUSNA from '../../common/asmaulhusna.js'
 import { STRINGS, loadLanguage } from '../../common/i18n.js'
+import { keepScreenOn } from '../../common/screen.js'
 
 // Column of the meaning in asmaulhusna.js for each language
 const MEANING_COLUMN = { id: 1, en: 2, zh: 3 }
@@ -51,6 +52,14 @@ export default {
       this.title = STRINGS[lang].asmaulhusna
       this.render()
     })
+  },
+
+  onShow() {
+    keepScreenOn(true)
+  },
+
+  onHide() {
+    keepScreenOn(false)
   },
 
   go(n) {

@@ -21,6 +21,9 @@
     },
     {
       "name": "system.app"
+    },
+    {
+      "name": "system.brightness"
     }
   ],
   "config": {

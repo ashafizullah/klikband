@@ -34,6 +34,7 @@
 import router from '@system.router'
 import { UMRAH_STEPS } from '../../common/umrah.js'
 import { STRINGS, loadLanguage } from '../../common/i18n.js'
+import { keepScreenOn } from '../../common/screen.js'
 
 export default {
   // Step to show (router params arrive as strings)
@@ -59,6 +60,14 @@ export default {
       this.t = STRINGS[lang]
       this.render()
     })
+  },
+
+  onShow() {
+    keepScreenOn(true)
+  },
+
+  onHide() {
+    keepScreenOn(false)
   },
 
   render() {

@@ -44,6 +44,7 @@ import vibrator from '@system.vibrator'
 import PRAYER_DHIKR from '../../common/dhikr.js'
 import { morningEveningDhikr } from '../../common/dhikrmorningevening.js'
 import { STRINGS, loadLanguage } from '../../common/i18n.js'
+import { keepScreenOn } from '../../common/screen.js'
 
 // Which dhikr set to show, from the router param `set`
 const SETS = {
@@ -82,6 +83,14 @@ export default {
       this.t = STRINGS[lang]
       this.render()
     })
+  },
+
+  onShow() {
+    keepScreenOn(true)
+  },
+
+  onHide() {
+    keepScreenOn(false)
   },
 
   render() {

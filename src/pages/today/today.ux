@@ -28,11 +28,13 @@
 </template>
 
 <script>
+import vibrator from '@system.vibrator'
 import { nextPrayer, prayerDate, formatMinutes } from '../../common/prayer.js'
 import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
 import { CITIES, TIME_ZONES, loadCity } from '../../common/cities.js'
 import { toHijriWithOffset, loadHijriOffset } from '../../common/hijri.js'
 import { fastsFor } from '../../common/fasting.js'
+import { keepScreenOn } from '../../common/screen.js'
 
 // Style for a fasting line: highlighted when there is a fast, red when fasting is not allowed
 function fastStyle(keys) {
@@ -76,6 +78,14 @@ export default {
     this.timer = setInterval(() => this.tick(), 1000)
   },
 
+  onShow() {
+    keepScreenOn(true)
+  },
+
+  onHide() {
+    keepScreenOn(false)
+  },
+
   onDestroy() {
     clearInterval(this.timer)
   },
@@ -84,6 +94,8 @@ export default {
     const seconds = Math.ceil((this.target - Date.now()) / 1000)
     // Full refresh at the next prayer, and once a minute for the date
     this.ticks = (this.ticks || 0) + 1
+    // Buzz when the prayer time arrives while this page is open (short for Imsak)
+    if (seconds <= 0) vibrator.vibrate({ mode: this.nextKey === 'imsak' ? 'short' : 'long' })
     if (seconds <= 0 || this.ticks % 60 === 0) this.refresh()
     else this.countdown = formatDuration(this.t, seconds)
   },
@@ -98,6 +110,7 @@ export default {
     this.hijri = h.day + ' ' + t.hijriMonths[h.month - 1] + ' ' + h.year + ' H'
 
     const next = nextPrayer(now, this.cityData)
+    this.nextKey = next.key
     this.nextLabel = t.prayers[next.key]
     this.nextTime = formatMinutes(next.times[next.key])
     this.target = prayerDate(next.day, next.times[next.key]).getTime()

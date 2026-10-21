@@ -39,6 +39,19 @@ function hourAngle(alt, lat, decl) {
   return deg(Math.acos(Math.min(1, Math.max(-1, cos)))) / 15
 }
 
+// Where the sun is now: azimuth in degrees clockwise from true north, and
+// altitude in degrees above the horizon
+export function sunDirection(date, location) {
+  const ms = date.getTime()
+  const { decl, eqt } = sunPosition(ms / 86400000 + 2440587.5)
+  const solarHours = ((ms / 3600000) % 24) + location.lng / 15 + eqt
+  const h = rad((solarHours - 12) * 15)
+  const lat = rad(location.lat)
+  const alt = Math.asin(Math.sin(lat) * Math.sin(decl) + Math.cos(lat) * Math.cos(decl) * Math.cos(h))
+  const az = deg(Math.atan2(Math.sin(h), Math.cos(h) * Math.sin(lat) - Math.tan(decl) * Math.cos(lat))) + 180
+  return { azimuth: Math.round(((az % 360) + 360) % 360), altitude: deg(alt) }
+}
+
 // Returns minutes since local midnight for each prayer time.
 // location: { lat, lng, tz } from common/cities.js
 export function prayerTimes(date, location) {

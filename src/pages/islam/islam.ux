@@ -22,6 +22,7 @@ const LABEL_WIDTH = 96
 const MENU = [
   { key: 'today', color: '#0A84FF' },
   { key: 'prayer', color: '#1FA77A' },
+  { key: 'qibla', color: '#2E8B57' },
   { key: 'dhikr', color: '#30B0C7' },
   { key: 'morningevening', color: '#5E5CE6' },
   { key: 'tasbih', color: '#3D7BFF' },

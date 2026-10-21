@@ -24,6 +24,15 @@
     },
     {
       "name": "system.brightness"
+    },
+    {
+      "name": "system.sensor"
+    },
+    {
+      "name": "system.device"
+    },
+    {
+      "name": "system.battery"
     }
   ],
   "config": {
@@ -47,6 +56,9 @@
       },
       "pages/prayer": {
         "component": "prayer"
+      },
+      "pages/qibla": {
+        "component": "qibla"
       },
       "pages/dhikr": {
         "component": "dhikr"

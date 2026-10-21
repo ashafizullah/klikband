@@ -1,0 +1,308 @@
+<template>
+  <scroll class="page" scroll-y="true">
+    <text class="title">{{t.qibla}}</text>
+    <text class="subtitle">{{location}}</text>
+
+    <div class="compass">
+      <text class="cardinal {{$idx === 0 ? 'north' : ''}}" for="{{cardinals}}" style="left: {{$item.x}}px; top: {{$item.y}}px;">{{$item.label}}</text>
+      <div class="dot" for="{{dots}}" style="left: {{$item.x}}px; top: {{$item.y}}px;"></div>
+      <div class="center"></div>
+      <div class="sun" if="{{sun}}" style="left: {{sun.x}}px; top: {{sun.y}}px;"></div>
+      <image class="kaaba" src="/common/kaaba.png" style="left: {{kaaba.x}}px; top: {{kaaba.y}}px;"></image>
+    </div>
+
+    <text class="degrees">{{degrees}}</text>
+    <text class="direction">{{direction}}</text>
+    <text class="distance">{{distance}}</text>
+    <text class="hint">{{hint}}</text>
+
+    <div class="card" if="{{sunDates.length}}">
+      <text class="card-title">{{t.sunOverKaaba}}</text>
+      <text class="card-date" for="{{sunDates}}">{{$item}}</text>
+      <text class="card-note">{{t.sunOverKaabaNote}}</text>
+    </div>
+  </scroll>
+</template>
+
+<script>
+import sensor from '@system.sensor'
+import { qiblaBearing, kaabaDistance, compassPoint, SUN_OVER_KAABA } from '../../common/qibla.js'
+import { sunDirection } from '../../common/prayer.js'
+import { STRINGS, loadLanguage } from '../../common/i18n.js'
+import { CITIES, TIME_ZONES, loadCity } from '../../common/cities.js'
+import { keepScreenOn } from '../../common/screen.js'
+
+// Compass geometry in px: 160 box with a 2px border (positions start inside it),
+// letters and the Kaaba on rings around the center
+const CENTER = 78
+const LETTER_RING = 66
+const KAABA_RING = 54
+const DOT_RINGS = [14, 25, 36]
+const LETTER_SIZE = 20
+const KAABA_SIZE = 28
+const DOT_SIZE = 6
+const SUN_SIZE = 18
+
+// The sun works as a compass only when it is clearly up and not near overhead
+const SUN_MIN_ALTITUDE = 3
+const SUN_MAX_ALTITUDE = 70
+
+// Top-left of a box of `size` centered on the ring at `angle` (0 = up, clockwise)
+function onRing(angle, ring, size) {
+  const a = (angle * Math.PI) / 180
+  return {
+    x: Math.round(CENTER + ring * Math.sin(a) - size / 2),
+    y: Math.round(CENTER - ring * Math.cos(a) - size / 2)
+  }
+}
+
+const pad = (n) => (n < 10 ? '0' : '') + n
+
+// 7900 -> "7.900" / "7,900"
+const groupDigits = (n, sep) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, sep)
+
+export default {
+  private: {
+    t: STRINGS.id,
+    location: '',
+    cardinals: [],
+    dots: [],
+    kaaba: { x: 0, y: 0 },
+    sun: null,
+    degrees: '',
+    direction: '',
+    distance: '',
+    hint: '',
+    sunDates: []
+  },
+
+  onInit() {
+    this.city = CITIES[0]
+    // Heading of the top of the band from the compass, when the device has one
+    this.heading = null
+    this.render()
+    loadLanguage((lang) => {
+      this.t = STRINGS[lang]
+      this.render()
+    })
+    loadCity((city) => {
+      this.city = city
+      this.render()
+    })
+    // The sun moves about a degree every 4 minutes
+    this.timer = setInterval(() => this.render(), 60 * 1000)
+  },
+
+  onDestroy() {
+    clearInterval(this.timer)
+  },
+
+  onShow() {
+    keepScreenOn(true)
+    try {
+      sensor.subscribeCompass({
+        callback: (ret) => {
+          const heading = Math.round(ret.direction)
+          this.calibrate = ret.accuracy >= 0 && ret.accuracy <= 1
+          if (heading !== this.heading) {
+            this.heading = heading
+            this.render()
+          }
+        },
+        // No compass (e.g. Smart Band 9): stay on the north-up drawing
+        fail: () => {
+          this.heading = null
+          this.render()
+        }
+      })
+    } catch (e) {
+      this.heading = null
+    }
+  },
+
+  onHide() {
+    keepScreenOn(false)
+    try {
+      sensor.unsubscribeCompass()
+    } catch (e) {}
+  },
+
+  render() {
+    const t = this.t
+    const city = this.city
+    const bearing = qiblaBearing(city.lat, city.lng)
+    const live = this.heading !== null
+    // Without a compass the drawing is north-up; with one it turns with the band
+    const turn = live ? this.heading : 0
+
+    this.location = city.name + ' · ' + TIME_ZONES[city.tz]
+    this.cardinals = t.cardinals.map((label, i) => {
+      const p = onRing(i * 90 - turn, LETTER_RING, LETTER_SIZE)
+      return { label, x: p.x, y: p.y }
+    })
+    this.dots = DOT_RINGS.map((ring) => onRing(bearing - turn, ring, DOT_SIZE))
+    this.kaaba = onRing(bearing - turn, KAABA_RING, KAABA_SIZE)
+    const sun = sunDirection(new Date(), city)
+    const sunUp = sun.altitude >= SUN_MIN_ALTITUDE && sun.altitude <= SUN_MAX_ALTITUDE
+    this.sun = sunUp ? onRing(sun.azimuth - turn, KAABA_RING, SUN_SIZE) : null
+
+    this.degrees = bearing + '°'
+    this.direction = t.compassPoints[compassPoint(bearing)] + ' · ' + t.fromNorth
+    this.distance = t.toMakkah.replace('{km}', groupDigits(kaabaDistance(city.lat, city.lng), t.thousands))
+    if (live) this.hint = this.calibrate ? t.qiblaCalibrate : t.qiblaHintTurn
+    else this.hint = sunUp ? t.qiblaHintSun : t.qiblaHintNorth
+    this.sunDates = this.sunOverKaaba()
+  },
+
+  // This year's two moments in local time, if the sun is still up then
+  // (in WIT, UTC+9, it is already evening, so they are skipped)
+  sunOverKaaba() {
+    const t = this.t
+    const tz = this.city.tz
+    if (tz > 8) return []
+    const year = new Date().getFullYear()
+    const leap = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0
+    return SUN_OVER_KAABA.map((s) => {
+      const minutes = s.utcMinutes + tz * 60
+      const day = s.day - (leap ? 1 : 0)
+      const time = pad(Math.floor(minutes / 60)) + ':' + pad(minutes % 60) + ' ' + TIME_ZONES[tz]
+      const date = t === STRINGS.zh ? t.months[s.month] + day + '日' : day + ' ' + t.months[s.month]
+      return date + ' · ' + time
+    })
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 24px 8px;
+  background-color: #000000;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: #8e8e93;
+  margin-top: 2px;
+  margin-bottom: 12px;
+}
+
+.compass {
+  width: 160px;
+  height: 160px;
+  border-radius: 80px;
+  border-width: 2px;
+  border-color: #3a3a3c;
+  background-color: #1c1c1e;
+}
+
+.cardinal {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+  color: #8e8e93;
+}
+
+.north {
+  color: #ff453a;
+}
+
+.dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background-color: #34d399;
+}
+
+.center {
+  position: absolute;
+  left: 73px;
+  top: 73px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+.sun {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  background-color: #ffd60a;
+}
+
+.kaaba {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+}
+
+.degrees {
+  font-size: 44px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-top: 10px;
+}
+
+.direction {
+  font-size: 16px;
+  color: #34d399;
+}
+
+.distance {
+  font-size: 15px;
+  color: #8e8e93;
+  margin-top: 2px;
+}
+
+.hint {
+  font-size: 14px;
+  color: #ffffff;
+  text-align: center;
+  width: 168px;
+  margin-top: 10px;
+}
+
+.card {
+  flex-direction: column;
+  align-items: center;
+  width: 176px;
+  padding: 12px 8px;
+  margin-top: 14px;
+  border-radius: 24px;
+  background-color: #0d3b2c;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: bold;
+  color: #34d399;
+  margin-bottom: 4px;
+}
+
+.card-date {
+  font-size: 15px;
+  color: #ffffff;
+}
+
+.card-note {
+  font-size: 13px;
+  color: #a7f3d0;
+  text-align: center;
+  margin-top: 4px;
+}
+</style>

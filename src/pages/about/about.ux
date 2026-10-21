@@ -15,26 +15,123 @@
       <text class="label">{{t.license}}</text>
       <text class="value">MIT</text>
     </div>
+
+    <div class="card">
+      <text class="label">{{t.storage}}</text>
+      <text class="value">{{storageUsed}}</text>
+      <div class="bar">
+        <div class="bar-fill" style="width: {{storageBar}}px;"></div>
+      </div>
+      <text class="detail">{{storageDetail}}</text>
+    </div>
+
+    <!-- Only where the battery API exists (not on Smart Band 9 / 9 Pro) -->
+    <div class="card" if="{{batteryLevel}}">
+      <text class="label">{{t.battery}}</text>
+      <text class="value">{{batteryLevel}}</text>
+      <text class="detail">{{batteryState}}</text>
+    </div>
+
+    <div class="card">
+      <text class="label">{{t.model}}</text>
+      <text class="value">{{model}}</text>
+      <div class="divider"></div>
+      <text class="label">{{t.system}}</text>
+      <text class="value">{{system}}</text>
+      <div class="divider"></div>
+      <text class="label">{{t.platform}}</text>
+      <text class="value">{{platform}}</text>
+      <div class="divider"></div>
+      <text class="label">{{t.screen}}</text>
+      <text class="value">{{screen}}</text>
+    </div>
   </scroll>
 </template>
 
 <script>
 import app from '@system.app'
+import device from '@system.device'
+import battery from '@system.battery'
 import { STRINGS, loadLanguage } from '../../common/i18n.js'
+
+// Inner width of the card: 176 - 2 * 14 padding
+const BAR_WIDTH = 148
+
+// 31457280 -> "30.0 MB", 2147483648 -> "2.0 GB"
+function formatBytes(bytes) {
+  const mb = bytes / (1024 * 1024)
+  return mb >= 1024 ? (mb / 1024).toFixed(1) + ' GB' : mb.toFixed(1) + ' MB'
+}
 
 export default {
   private: {
     t: STRINGS.id,
-    version: ''
+    version: '',
+    storageUsed: '-',
+    storageBar: 0,
+    storageDetail: '',
+    batteryLevel: '',
+    batteryState: '',
+    model: '-',
+    system: '-',
+    platform: '-',
+    screen: '-'
   },
 
   onInit() {
-    loadLanguage((lang) => (this.t = STRINGS[lang]))
+    loadLanguage((lang) => {
+      this.t = STRINGS[lang]
+      this.refresh()
+    })
+    this.refresh()
     try {
       this.version = app.getInfo().versionName
     } catch (e) {
       this.version = '-'
     }
+  },
+
+  // Each API is optional on some devices, so every call fails quietly to "-"
+  refresh() {
+    const t = this.t
+    try {
+      device.getInfo({
+        success: (info) => {
+          this.model = [info.brand, info.model].filter(Boolean).join(' ') || '-'
+          this.system = [info.osType, info.osVersionName].filter(Boolean).join(' ') || '-'
+          this.platform = info.platformVersionName
+            ? info.platformVersionName + ' (' + info.platformVersionCode + ')'
+            : String(info.platformVersionCode || '-')
+          this.screen = info.screenWidth + ' × ' + info.screenHeight + (info.deviceType ? ' · ' + info.deviceType : '')
+        }
+      })
+    } catch (e) {}
+
+    try {
+      device.getTotalStorage({
+        success: (total) => {
+          device.getAvailableStorage({
+            success: (available) => {
+              const all = total.totalStorage
+              const free = available.availableStorage
+              const used = Math.max(0, all - free)
+              this.storageUsed = formatBytes(used) + ' / ' + formatBytes(all)
+              this.storageBar = all > 0 ? Math.round((used / all) * BAR_WIDTH) : 0
+              this.storageDetail = formatBytes(free) + ' ' + t.storageFree
+            }
+          })
+        }
+      })
+    } catch (e) {}
+
+    try {
+      battery.getStatus({
+        success: (status) => {
+          this.batteryLevel = Math.round(status.level * 100) + '%'
+          this.batteryState = status.charging ? t.charging : t.notCharging
+        }
+      })
+    } catch (e) {}
   }
 }
 </script>
@@ -90,6 +187,26 @@ export default {
   font-size: 16px;
   font-weight: bold;
   color: #ffffff;
+}
+
+.detail {
+  font-size: 13px;
+  color: #8e8e93;
+  margin-top: 2px;
+}
+
+.bar {
+  width: 148px;
+  height: 6px;
+  margin-top: 8px;
+  border-radius: 3px;
+  background-color: #2c2c2e;
+}
+
+.bar-fill {
+  height: 6px;
+  border-radius: 3px;
+  background-color: #30b0c7;
 }
 
 .divider {

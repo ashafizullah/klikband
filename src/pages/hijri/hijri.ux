@@ -1,32 +1,34 @@
 <template>
-  <div class="page">
-    <text class="title">{{t.hijri}}</text>
-    <div class="card">
-      <text class="weekday">{{weekday}}</text>
-      <text class="day">{{day}}</text>
-      <text class="month">{{month}}</text>
-      <text class="year">{{year}} H</text>
+  <div class="page {{w}}page">
+    <text class="title {{w}}title">{{t.hijri}}</text>
+    <div class="card {{w}}card">
+      <text class="weekday {{w}}weekday">{{weekday}}</text>
+      <text class="day {{w}}day">{{day}}</text>
+      <text class="month {{w}}month">{{month}}</text>
+      <text class="year {{w}}year">{{year}} H</text>
     </div>
-    <text class="gregorian">{{gregorian}}</text>
-    <div class="offset">
-      <div class="button" onclick="shift(-1)">
-        <text class="button-text">−</text>
+    <text class="gregorian {{w}}gregorian">{{gregorian}}</text>
+    <div class="offset {{w}}offset">
+      <div class="button {{w}}button" onclick="shift(-1)">
+        <text class="button-text {{w}}button-text">−</text>
       </div>
-      <text class="offset-value">{{offsetText}}</text>
-      <div class="button" onclick="shift(1)">
-        <text class="button-text">+</text>
+      <text class="offset-value {{w}}offset-value">{{offsetText}}</text>
+      <div class="button {{w}}button" onclick="shift(1)">
+        <text class="button-text {{w}}button-text">+</text>
       </div>
     </div>
-    <text class="note">{{t.hijriNote}}</text>
+    <text class="note {{w}}note">{{t.hijriNote}}</text>
   </div>
 </template>
 
 <script>
 import { toHijriWithOffset, loadHijriOffset, saveHijriOffset } from '../../common/hijri.js'
 import { STRINGS, loadLanguage } from '../../common/i18n.js'
+import { loadLayout } from '../../common/screen.js'
 
 export default {
   private: {
+    w: '',
     t: STRINGS.id,
     offset: 0,
     offsetText: '0 hari',
@@ -38,6 +40,7 @@ export default {
   },
 
   onInit() {
+    loadLayout((w) => (this.w = w))
     this.render()
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
@@ -162,5 +165,69 @@ export default {
   text-align: center;
   margin-top: 10px;
   width: 168px;
+}
+
+/* Wide screens (Band 9 Pro): the band layout at about 0.6x, since px
+   there is scaled 1.75x */
+.w-page {
+  height: 274px;
+  padding: 22px 5px 14px 5px;
+}
+
+.w-title {
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.w-card {
+  padding: 10px 5px 11px 5px;
+  border-radius: 14px;
+}
+
+.w-weekday {
+  font-size: 10px;
+}
+
+.w-day {
+  font-size: 43px;
+}
+
+.w-month {
+  font-size: 12px;
+}
+
+.w-year {
+  font-size: 10px;
+  margin-top: 1px;
+}
+
+.w-gregorian {
+  font-size: 10px;
+  margin-top: 7px;
+  margin-bottom: 12px;
+}
+
+.w-offset {
+  padding: 4px;
+  border-radius: 18px;
+}
+
+.w-button {
+  width: 29px;
+  height: 29px;
+  border-radius: 14px;
+}
+
+.w-button-text {
+  font-size: 14px;
+}
+
+.w-offset-value {
+  font-size: 10px;
+}
+
+.w-note {
+  font-size: 8px;
+  margin-top: 6px;
 }
 </style>

@@ -1,25 +1,29 @@
 <template>
-  <scroll class="page" scroll-y="true">
-    <text class="title">{{t.qibla}}</text>
-    <text class="subtitle">{{location}}</text>
+  <scroll class="page {{w}}page" scroll-y="true">
+    <text class="title {{w}}title">{{t.qibla}}</text>
+    <text class="subtitle {{w}}subtitle">{{location}}</text>
 
-    <div class="compass">
-      <text class="cardinal {{$idx === 0 ? 'north' : ''}}" for="{{cardinals}}" style="left: {{$item.x}}px; top: {{$item.y}}px;">{{$item.label}}</text>
-      <div class="dot" for="{{dots}}" style="left: {{$item.x}}px; top: {{$item.y}}px;"></div>
-      <div class="center"></div>
-      <div class="sun" if="{{sun}}" style="left: {{sun.x}}px; top: {{sun.y}}px;"></div>
-      <image class="kaaba" src="/common/kaaba.png" style="left: {{kaaba.x}}px; top: {{kaaba.y}}px;"></image>
+    <div class="main {{w}}main">
+      <div class="compass {{w}}compass">
+        <text class="cardinal {{w}}cardinal {{$idx === 0 ? 'north' : ''}}" for="{{cardinals}}" style="left: {{$item.x}}px; top: {{$item.y}}px;">{{$item.label}}</text>
+        <div class="dot {{w}}dot" for="{{dots}}" style="left: {{$item.x}}px; top: {{$item.y}}px;"></div>
+        <div class="center {{w}}center"></div>
+        <div class="sun {{w}}sun" if="{{sun}}" style="left: {{sun.x}}px; top: {{sun.y}}px;"></div>
+        <image class="kaaba {{w}}kaaba" src="/common/kaaba.png" style="left: {{kaaba.x}}px; top: {{kaaba.y}}px;"></image>
+      </div>
+
+      <div class="info {{w}}info">
+        <text class="degrees {{w}}degrees">{{degrees}}</text>
+        <text class="direction {{w}}direction">{{direction}}</text>
+        <text class="distance {{w}}distance">{{distance}}</text>
+        <text class="hint {{w}}hint">{{hint}}</text>
+      </div>
     </div>
 
-    <text class="degrees">{{degrees}}</text>
-    <text class="direction">{{direction}}</text>
-    <text class="distance">{{distance}}</text>
-    <text class="hint">{{hint}}</text>
-
-    <div class="card" if="{{sunDates.length}}">
-      <text class="card-title">{{t.sunOverKaaba}}</text>
-      <text class="card-date" for="{{sunDates}}">{{$item}}</text>
-      <text class="card-note">{{t.sunOverKaabaNote}}</text>
+    <div class="card {{w}}card" if="{{sunDates.length}}">
+      <text class="card-title {{w}}card-title">{{t.sunOverKaaba}}</text>
+      <text class="card-date {{w}}card-date" for="{{sunDates}}">{{$item}}</text>
+      <text class="card-note {{w}}card-note">{{t.sunOverKaabaNote}}</text>
     </div>
   </scroll>
 </template>
@@ -30,10 +34,11 @@ import { qiblaBearing, kaabaDistance, compassPoint, SUN_OVER_KAABA } from '../..
 import { sunDirection } from '../../common/prayer.js'
 import { STRINGS, loadLanguage } from '../../common/i18n.js'
 import { CITIES, TIME_ZONES, loadCity } from '../../common/cities.js'
-import { keepScreenOn } from '../../common/screen.js'
+import { keepScreenOn, loadLayout } from '../../common/screen.js'
 
 // Compass geometry in px: 160 box with a 2px border (positions start inside it),
-// letters and the Kaaba on rings around the center
+// letters and the Kaaba on rings around the center. Wide screens draw it at
+// WIDE_SCALE, matching the .w-* sizes below
 const CENTER = 78
 const LETTER_RING = 66
 const KAABA_RING = 54
@@ -42,17 +47,19 @@ const LETTER_SIZE = 20
 const KAABA_SIZE = 28
 const DOT_SIZE = 6
 const SUN_SIZE = 18
+const WIDE_SCALE = 0.6
 
 // The sun works as a compass only when it is clearly up and not near overhead
 const SUN_MIN_ALTITUDE = 3
 const SUN_MAX_ALTITUDE = 70
 
-// Top-left of a box of `size` centered on the ring at `angle` (0 = up, clockwise)
-function onRing(angle, ring, size) {
+// Top-left of a box of `size` centered on the ring at `angle` (0 = up,
+// clockwise), drawn at `scale`
+function onRing(angle, ring, size, scale) {
   const a = (angle * Math.PI) / 180
   return {
-    x: Math.round(CENTER + ring * Math.sin(a) - size / 2),
-    y: Math.round(CENTER - ring * Math.cos(a) - size / 2)
+    x: Math.round((CENTER + ring * Math.sin(a) - size / 2) * scale),
+    y: Math.round((CENTER - ring * Math.cos(a) - size / 2) * scale)
   }
 }
 
@@ -63,6 +70,7 @@ const groupDigits = (n, sep) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, sep)
 
 export default {
   private: {
+    w: '',
     t: STRINGS.id,
     location: '',
     cardinals: [],
@@ -81,6 +89,10 @@ export default {
     // Heading of the top of the band from the compass, when the device has one
     this.heading = null
     this.render()
+    loadLayout((w) => {
+      this.w = w
+      this.render()
+    })
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
       this.render()
@@ -134,17 +146,18 @@ export default {
     const live = this.heading !== null
     // Without a compass the drawing is north-up; with one it turns with the band
     const turn = live ? this.heading : 0
+    const scale = this.w ? WIDE_SCALE : 1
 
     this.location = city.name + ' · ' + TIME_ZONES[city.tz]
     this.cardinals = t.cardinals.map((label, i) => {
-      const p = onRing(i * 90 - turn, LETTER_RING, LETTER_SIZE)
+      const p = onRing(i * 90 - turn, LETTER_RING, LETTER_SIZE, scale)
       return { label, x: p.x, y: p.y }
     })
-    this.dots = DOT_RINGS.map((ring) => onRing(bearing - turn, ring, DOT_SIZE))
-    this.kaaba = onRing(bearing - turn, KAABA_RING, KAABA_SIZE)
+    this.dots = DOT_RINGS.map((ring) => onRing(bearing - turn, ring, DOT_SIZE, scale))
+    this.kaaba = onRing(bearing - turn, KAABA_RING, KAABA_SIZE, scale)
     const sun = sunDirection(new Date(), city)
     const sunUp = sun.altitude >= SUN_MIN_ALTITUDE && sun.altitude <= SUN_MAX_ALTITUDE
-    this.sun = sunUp ? onRing(sun.azimuth - turn, KAABA_RING, SUN_SIZE) : null
+    this.sun = sunUp ? onRing(sun.azimuth - turn, KAABA_RING, SUN_SIZE, scale) : null
 
     this.degrees = bearing + '°'
     this.direction = t.compassPoints[compassPoint(bearing)] + ' · ' + t.fromNorth
@@ -194,6 +207,16 @@ export default {
   color: #8e8e93;
   margin-top: 2px;
   margin-bottom: 12px;
+}
+
+.main {
+  flex-direction: column;
+  align-items: center;
+}
+
+.info {
+  flex-direction: column;
+  align-items: center;
 }
 
 .compass {
@@ -304,5 +327,109 @@ export default {
   color: #a7f3d0;
   text-align: center;
   margin-top: 4px;
+}
+
+/* Wide screens (Band 9 Pro): the compass at WIDE_SCALE on the left, the
+   reading on the right */
+.w-page {
+  height: 274px;
+  padding: 8px 8px 12px 8px;
+}
+
+.w-title {
+  font-size: 14px;
+}
+
+.w-subtitle {
+  font-size: 9px;
+  margin-top: 0;
+  margin-bottom: 6px;
+}
+
+.w-main {
+  flex-direction: row;
+  justify-content: space-between;
+  width: 176px;
+}
+
+.w-compass {
+  width: 96px;
+  height: 96px;
+  border-radius: 48px;
+  border-width: 1px;
+}
+
+.w-cardinal {
+  width: 12px;
+  height: 12px;
+  font-size: 9px;
+}
+
+.w-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 2px;
+}
+
+.w-center {
+  left: 44px;
+  top: 44px;
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+}
+
+.w-sun {
+  width: 11px;
+  height: 11px;
+  border-radius: 6px;
+}
+
+.w-kaaba {
+  width: 17px;
+  height: 17px;
+}
+
+.w-info {
+  width: 76px;
+}
+
+.w-degrees {
+  font-size: 26px;
+  margin-top: 0;
+}
+
+.w-direction {
+  font-size: 9px;
+  text-align: center;
+}
+
+.w-distance {
+  font-size: 8px;
+  text-align: center;
+}
+
+.w-hint {
+  width: 76px;
+  font-size: 8px;
+  margin-top: 6px;
+}
+
+.w-card {
+  padding: 8px 6px;
+  margin-top: 8px;
+  border-radius: 14px;
+}
+
+.w-card-title {
+  font-size: 10px;
+}
+
+.w-card-date {
+  font-size: 10px;
+}
+
+.w-card-note {
+  font-size: 8px;
 }
 </style>

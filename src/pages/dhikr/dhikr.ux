@@ -1,39 +1,46 @@
 <template>
-  <scroll id="scroller" class="page" scroll-y="true">
-    <text class="title">{{title}}</text>
+  <scroll id="scroller" class="page {{w}}page" scroll-y="true">
+    <text class="title {{w}}title">{{title}}</text>
 
-    <div if="{{!finished}}" class="content">
-      <text class="step">{{step + 1}} / {{total}}</text>
-      <div if="{{note}}" class="note">
-        <text class="note-text">{{note}}</text>
-      </div>
-      <text class="latin {{longText ? 'latin-long' : ''}}">{{latin}}</text>
-      <text class="meaning">{{meaning}}</text>
-
-      <div class="circle" onclick="increment">
-        <text class="count">{{count}}</text>
-        <text class="target">/ {{target}}</text>
+    <!-- Bands stack the text over the counter; wide screens put them side by side -->
+    <div if="{{!finished}}" class="content {{w}}content">
+      <div class="text-col {{w}}text-col">
+        <text class="step {{w}}step">{{step + 1}} / {{total}}</text>
+        <div if="{{note}}" class="note {{w}}note">
+          <text class="note-text {{w}}note-text">{{note}}</text>
+        </div>
+        <text class="latin {{w}}latin {{longText ? 'latin-long' : ''}} {{longText ? w + 'latin-long' : ''}}">{{latin}}</text>
+        <text class="meaning {{w}}meaning">{{meaning}}</text>
       </div>
 
-      <!-- One full-width button per row, easier to tap on the band -->
-      <div class="button button-main button-row" onclick="advance">
-        <text class="button-text">{{t.next}}</text>
-      </div>
-      <div class="button button-row" onclick="back">
-        <text class="button-text" style="color: {{step > 0 ? '#ffffff' : '#636366'}};">{{t.previous}}</text>
-      </div>
-      <div class="button button-row" onclick="restart">
-        <text class="button-text">{{t.reset}}</text>
+      <div class="action-col {{w}}action-col">
+        <div class="circle {{w}}circle" onclick="increment">
+          <text class="count {{w}}count">{{count}}</text>
+          <text class="target {{w}}target">/ {{target}}</text>
+        </div>
+
+        <div class="button button-main button-row {{w}}button {{w}}button-row" onclick="advance">
+          <text class="button-text {{w}}button-text">{{t.next}}</text>
+        </div>
+        <!-- Previous and reset share a row so the screen holds fewer buttons -->
+        <div class="pair {{w}}pair">
+          <div class="button button-half {{w}}button {{w}}button-half" onclick="back">
+            <text class="button-text button-text-small {{w}}button-text" style="color: {{step > 0 ? '#ffffff' : '#636366'}};">{{t.previous}}</text>
+          </div>
+          <div class="button button-half {{w}}button {{w}}button-half" onclick="restart">
+            <text class="button-text button-text-small {{w}}button-text">{{t.reset}}</text>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div else class="content">
-      <div class="circle circle-done" onclick="restart">
-        <text class="count">✓</text>
+    <div else class="content content-done">
+      <div class="circle circle-done {{w}}circle {{w}}circle-done" onclick="restart">
+        <text class="count {{w}}count">✓</text>
       </div>
-      <text class="done">{{t.done}}</text>
-      <div class="button button-main button-wide" onclick="restart">
-        <text class="button-text">{{t.repeat}}</text>
+      <text class="done {{w}}done">{{t.done}}</text>
+      <div class="button button-main button-wide {{w}}button {{w}}button-wide" onclick="restart">
+        <text class="button-text {{w}}button-text">{{t.repeat}}</text>
       </div>
     </div>
   </scroll>
@@ -44,7 +51,7 @@ import vibrator from '@system.vibrator'
 import PRAYER_DHIKR from '../../common/dhikr.js'
 import { morningEveningDhikr } from '../../common/dhikrmorningevening.js'
 import { STRINGS, loadLanguage } from '../../common/i18n.js'
-import { keepScreenOn } from '../../common/screen.js'
+import { keepScreenOn, loadLayout } from '../../common/screen.js'
 
 // Which dhikr set to show, from the router param `set`
 const SETS = {
@@ -59,6 +66,7 @@ export default {
   },
 
   private: {
+    w: '',
     t: STRINGS.id,
     lang: 'id',
     title: '',
@@ -74,6 +82,7 @@ export default {
   },
 
   onInit() {
+    loadLayout((w) => (this.w = w))
     this.config = SETS[this.set] || SETS.prayer
     this.steps = this.config.steps()
     this.total = this.steps.length
@@ -172,6 +181,17 @@ export default {
   width: 176px;
 }
 
+.text-col {
+  flex-direction: column;
+  align-items: center;
+  width: 176px;
+}
+
+.action-col {
+  flex-direction: column;
+  align-items: center;
+}
+
 .step {
   font-size: 15px;
   color: #8e8e93;
@@ -257,6 +277,17 @@ export default {
   margin-top: 8px;
 }
 
+.pair {
+  flex-direction: row;
+  justify-content: space-between;
+  width: 176px;
+  margin-top: 8px;
+}
+
+.button-half {
+  width: 84px;
+}
+
 .button-wide {
   width: 176px;
   margin-top: 16px;
@@ -268,10 +299,127 @@ export default {
   color: #ffffff;
 }
 
+.button-text-small {
+  font-size: 13px;
+}
+
 .done {
   font-size: 22px;
   font-weight: bold;
   color: #34d399;
   margin-top: 14px;
+}
+
+/* Wide screens (Band 9 Pro): the dhikr text on the left, the counter and
+   buttons on the right */
+.w-page {
+  height: 274px;
+  padding: 8px 8px 12px 8px;
+}
+
+.w-title {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.w-content {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.w-text-col {
+  width: 92px;
+}
+
+.w-step {
+  font-size: 9px;
+  margin-bottom: 4px;
+}
+
+.w-note {
+  padding: 2px 6px;
+  margin-bottom: 4px;
+  border-radius: 8px;
+}
+
+.w-note-text {
+  font-size: 8px;
+}
+
+.w-latin {
+  width: 92px;
+  font-size: 12px;
+}
+
+.w-latin-long {
+  font-size: 10px;
+}
+
+.w-meaning {
+  width: 92px;
+  font-size: 9px;
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+.w-action-col {
+  width: 78px;
+}
+
+.w-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 36px;
+  border-width: 4px;
+  margin-bottom: 4px;
+}
+
+.w-count {
+  font-size: 26px;
+}
+
+.w-target {
+  font-size: 9px;
+}
+
+.w-button {
+  height: 26px;
+  border-radius: 13px;
+}
+
+.w-button-row {
+  width: 78px;
+  margin-top: 4px;
+}
+
+.w-pair {
+  flex-direction: column;
+  width: 78px;
+  margin-top: 0;
+}
+
+.w-button-half {
+  width: 78px;
+  height: 22px;
+  margin-top: 4px;
+}
+
+.w-button-text {
+  font-size: 8px;
+}
+
+.w-circle-done {
+  margin-top: 16px;
+}
+
+.w-done {
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.w-button-wide {
+  width: 120px;
+  margin-top: 10px;
 }
 </style>

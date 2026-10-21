@@ -1,12 +1,13 @@
 <template>
-  <scroll class="page" scroll-y="true">
-    <text class="title">{{title}}</text>
-    <div class="card" for="{{menu}}" onclick="openPage($item.uri)">
-      <div class="icon" style="background-color: {{$item.color}};">
-        <image class="icon-image" src="{{$item.icon}}"></image>
+  <scroll class="page {{w}}page" scroll-y="true">
+    <text class="title {{w}}title">{{title}}</text>
+    <div class="grid {{w}}grid">
+      <div class="card {{w}}card" for="{{menu}}" onclick="openPage($item.uri)">
+        <div class="icon {{w}}icon" style="background-color: {{$item.color}};">
+          <image class="icon-image {{w}}icon-image" src="{{$item.icon}}"></image>
+        </div>
+        <text class="label {{w}}label">{{$item.label}}</text>
       </div>
-      <marquee if="{{$item.long}}" id="m{{$idx}}" class="label" scrollamount="30" text-offset="40">{{$item.label}}</marquee>
-      <text else class="label">{{$item.label}}</text>
     </div>
   </scroll>
 </template>
@@ -14,10 +15,7 @@
 <script>
 import router from '@system.router'
 import { STRINGS, loadLanguage } from '../../common/i18n.js'
-import { textWidth, startMarquees } from '../../common/text.js'
-
-// Label area: 176 card - 24 padding - 46 icon - 10 gap
-const LABEL_WIDTH = 96
+import { loadLayout } from '../../common/screen.js'
 
 const MENU = [
   { key: 'today', color: '#0A84FF' },
@@ -37,7 +35,6 @@ function buildMenu(lang) {
   const t = STRINGS[lang]
   return MENU.map((m) => ({
     label: t[m.key],
-    long: textWidth(t[m.key], 19) > LABEL_WIDTH,
     icon: '/common/icons/' + m.key + '.png',
     color: m.color,
     uri: '/pages/' + m.key
@@ -46,20 +43,18 @@ function buildMenu(lang) {
 
 export default {
   private: {
+    w: '',
     title: STRINGS.id.islam,
     menu: buildMenu('id')
   },
 
   onInit() {
+    loadLayout((w) => (this.w = w))
     loadLanguage((lang) => this.apply(lang))
   },
 
   onShow() {
     loadLanguage((lang) => this.apply(lang))
-  },
-
-  onReady() {
-    startMarquees(this, MENU.length)
   },
 
   apply(lang) {
@@ -79,46 +74,100 @@ export default {
   align-items: center;
   width: 192px;
   height: 490px;
-  padding: 36px 8px 24px 8px;
+  padding: 32px 8px 24px 8px;
   background-color: #000000;
 }
 
 .title {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: bold;
   color: #ffffff;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+}
+
+.grid {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 176px;
 }
 
 .card {
   flex-direction: row;
   align-items: center;
   width: 176px;
-  height: 76px;
-  padding: 0 12px;
+  height: 64px;
+  padding: 0 10px;
   margin-bottom: 8px;
-  border-radius: 26px;
+  border-radius: 24px;
   background-color: #1c1c1e;
 }
 
 .icon {
   justify-content: center;
   align-items: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 23px;
+  width: 38px;
+  height: 38px;
+  border-radius: 19px;
   margin-right: 10px;
 }
 
 .icon-image {
-  width: 27px;
-  height: 27px;
+  width: 24px;
+  height: 24px;
 }
 
+/* Long names wrap to a second line instead of scrolling */
 .label {
-  width: 96px;
-  font-size: 19px;
+  width: 108px;
+  font-size: 17px;
   font-weight: bold;
   color: #ffffff;
+  lines: 2;
+  text-overflow: ellipsis;
+}
+
+/* Wide screens (Band 9 Pro): a two-column grid of tiles */
+.w-page {
+  height: 274px;
+  padding: 10px 6px 12px 6px;
+}
+
+.w-title {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.w-grid {
+  width: 180px;
+}
+
+.w-card {
+  flex-direction: column;
+  justify-content: center;
+  width: 87px;
+  height: 64px;
+  padding: 0 6px;
+  margin-bottom: 6px;
+  border-radius: 14px;
+}
+
+.w-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 13px;
+  margin-right: 0;
+  margin-bottom: 4px;
+}
+
+.w-icon-image {
+  width: 16px;
+  height: 16px;
+}
+
+.w-label {
+  width: 75px;
+  font-size: 10px;
+  text-align: center;
 }
 </style>

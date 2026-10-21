@@ -1,15 +1,15 @@
 <template>
-  <div class="page">
-    <div class="display">
-      <text class="expression">{{expression}}</text>
+  <div class="page {{w}}page">
+    <div class="display {{w}}display">
+      <text class="expression {{w}}expression">{{expression}}</text>
       <text class="value" style="font-size: {{valueSize}}px;">{{value}}</text>
     </div>
 
-    <div class="row" for="{{row in rows}}">
-      <div class="key" for="{{k in row}}" style="background-color: {{k.color}};" onclick="press(k.key)">
+    <div class="row {{w}}row" for="{{row in rows}}">
+      <div class="key {{w}}key" for="{{k in row}}" style="background-color: {{k.color}};" onclick="press(k.key)">
         <!-- The band font has no ⌫ glyph, so backspace is an icon -->
-        <image if="{{k.key === '⌫'}}" class="key-icon" src="/common/icons/backspace.png"></image>
-        <text else class="key-text">{{k.label}}</text>
+        <image if="{{k.key === '⌫'}}" class="key-icon {{w}}key-icon" src="/common/icons/backspace.png"></image>
+        <text else class="key-text {{w}}key-text">{{k.label}}</text>
       </div>
     </div>
   </div>
@@ -18,6 +18,7 @@
 <script>
 import { evaluate, numberToEntry, formatEntry } from '../../common/calculator.js'
 import { STRINGS, loadLanguage } from '../../common/i18n.js'
+import { loadLayout } from '../../common/screen.js'
 
 const KEYS = [
   ['C', '⌫', '%', '÷'],
@@ -38,6 +39,7 @@ function keyColor(key) {
 
 export default {
   private: {
+    w: '',
     t: STRINGS.id,
     expression: '',
     value: '0',
@@ -52,6 +54,10 @@ export default {
     this.entry = '0'
     this.done = false
     this.render()
+    loadLayout((w) => {
+      this.w = w
+      this.render()
+    })
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
       this.render()
@@ -73,7 +79,8 @@ export default {
     this.expression = expression.length > 20 ? '...' + expression.slice(-17) : expression
     this.value = this.entry === 'error' ? t.calcError : this.format(this.entry || '0')
     const length = this.value.length
-    this.valueSize = length <= 8 ? 34 : length <= 11 ? 26 : 20
+    const size = length <= 8 ? 34 : length <= 11 ? 26 : 20
+    this.valueSize = this.w ? Math.round(size * 0.6) : size
   },
 
   press(key) {
@@ -216,5 +223,42 @@ export default {
   font-size: 22px;
   font-weight: bold;
   color: #ffffff;
+}
+
+/* Wide screens (Band 9 Pro): the same grid, shorter keys so it fits the
+   screen height */
+.w-page {
+  height: 274px;
+  padding: 8px 8px 8px 8px;
+}
+
+.w-display {
+  height: 46px;
+  padding: 4px 8px;
+  margin-bottom: 5px;
+  border-radius: 12px;
+}
+
+.w-expression {
+  font-size: 9px;
+}
+
+.w-row {
+  margin-bottom: 4px;
+}
+
+.w-key {
+  width: 41px;
+  height: 33px;
+  border-radius: 12px;
+}
+
+.w-key-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.w-key-text {
+  font-size: 13px;
 }
 </style>

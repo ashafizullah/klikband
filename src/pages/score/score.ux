@@ -1,29 +1,31 @@
 <template>
-  <div class="page">
+  <div class="page {{w}}page">
     <!-- Tap to change the mode; locked once the match has started -->
-    <div class="mode" onclick="nextMode">
-      <text class="mode-text" style="color: {{canChangeMode ? '#ffffff' : '#636366'}};">{{modeName}}</text>
+    <div class="mode {{w}}mode" onclick="nextMode">
+      <text class="mode-text {{w}}mode-text" style="color: {{canChangeMode ? '#ffffff' : '#636366'}};">{{modeName}}</text>
     </div>
 
     <!-- The middle section fills the remaining height, so the buttons stay put -->
-    <div class="middle">
-      <div class="side side-a" onclick="add('a')">
-        <text class="points">{{aPoints}}</text>
-        <text if="{{aDetail}}" class="detail" style="color: {{winner === 'a' ? '#30d158' : '#8ab4ff'}};">{{aDetail}}</text>
+    <div class="middle {{w}}middle">
+      <div class="side side-a {{w}}side" onclick="add('a')">
+        <text class="points {{w}}points">{{aPoints}}</text>
+        <text if="{{aDetail}}" class="detail {{w}}detail" style="color: {{winner === 'a' ? '#30d158' : '#8ab4ff'}};">{{aDetail}}</text>
       </div>
-      <div class="side side-b" onclick="add('b')">
-        <text class="points">{{bPoints}}</text>
-        <text if="{{bDetail}}" class="detail" style="color: {{winner === 'b' ? '#30d158' : '#ff9a94'}};">{{bDetail}}</text>
+      <div class="side side-b {{w}}side" onclick="add('b')">
+        <text class="points {{w}}points">{{bPoints}}</text>
+        <text if="{{bDetail}}" class="detail {{w}}detail" style="color: {{winner === 'b' ? '#30d158' : '#ff9a94'}};">{{bDetail}}</text>
       </div>
     </div>
 
     <!-- One full-width button per row, easier to tap on the band -->
-    <div class="button" onclick="undo">
-      <text class="button-text" style="color: {{canUndo ? '#ffffff' : '#636366'}};">{{t.undo}}</text>
-    </div>
-    <!-- Inline colors: a changing class here broke the button size on the band -->
-    <div class="button" style="background-color: {{confirming ? '#ff453a' : '#1c1c1e'}};" onclick="reset">
-      <text class="button-text">{{confirming ? t.sure : t.reset}}</text>
+    <div class="buttons {{w}}buttons">
+      <div class="button {{w}}button" onclick="undo">
+        <text class="button-text {{w}}button-text" style="color: {{canUndo ? '#ffffff' : '#636366'}};">{{t.undo}}</text>
+      </div>
+      <!-- Inline colors: a changing class here broke the button size on the band -->
+      <div class="button {{w}}button" style="background-color: {{confirming ? '#ff453a' : '#1c1c1e'}};" onclick="reset">
+        <text class="button-text {{w}}button-text">{{confirming ? t.sure : t.reset}}</text>
+      </div>
     </div>
   </div>
 </template>
@@ -33,7 +35,7 @@ import vibrator from '@system.vibrator'
 import storage from '@system.storage'
 import { STRINGS, loadLanguage } from '../../common/i18n.js'
 import { MODES, newMatch, addPoint, pointsText, detailText } from '../../common/score.js'
-import { keepScreenOn } from '../../common/screen.js'
+import { keepScreenOn, loadLayout } from '../../common/screen.js'
 
 // Match states kept for undo
 const MAX_HISTORY = 50
@@ -42,6 +44,7 @@ const CONFIRM_MS = 3000
 
 export default {
   private: {
+    w: '',
     t: STRINGS.id,
     modeName: '',
     aPoints: '0',
@@ -55,6 +58,7 @@ export default {
   },
 
   onInit() {
+    loadLayout((w) => (this.w = w))
     this.match = newMatch('points')
     this.history = []
     this.render()
@@ -229,6 +233,10 @@ export default {
   font-weight: bold;
 }
 
+.buttons {
+  flex-direction: column;
+}
+
 .button {
   justify-content: center;
   align-items: center;
@@ -246,5 +254,62 @@ export default {
   font-size: 17px;
   font-weight: bold;
   color: #ffffff;
+}
+
+/* Wide screens (Band 9 Pro): the two sides next to each other, and the
+   buttons share a row */
+.w-page {
+  height: 274px;
+  padding: 10px 8px 10px 8px;
+}
+
+.w-mode {
+  width: 100px;
+  height: 22px;
+  border-radius: 11px;
+}
+
+.w-mode-text {
+  width: 100px;
+  font-size: 10px;
+}
+
+.w-middle {
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.w-side {
+  width: 86px;
+  height: 140px;
+  margin: 0;
+  border-radius: 16px;
+  border-width: 3px;
+}
+
+.w-points {
+  font-size: 44px;
+}
+
+.w-detail {
+  font-size: 9px;
+}
+
+.w-buttons {
+  flex-direction: row;
+  justify-content: space-between;
+  width: 176px;
+}
+
+.w-button {
+  width: 86px;
+  height: 30px;
+  margin-top: 6px;
+  border-radius: 15px;
+}
+
+.w-button-text {
+  width: 86px;
+  font-size: 10px;
 }
 </style>

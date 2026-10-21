@@ -1,31 +1,31 @@
 <template>
-  <scroll id="scroller" class="page" scroll-y="true">
-    <text class="step">{{index + 1}} / {{total}}</text>
-    <text class="title">{{title}}</text>
+  <scroll id="scroller" class="page {{w}}page" scroll-y="true">
+    <text class="step {{w}}step">{{index + 1}} / {{total}}</text>
+    <text class="title {{w}}title">{{title}}</text>
 
-    <div class="card">
-      <div class="point" for="{{points}}">
-        <text class="bullet">•</text>
-        <text class="point-text">{{$item}}</text>
+    <div class="card {{w}}card">
+      <div class="point {{w}}point" for="{{points}}">
+        <text class="bullet {{w}}bullet">•</text>
+        <text class="point-text {{w}}point-text">{{$item}}</text>
       </div>
     </div>
 
-    <div class="card" for="{{readings}}">
-      <text class="latin">{{$item.latin}}</text>
-      <div class="divider"></div>
-      <text class="meaning">{{$item.meaning}}</text>
+    <div class="card {{w}}card" for="{{readings}}">
+      <text class="latin {{w}}latin">{{$item.latin}}</text>
+      <div class="divider {{w}}divider"></div>
+      <text class="meaning {{w}}meaning">{{$item.meaning}}</text>
     </div>
 
-    <div if="{{counter}}" class="button button-main button-wide" onclick="openCounter">
-      <text class="button-text">{{t.countRounds}}</text>
+    <div if="{{counter}}" class="button button-main button-wide {{w}}button {{w}}button-wide" onclick="openCounter">
+      <text class="button-text {{w}}button-text">{{t.countRounds}}</text>
     </div>
 
     <!-- One full-width button per row, easier to tap on the band -->
-    <div class="button button-wide" onclick="go(1)">
-      <text class="button-text" style="color: {{index < total - 1 ? '#ffffff' : '#636366'}};">{{t.next}}</text>
+    <div class="button button-wide {{w}}button {{w}}button-wide" onclick="go(1)">
+      <text class="button-text {{w}}button-text" style="color: {{index < total - 1 ? '#ffffff' : '#636366'}};">{{t.next}}</text>
     </div>
-    <div class="button button-wide" onclick="go(-1)">
-      <text class="button-text" style="color: {{index > 0 ? '#ffffff' : '#636366'}};">{{t.previous}}</text>
+    <div class="button button-wide {{w}}button {{w}}button-wide" onclick="go(-1)">
+      <text class="button-text {{w}}button-text" style="color: {{index > 0 ? '#ffffff' : '#636366'}};">{{t.previous}}</text>
     </div>
   </scroll>
 </template>
@@ -34,7 +34,7 @@
 import router from '@system.router'
 import { UMRAH_STEPS } from '../../common/umrah.js'
 import { STRINGS, loadLanguage } from '../../common/i18n.js'
-import { keepScreenOn } from '../../common/screen.js'
+import { keepScreenOn, loadLayout } from '../../common/screen.js'
 
 export default {
   // Step to show (router params arrive as strings)
@@ -43,6 +43,7 @@ export default {
   },
 
   private: {
+    w: '',
     t: STRINGS.id,
     lang: 'id',
     total: UMRAH_STEPS.length,
@@ -53,6 +54,7 @@ export default {
   },
 
   onInit() {
+    loadLayout((w) => (this.w = w))
     this.index = parseInt(this.index, 10) || 0
     this.render()
     loadLanguage((lang) => {
@@ -182,5 +184,64 @@ export default {
   font-size: 18px;
   font-weight: bold;
   color: #ffffff;
+}
+
+/* Wide screens (Band 9 Pro): the band layout at about 0.6x, since px
+   there is scaled 1.75x */
+.w-page {
+  height: 274px;
+  padding: 22px 5px 14px 5px;
+}
+
+.w-step {
+  font-size: 8px;
+}
+
+.w-title {
+  font-size: 13px;
+  margin-bottom: 7px;
+}
+
+.w-card {
+  padding: 8px;
+  margin-bottom: 5px;
+  border-radius: 13px;
+}
+
+.w-point {
+  margin-bottom: 4px;
+}
+
+.w-bullet {
+  font-size: 9px;
+}
+
+.w-point-text {
+  font-size: 9px;
+}
+
+.w-latin {
+  font-size: 10px;
+}
+
+.w-divider {
+  margin: 6px 0;
+}
+
+.w-meaning {
+  font-size: 8px;
+}
+
+.w-button {
+  height: 29px;
+  border-radius: 14px;
+}
+
+.w-button-wide {
+  margin-bottom: 5px;
+}
+
+.w-button-text {
+  font-size: 11px;
 }
 </style>

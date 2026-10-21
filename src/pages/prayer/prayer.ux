@@ -1,35 +1,38 @@
 <template>
-  <scroll class="page" scroll-y="true">
-    <text class="title">{{title}}</text>
-    <text class="subtitle">{{location}}</text>
-    <text class="subtitle subtitle-last">{{dateText}}</text>
+  <scroll class="page {{w}}page" scroll-y="true">
+    <text class="title {{w}}title">{{title}}</text>
+    <text class="subtitle {{w}}subtitle">{{location}}</text>
+    <text class="subtitle subtitle-last {{w}}subtitle {{w}}subtitle-last">{{dateText}}</text>
 
-    <div class="hero">
-      <text class="hero-label">{{nextLabel}}</text>
-      <text class="hero-time">{{nextTime}}</text>
-      <div class="pill">
-        <text class="pill-text">{{countdown}}</text>
+    <div class="panels {{w}}panels">
+      <div class="hero {{w}}hero">
+        <text class="hero-label {{w}}hero-label">{{nextLabel}}</text>
+        <text class="hero-time {{w}}hero-time">{{nextTime}}</text>
+        <div class="pill {{w}}pill">
+          <text class="pill-text {{w}}pill-text">{{countdown}}</text>
+        </div>
       </div>
-    </div>
 
-    <div class="list">
-      <div class="row {{$item.next ? 'row-next' : ''}}" for="{{rows}}">
-        <text class="name {{$item.style}}">{{$item.label}}</text>
-        <text class="time {{$item.style}}">{{$item.time}}</text>
+      <div class="list {{w}}list">
+        <div class="row {{w}}row {{$item.next ? 'row-next' : ''}}" for="{{rows}}">
+          <text class="name {{w}}cell {{$item.style}}">{{$item.label}}</text>
+          <text class="time {{w}}cell {{$item.style}}">{{$item.time}}</text>
+        </div>
       </div>
     </div>
   </scroll>
 </template>
 
 <script>
-import vibrator from '@system.vibrator'
 import { PRAYER_ORDER, nextPrayer, prayerDate, formatMinutes } from '../../common/prayer.js'
+import { prayerAlert } from '../../common/alert.js'
 import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
 import { CITIES, TIME_ZONES, loadCity } from '../../common/cities.js'
-import { keepScreenOn } from '../../common/screen.js'
+import { keepScreenOn, loadLayout } from '../../common/screen.js'
 
 export default {
   private: {
+    w: '',
     title: '',
     location: '',
     dateText: '',
@@ -43,6 +46,7 @@ export default {
     this.t = STRINGS.id
     this.city = CITIES[0]
     this.refresh()
+    loadLayout((w) => (this.w = w))
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
       this.refresh()
@@ -71,8 +75,7 @@ export default {
     const seconds = Math.ceil((this.target - Date.now()) / 1000)
     // Full refresh at the next prayer, and once a minute for the date
     this.ticks = (this.ticks || 0) + 1
-    // Buzz when the prayer time arrives while this page is open (short for Imsak)
-    if (seconds <= 0) vibrator.vibrate({ mode: this.nextKey === 'imsak' ? 'short' : 'long' })
+    if (seconds <= 0) prayerAlert(this.t, this.nextKey)
     if (seconds <= 0 || this.ticks % 60 === 0) this.refresh()
     else this.countdown = formatDuration(this.t, seconds)
   },
@@ -125,6 +128,10 @@ export default {
 
 .subtitle-last {
   margin-bottom: 12px;
+}
+
+.panels {
+  flex-direction: column;
 }
 
 .hero {
@@ -198,5 +205,71 @@ export default {
 
 .text-past {
   color: #636366;
+}
+
+/* Wide screens (Band 9 Pro): the next prayer and the full schedule side by side */
+.w-page {
+  height: 274px;
+  padding: 8px 8px 10px 8px;
+}
+
+.w-title {
+  font-size: 14px;
+}
+
+.w-subtitle {
+  font-size: 9px;
+  margin-top: 0;
+}
+
+.w-subtitle-last {
+  margin-bottom: 6px;
+}
+
+.w-panels {
+  flex-direction: row;
+  justify-content: space-between;
+  width: 176px;
+}
+
+.w-hero {
+  justify-content: center;
+  width: 74px;
+  padding: 8px 0;
+  margin-bottom: 0;
+  border-radius: 14px;
+}
+
+.w-hero-label {
+  font-size: 11px;
+}
+
+.w-hero-time {
+  font-size: 22px;
+}
+
+.w-pill {
+  padding: 2px 5px;
+  border-radius: 8px;
+}
+
+.w-pill-text {
+  font-size: 7px;
+}
+
+.w-list {
+  width: 98px;
+  padding: 4px;
+  border-radius: 14px;
+}
+
+.w-row {
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 9px;
+}
+
+.w-cell {
+  font-size: 10px;
 }
 </style>

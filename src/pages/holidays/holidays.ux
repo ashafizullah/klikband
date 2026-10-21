@@ -1,13 +1,13 @@
 <template>
-  <scroll class="page" scroll-y="true">
-    <text class="title">{{t.holidays}}</text>
-    <div class="card {{$idx === 0 ? 'card-next' : ''}}" for="{{items}}">
-      <text class="name">{{$item.name}}</text>
-      <text class="hijri">{{$item.hijri}}</text>
-      <text class="date">{{$item.date}}</text>
-      <text class="days">{{$item.days}}</text>
+  <scroll class="page {{w}}page" scroll-y="true">
+    <text class="title {{w}}title">{{t.holidays}}</text>
+    <div class="card {{$idx === 0 ? 'card-next' : ''}} {{w}}card" for="{{items}}">
+      <text class="name {{w}}name">{{$item.name}}</text>
+      <text class="hijri {{w}}hijri">{{$item.hijri}}</text>
+      <text class="date {{w}}date">{{$item.date}}</text>
+      <text class="days {{w}}days">{{$item.days}}</text>
     </div>
-    <text class="note">{{t.hijriNote}}</text>
+    <text class="note {{w}}note">{{t.hijriNote}}</text>
   </scroll>
 </template>
 
@@ -15,14 +15,17 @@
 import { upcomingHolidays } from '../../common/holidays.js'
 import { loadHijriOffset } from '../../common/hijri.js'
 import { STRINGS, loadLanguage, formatDays, formatFullDate } from '../../common/i18n.js'
+import { loadLayout } from '../../common/screen.js'
 
 export default {
   private: {
+    w: '',
     t: STRINGS.id,
     items: []
   },
 
   onInit() {
+    loadLayout((w) => (this.w = w))
     this.offset = 0
     this.render()
     loadLanguage((lang) => {
@@ -107,5 +110,45 @@ export default {
   color: #636366;
   text-align: center;
   margin-top: 4px;
+}
+
+/* Wide screens (Band 9 Pro): the band layout at about 0.6x, since px
+   there is scaled 1.75x */
+.w-page {
+  height: 274px;
+  padding: 22px 5px 14px 5px;
+}
+
+.w-title {
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.w-card {
+  padding: 7px 8px;
+  margin-bottom: 5px;
+  border-radius: 13px;
+}
+
+.w-name {
+  font-size: 11px;
+}
+
+.w-hijri {
+  font-size: 8px;
+}
+
+.w-date {
+  font-size: 8px;
+}
+
+.w-days {
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.w-note {
+  font-size: 8px;
+  margin-top: 2px;
 }
 </style>

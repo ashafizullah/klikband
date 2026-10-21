@@ -1,20 +1,20 @@
 <template>
-  <scroll class="page" scroll-y="true">
-    <text class="title">{{title}}</text>
+  <scroll class="page {{w}}page" scroll-y="true">
+    <text class="title {{w}}title">{{title}}</text>
 
-    <text class="section">{{cityLabel}}</text>
-    <div class="group">
-      <div class="option" onclick="openCities">
-        <text class="option-label">{{cityName}}</text>
-        <text class="chevron">›</text>
+    <text class="section {{w}}section">{{cityLabel}}</text>
+    <div class="group {{w}}group">
+      <div class="option {{w}}option" onclick="openCities">
+        <text class="option-label {{w}}option-label">{{cityName}}</text>
+        <text class="chevron {{w}}chevron">›</text>
       </div>
     </div>
 
-    <text class="section section-next">{{languageLabel}}</text>
-    <div class="group">
-      <div class="option" for="{{languages}}" onclick="select($item.code)">
-        <text class="option-label">{{$item.label}}</text>
-        <div class="radio {{$item.code === active ? 'radio-active' : ''}}"></div>
+    <text class="section section-next {{w}}section {{w}}section-next">{{languageLabel}}</text>
+    <div class="group {{w}}group">
+      <div class="option {{w}}option" for="{{languages}}" onclick="select($item.code)">
+        <text class="option-label {{w}}option-label">{{$item.label}}</text>
+        <div class="radio {{$item.code === active ? 'radio-active' : ''}} {{w}}radio"></div>
       </div>
     </div>
   </scroll>
@@ -24,9 +24,11 @@
 import router from '@system.router'
 import { LANGUAGES, STRINGS, loadLanguage, saveLanguage } from '../../common/i18n.js'
 import { CITIES, loadCity } from '../../common/cities.js'
+import { loadLayout } from '../../common/screen.js'
 
 export default {
   private: {
+    w: '',
     languages: LANGUAGES,
     active: 'id',
     title: STRINGS.id.settings,
@@ -36,6 +38,7 @@ export default {
   },
 
   onInit() {
+    loadLayout((w) => (this.w = w))
     loadLanguage((lang) => this.apply(lang))
   },
 
@@ -127,5 +130,55 @@ export default {
 .radio-active {
   border-width: 6px;
   border-color: #1fa77a;
+}
+
+/* Wide screens (Band 9 Pro): the band layout at about 0.6x, since px
+   there is scaled 1.75x */
+.w-page {
+  height: 274px;
+  padding: 22px 5px 14px 5px;
+}
+
+.w-title {
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.w-section {
+  font-size: 9px;
+  margin-bottom: 4px;
+}
+
+.w-section-next {
+  margin-top: 8px;
+}
+
+.w-group {
+  padding: 2px 0;
+  border-radius: 13px;
+}
+
+.w-option {
+  height: 31px;
+  padding: 0 10px;
+}
+
+.w-option-label {
+  font-size: 11px;
+}
+
+.w-chevron {
+  font-size: 13px;
+}
+
+.w-radio {
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
+  border-width: 1px;
+}
+
+.w-radio-active {
+  border-width: 4px;
 }
 </style>

@@ -1,13 +1,13 @@
 <template>
-  <scroll class="page" scroll-y="true">
-    <text class="title">{{title}}</text>
-    <div class="group">
-      <div class="option" for="{{items}}" onclick="select($item.name)">
+  <scroll class="page {{w}}page" scroll-y="true">
+    <text class="title {{w}}title">{{title}}</text>
+    <div class="group {{w}}group">
+      <div class="option {{w}}option" for="{{items}}" onclick="select($item.name)">
         <div class="text">
-          <text class="name">{{$item.name}}</text>
-          <text class="zone">{{$item.zone}}</text>
+          <text class="name {{w}}name">{{$item.name}}</text>
+          <text class="zone {{w}}zone">{{$item.zone}}</text>
         </div>
-        <div class="radio {{$item.name === active ? 'radio-active' : ''}}"></div>
+        <div class="radio {{$item.name === active ? 'radio-active' : ''}} {{w}}radio"></div>
       </div>
     </div>
   </scroll>
@@ -17,15 +17,18 @@
 import router from '@system.router'
 import { CITIES, TIME_ZONES, loadCity, saveCity } from '../../common/cities.js'
 import { STRINGS, loadLanguage } from '../../common/i18n.js'
+import { loadLayout } from '../../common/screen.js'
 
 export default {
   private: {
+    w: '',
     title: STRINGS.id.city,
     active: CITIES[0].name,
     items: CITIES.map((c) => ({ name: c.name, zone: TIME_ZONES[c.tz] }))
   },
 
   onInit() {
+    loadLayout((w) => (this.w = w))
     loadLanguage((lang) => (this.title = STRINGS[lang].city))
     loadCity((city) => (this.active = city.name))
   },
@@ -96,5 +99,46 @@ export default {
 .radio-active {
   border-width: 6px;
   border-color: #1fa77a;
+}
+
+/* Wide screens (Band 9 Pro): the band layout at about 0.6x, since px
+   there is scaled 1.75x */
+.w-page {
+  height: 274px;
+  padding: 22px 5px 14px 5px;
+}
+
+.w-title {
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.w-group {
+  padding: 2px 0;
+  border-radius: 13px;
+}
+
+.w-option {
+  height: 34px;
+  padding: 0 10px;
+}
+
+.w-name {
+  font-size: 10px;
+}
+
+.w-zone {
+  font-size: 8px;
+}
+
+.w-radio {
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
+  border-width: 1px;
+}
+
+.w-radio-active {
+  border-width: 4px;
 }
 </style>

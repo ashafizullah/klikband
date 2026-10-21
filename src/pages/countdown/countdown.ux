@@ -1,17 +1,17 @@
 <template>
-  <scroll class="page" scroll-y="true">
-    <text class="title">{{t.countdown}}</text>
+  <scroll class="page {{w}}page" scroll-y="true">
+    <text class="title {{w}}title">{{t.countdown}}</text>
 
-    <text if="{{items.length === 0}}" class="empty">{{t.empty}}</text>
+    <text if="{{items.length === 0}}" class="empty {{w}}empty">{{t.empty}}</text>
 
-    <div class="card" for="{{items}}" onclick="edit($item.index)">
-      <text class="label">{{$item.label}}</text>
-      <text class="date">{{$item.date}}</text>
-      <text class="days {{$item.past ? 'days-past' : ''}}">{{$item.days}}</text>
+    <div class="card {{w}}card" for="{{items}}" onclick="edit($item.index)">
+      <text class="label {{w}}label">{{$item.label}}</text>
+      <text class="date {{w}}date">{{$item.date}}</text>
+      <text class="days {{$item.past ? 'days-past' : ''}} {{w}}days">{{$item.days}}</text>
     </div>
 
-    <div if="{{canAdd}}" class="button" onclick="edit(-1)">
-      <text class="button-text">+ {{t.add}}</text>
+    <div if="{{canAdd}}" class="button {{w}}button" onclick="edit(-1)">
+      <text class="button-text {{w}}button-text">+ {{t.add}}</text>
     </div>
   </scroll>
 </template>
@@ -20,15 +20,18 @@
 import router from '@system.router'
 import { loadCountdowns, daysUntil, targetDate, MAX_ENTRIES } from '../../common/countdown.js'
 import { STRINGS, loadLanguage, formatDays, formatFullDate } from '../../common/i18n.js'
+import { loadLayout } from '../../common/screen.js'
 
 export default {
   private: {
+    w: '',
     t: STRINGS.id,
     items: [],
     canAdd: true
   },
 
   onInit() {
+    loadLayout((w) => (this.w = w))
     this.list = []
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
@@ -138,5 +141,51 @@ export default {
   font-size: 18px;
   font-weight: bold;
   color: #ff9f0a;
+}
+
+/* Wide screens (Band 9 Pro): the band layout at about 0.6x, since px
+   there is scaled 1.75x */
+.w-page {
+  height: 274px;
+  padding: 22px 5px 14px 5px;
+}
+
+.w-title {
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.w-empty {
+  font-size: 10px;
+  margin: 12px 0;
+}
+
+.w-card {
+  padding: 7px 8px;
+  margin-bottom: 5px;
+  border-radius: 13px;
+}
+
+.w-label {
+  font-size: 10px;
+}
+
+.w-date {
+  font-size: 8px;
+}
+
+.w-days {
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.w-button {
+  height: 31px;
+  margin-top: 2px;
+  border-radius: 16px;
+}
+
+.w-button-text {
+  font-size: 11px;
 }
 </style>

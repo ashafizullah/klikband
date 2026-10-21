@@ -1,25 +1,25 @@
 <template>
-  <scroll class="page" scroll-y="true">
+  <scroll class="page {{w}}page" scroll-y="true">
     <!-- The whole name pill is the tap target: each tap picks the next preset label -->
-    <div class="name" onclick="rename">
-      <text class="title">{{label}}</text>
-      <text class="name-hint">{{t.tapToRename}}</text>
+    <div class="name {{w}}name" onclick="rename">
+      <text class="title {{w}}title">{{label}}</text>
+      <text class="name-hint {{w}}name-hint">{{t.tapToRename}}</text>
     </div>
 
-    <div class="circle" onclick="increment">
+    <div class="circle {{w}}circle" onclick="increment">
       <text class="count" style="font-size: {{countSize}}px;">{{count}}</text>
     </div>
 
     <!-- One full-width button per row, easier to tap on the band -->
-    <div class="button" onclick="undo">
-      <text class="button-text" style="color: {{count > 0 ? '#ffffff' : '#636366'}};">−1</text>
+    <div class="button {{w}}button" onclick="undo">
+      <text class="button-text {{w}}button-text" style="color: {{count > 0 ? '#ffffff' : '#636366'}};">−1</text>
     </div>
     <!-- Inline colors: a changing class broke button sizes on the band -->
-    <div class="button" style="background-color: {{confirming === 'reset' ? '#ff453a' : '#1c1c1e'}};" onclick="reset">
-      <text class="button-text">{{confirming === 'reset' ? t.sure : t.reset}}</text>
+    <div class="button {{w}}button" style="background-color: {{confirming === 'reset' ? '#ff453a' : '#1c1c1e'}};" onclick="reset">
+      <text class="button-text {{w}}button-text">{{confirming === 'reset' ? t.sure : t.reset}}</text>
     </div>
-    <div class="button" style="background-color: {{confirming === 'remove' ? '#ff453a' : '#1c1c1e'}};" onclick="remove">
-      <text class="button-text" style="color: {{confirming === 'remove' ? '#ffffff' : '#ff453a'}};">{{confirming === 'remove' ? t.sure : t.remove}}</text>
+    <div class="button {{w}}button" style="background-color: {{confirming === 'remove' ? '#ff453a' : '#1c1c1e'}};" onclick="remove">
+      <text class="button-text {{w}}button-text" style="color: {{confirming === 'remove' ? '#ffffff' : '#ff453a'}};">{{confirming === 'remove' ? t.sure : t.remove}}</text>
     </div>
   </scroll>
 </template>
@@ -29,7 +29,7 @@ import router from '@system.router'
 import vibrator from '@system.vibrator'
 import { COUNTER_LABELS, loadCounters, saveCounters } from '../../common/counters.js'
 import { STRINGS, loadLanguage } from '../../common/i18n.js'
-import { keepScreenOn } from '../../common/screen.js'
+import { keepScreenOn, loadLayout } from '../../common/screen.js'
 
 // Reset and delete need a second tap within this time
 const CONFIRM_MS = 3000
@@ -41,6 +41,7 @@ export default {
   },
 
   private: {
+    w: '',
     t: STRINGS.id,
     label: '',
     count: 0,
@@ -52,6 +53,10 @@ export default {
     this.index = parseInt(this.index, 10)
     this.list = []
     this.entry = { label: 'other', count: 0 }
+    loadLayout((w) => {
+      this.w = w
+      this.render()
+    })
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
       this.render()
@@ -80,7 +85,8 @@ export default {
     this.count = this.entry.count
     // Smaller digits as the number grows, so it stays inside the circle
     const digits = String(this.count).length
-    this.countSize = digits <= 3 ? 56 : digits === 4 ? 46 : digits === 5 ? 38 : 30
+    const size = digits <= 3 ? 56 : digits === 4 ? 46 : digits === 5 ? 38 : 30
+    this.countSize = this.w ? Math.round(size * 0.6) : size
   },
 
   save() {
@@ -200,5 +206,44 @@ export default {
   font-size: 17px;
   font-weight: bold;
   color: #ffffff;
+}
+
+/* Wide screens (Band 9 Pro): the band layout at about 0.6x, since px
+   there is scaled 1.75x */
+.w-page {
+  height: 274px;
+  padding: 22px 5px 14px 5px;
+}
+
+.w-name {
+  height: 34px;
+  margin-bottom: 7px;
+  border-radius: 17px;
+}
+
+.w-name-hint {
+  font-size: 7px;
+}
+
+.w-title {
+  font-size: 12px;
+}
+
+.w-circle {
+  width: 98px;
+  height: 98px;
+  margin-bottom: 8px;
+  border-radius: 49px;
+  border-width: 4px;
+}
+
+.w-button {
+  height: 29px;
+  margin-bottom: 5px;
+  border-radius: 14px;
+}
+
+.w-button-text {
+  font-size: 10px;
 }
 </style>

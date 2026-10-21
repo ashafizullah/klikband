@@ -1,56 +1,58 @@
 <template>
-  <scroll class="page" scroll-y="true" onswipe="onSwipe">
-    <text class="date">{{gregorian}}</text>
+  <scroll class="page {{w}}page" scroll-y="true" onswipe="onSwipe">
+    <text class="date {{w}}date">{{gregorian}}</text>
     <div class="time-row">
-      <text class="time">{{hours}}</text>
-      <text class="time colon">:</text>
-      <text class="time">{{minutes}}</text>
+      <text class="time {{w}}time">{{hours}}</text>
+      <text class="time colon {{w}}colon">:</text>
+      <text class="time {{w}}time">{{minutes}}</text>
     </div>
-    <div class="track">
-      <div class="seconds-fill" style="width: {{secondsBar}}px;"></div>
+    <div class="track {{w}}track">
+      <div class="seconds-fill {{w}}seconds-fill" style="width: {{secondsBar}}px;"></div>
     </div>
-    <div class="hijri-pill">
-      <text class="hijri">{{hijri}}</text>
+    <text class="hijri {{w}}hijri">{{hijri}}</text>
+
+    <div class="panels {{w}}panels">
+      <div class="hero {{w}}hero">
+        <div class="hero-row {{w}}hero-row">
+          <text class="hero-label {{w}}hero-label">{{nextLabel}}</text>
+          <text class="hero-time {{w}}hero-time">{{nextTime}}</text>
+        </div>
+        <div class="hero-track {{w}}hero-track">
+          <div class="hero-fill {{w}}hero-fill" style="width: {{prayerBar}}px;"></div>
+        </div>
+        <text class="countdown {{w}}countdown">{{countdown}}</text>
+      </div>
+
+      <div class="schedule {{w}}schedule">
+        <div class="row {{w}}row {{$item.style}}" for="{{schedule}}">
+          <div class="dot {{w}}dot {{$item.style}}-dot"></div>
+          <text class="row-label {{w}}row-text {{$item.style}}-text">{{$item.label}}</text>
+          <text class="row-time {{w}}row-text {{$item.style}}-text">{{$item.time}}</text>
+        </div>
+      </div>
     </div>
 
-    <div class="hero">
-      <div class="hero-row">
-        <text class="hero-label">{{nextLabel}}</text>
-        <text class="hero-time">{{nextTime}}</text>
-      </div>
-      <div class="hero-track">
-        <div class="hero-fill" style="width: {{prayerBar}}px;"></div>
-      </div>
-      <text class="countdown">{{countdown}}</text>
-    </div>
-
-    <div class="schedule">
-      <div class="row {{$item.style}}" for="{{schedule}}">
-        <div class="dot {{$item.style}}-dot"></div>
-        <text class="row-label {{$item.style}}-text">{{$item.label}}</text>
-        <text class="row-time {{$item.style}}-text">{{$item.time}}</text>
-      </div>
-    </div>
-
-    <text class="footer">{{footer}}</text>
+    <text class="footer {{w}}footer">{{footer}}</text>
   </scroll>
 </template>
 
 <script>
 import router from '@system.router'
-import vibrator from '@system.vibrator'
 import battery from '@system.battery'
 import { prayerTimes, nextPrayer, prayerDate, formatMinutes, PRAYER_ORDER } from '../../common/prayer.js'
+import { prayerAlert } from '../../common/alert.js'
 import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
 import { CITIES, loadCity } from '../../common/cities.js'
 import { toHijriWithOffset, loadHijriOffset } from '../../common/hijri.js'
+import { loadLayout } from '../../common/screen.js'
 
 // The five daily prayers shown in the schedule
 const DAILY = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']
 
-// Inner widths of the seconds track and the hero card's progress track
-const SECONDS_WIDTH = 120
-const PRAYER_WIDTH = 148
+// Inner widths of the seconds track and the hero card's progress track,
+// on bands and on wide screens
+const SECONDS_WIDTH = { '': 120, 'w-': 176 }
+const PRAYER_WIDTH = { '': 148, 'w-': 62 }
 
 const pad = (n) => (n < 10 ? '0' : '') + n
 
@@ -68,6 +70,7 @@ function previousStart(now, next, location) {
 
 export default {
   private: {
+    w: '',
     gregorian: '',
     hours: '',
     minutes: '',
@@ -87,6 +90,10 @@ export default {
     this.offset = 0
     this.batteryText = ''
     this.refresh()
+    loadLayout((w) => {
+      this.w = w
+      this.refresh()
+    })
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
       this.refresh()
@@ -121,8 +128,7 @@ export default {
   tick() {
     const now = new Date()
     const left = Math.ceil((this.target - now.getTime()) / 1000)
-    // Buzz when the prayer time arrives while this page is open (short for Imsak)
-    if (left <= 0) vibrator.vibrate({ mode: this.nextKey === 'imsak' ? 'short' : 'long' })
+    if (left <= 0) prayerAlert(this.t, this.nextKey)
     // Full refresh at the next prayer and at every new minute
     if (left <= 0 || now.getMinutes() !== this.minute) this.refresh()
     else this.updateSeconds(now)
@@ -131,10 +137,10 @@ export default {
   // Everything that moves every second: the seconds track, countdown and prayer progress
   updateSeconds(now) {
     const ms = now.getTime()
-    this.secondsBar = Math.round((SECONDS_WIDTH * now.getSeconds()) / 59)
+    this.secondsBar = Math.round((SECONDS_WIDTH[this.w] * now.getSeconds()) / 59)
     this.countdown = formatDuration(this.t, Math.max(0, Math.ceil((this.target - ms) / 1000)))
     const span = this.target - this.start
-    this.prayerBar = Math.round(PRAYER_WIDTH * Math.min(1, Math.max(0, (ms - this.start) / span)))
+    this.prayerBar = Math.round(PRAYER_WIDTH[this.w] * Math.min(1, Math.max(0, (ms - this.start) / span)))
   },
 
   refresh() {
@@ -189,7 +195,7 @@ export default {
   align-items: center;
   width: 192px;
   height: 490px;
-  padding: 36px 8px 20px 8px;
+  padding: 32px 8px 16px 8px;
   background-color: #000000;
 }
 
@@ -220,7 +226,7 @@ export default {
   width: 120px;
   height: 4px;
   border-radius: 2px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   background-color: #1c1c1e;
 }
 
@@ -230,17 +236,18 @@ export default {
   background-color: #34d399;
 }
 
-.hijri-pill {
-  padding: 4px 12px;
-  margin-bottom: 14px;
-  border-radius: 14px;
-  background-color: #2b1f08;
+/* Plain centered text rather than a pill, so long month names fit on one line */
+.hijri {
+  width: 176px;
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+  color: #ff9f0a;
+  margin-bottom: 12px;
 }
 
-.hijri {
-  font-size: 14px;
-  font-weight: bold;
-  color: #ff9f0a;
+.panels {
+  flex-direction: column;
 }
 
 .hero {
@@ -353,6 +360,108 @@ export default {
 .footer {
   font-size: 13px;
   color: #636366;
-  margin-top: 10px;
+  margin-top: 8px;
+}
+
+/* Wide screens (Band 9 Pro): smaller type, and the next prayer and the
+   schedule sit side by side */
+.w-page {
+  height: 274px;
+  padding: 8px 8px 8px 8px;
+}
+
+.w-date {
+  font-size: 10px;
+}
+
+.w-time {
+  font-size: 40px;
+}
+
+.w-colon {
+  margin: 0 1px 4px 1px;
+}
+
+.w-track {
+  width: 176px;
+  height: 3px;
+  margin-bottom: 4px;
+}
+
+.w-seconds-fill {
+  height: 3px;
+}
+
+.w-hijri {
+  font-size: 10px;
+  margin-bottom: 6px;
+}
+
+.w-panels {
+  flex-direction: row;
+  justify-content: space-between;
+  width: 176px;
+}
+
+.w-hero {
+  width: 78px;
+  padding: 8px;
+  margin-bottom: 0;
+  border-radius: 14px;
+}
+
+.w-hero-row {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.w-hero-label {
+  font-size: 11px;
+}
+
+.w-hero-time {
+  font-size: 18px;
+}
+
+.w-hero-track {
+  width: 62px;
+  height: 4px;
+  margin: 6px 0 4px 0;
+}
+
+.w-hero-fill {
+  height: 4px;
+}
+
+.w-countdown {
+  font-size: 7px;
+}
+
+.w-schedule {
+  width: 94px;
+  padding: 4px;
+  border-radius: 14px;
+}
+
+.w-row {
+  height: 16px;
+  padding: 0 5px;
+  border-radius: 8px;
+}
+
+.w-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 2px;
+  margin-right: 4px;
+}
+
+.w-row-text {
+  font-size: 9px;
+}
+
+.w-footer {
+  font-size: 8px;
+  margin-top: 6px;
 }
 </style>

@@ -1,40 +1,53 @@
 <template>
-  <scroll class="page" scroll-y="true">
-    <text class="title">{{t.today}}</text>
+  <scroll class="page {{w}}page" scroll-y="true">
+    <text class="title {{w}}title">{{t.today}}</text>
 
-    <div class="card">
-      <text class="date">{{gregorian}}</text>
-      <text class="hijri">{{hijri}}</text>
-    </div>
-
-    <div class="hero">
-      <text class="hero-label">{{nextLabel}}</text>
-      <text class="hero-time">{{nextTime}}</text>
-      <div class="pill">
-        <text class="pill-text">{{countdown}}</text>
+    <!-- Gregorian and Hijri dates as two calendar tiles -->
+    <div class="dates {{w}}dates">
+      <div class="tile {{w}}tile">
+        <text class="tile-top {{w}}tile-top">{{weekday}}</text>
+        <text class="tile-day {{w}}tile-day">{{gDay}}</text>
+        <text class="tile-month {{w}}tile-month">{{gMonth}}</text>
       </div>
-      <text class="city">{{city}}</text>
+      <div class="tile {{w}}tile">
+        <text class="tile-top {{w}}tile-top">{{hYear}}</text>
+        <text class="tile-day hijri-day {{w}}tile-day">{{hDay}}</text>
+        <text class="tile-month hijri-month {{w}}tile-month">{{hMonth}}</text>
+      </div>
     </div>
 
-    <div class="card">
-      <text class="section">{{t.fasting}}</text>
-      <text class="when">{{t.todayLabel}}</text>
-      <text class="fast {{todayStyle}}">{{todayFasts}}</text>
-      <div class="divider"></div>
-      <text class="when">{{t.tomorrowLabel}}</text>
-      <text class="fast {{tomorrowStyle}}">{{tomorrowFasts}}</text>
+    <div class="hero {{w}}hero">
+      <div class="hero-main {{w}}hero-main">
+        <text class="hero-label {{w}}hero-label">{{nextLabel}}</text>
+        <text class="hero-time {{w}}hero-time">{{nextTime}}</text>
+      </div>
+      <div class="hero-side {{w}}hero-side">
+        <div class="pill {{w}}pill">
+          <text class="pill-text {{w}}pill-text">{{countdown}}</text>
+        </div>
+        <text class="city {{w}}city">{{city}}</text>
+      </div>
+    </div>
+
+    <div class="card {{w}}card">
+      <text class="section {{w}}section">{{t.fasting}}</text>
+      <text class="when {{w}}when">{{t.todayLabel}}</text>
+      <text class="fast {{w}}fast {{todayStyle}}">{{todayFasts}}</text>
+      <div class="divider {{w}}divider"></div>
+      <text class="when {{w}}when">{{t.tomorrowLabel}}</text>
+      <text class="fast {{w}}fast {{tomorrowStyle}}">{{tomorrowFasts}}</text>
     </div>
   </scroll>
 </template>
 
 <script>
-import vibrator from '@system.vibrator'
 import { nextPrayer, prayerDate, formatMinutes } from '../../common/prayer.js'
-import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
+import { prayerAlert } from '../../common/alert.js'
+import { STRINGS, loadLanguage, formatDuration } from '../../common/i18n.js'
 import { CITIES, TIME_ZONES, loadCity } from '../../common/cities.js'
 import { toHijriWithOffset, loadHijriOffset } from '../../common/hijri.js'
 import { fastsFor } from '../../common/fasting.js'
-import { keepScreenOn } from '../../common/screen.js'
+import { keepScreenOn, loadLayout } from '../../common/screen.js'
 
 // Style for a fasting line: highlighted when there is a fast, red when fasting is not allowed
 function fastStyle(keys) {
@@ -45,9 +58,14 @@ function fastStyle(keys) {
 
 export default {
   private: {
+    w: '',
     t: STRINGS.id,
-    gregorian: '',
-    hijri: '',
+    weekday: '',
+    gDay: '',
+    gMonth: '',
+    hYear: '',
+    hDay: '',
+    hMonth: '',
     nextLabel: '',
     nextTime: '',
     countdown: '',
@@ -62,6 +80,7 @@ export default {
     this.cityData = CITIES[0]
     this.offset = 0
     this.refresh()
+    loadLayout((w) => (this.w = w))
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
       this.refresh()
@@ -94,8 +113,7 @@ export default {
     const seconds = Math.ceil((this.target - Date.now()) / 1000)
     // Full refresh at the next prayer, and once a minute for the date
     this.ticks = (this.ticks || 0) + 1
-    // Buzz when the prayer time arrives while this page is open (short for Imsak)
-    if (seconds <= 0) vibrator.vibrate({ mode: this.nextKey === 'imsak' ? 'short' : 'long' })
+    if (seconds <= 0) prayerAlert(this.t, this.nextKey)
     if (seconds <= 0 || this.ticks % 60 === 0) this.refresh()
     else this.countdown = formatDuration(this.t, seconds)
   },
@@ -106,8 +124,13 @@ export default {
     const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
 
     const h = toHijriWithOffset(now, this.offset)
-    this.gregorian = formatDate(t, now) + ' ' + now.getFullYear()
-    this.hijri = h.day + ' ' + t.hijriMonths[h.month - 1] + ' ' + h.year + ' H'
+    const zh = t === STRINGS.zh
+    this.weekday = t.weekdays[now.getDay()]
+    this.gDay = String(now.getDate())
+    this.gMonth = zh ? now.getFullYear() + '年' + t.months[now.getMonth()] : t.months[now.getMonth()] + ' ' + now.getFullYear()
+    this.hYear = h.year + (zh ? ' 年' : ' H')
+    this.hDay = String(h.day)
+    this.hMonth = t.hijriMonths[h.month - 1]
 
     const next = nextPrayer(now, this.cityData)
     this.nextKey = next.key
@@ -133,7 +156,7 @@ export default {
   align-items: center;
   width: 192px;
   height: 490px;
-  padding: 36px 8px 24px 8px;
+  padding: 32px 8px 24px 8px;
   background-color: #000000;
 }
 
@@ -141,28 +164,51 @@ export default {
   font-size: 22px;
   font-weight: bold;
   color: #ffffff;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
-.card {
-  flex-direction: column;
+.dates {
+  flex-direction: row;
+  justify-content: space-between;
   width: 176px;
-  padding: 14px;
   margin-bottom: 8px;
-  border-radius: 22px;
+}
+
+.tile {
+  flex-direction: column;
+  align-items: center;
+  width: 84px;
+  padding: 10px 6px;
+  border-radius: 20px;
   background-color: #1c1c1e;
 }
 
-.date {
-  font-size: 17px;
+.tile-top {
+  font-size: 13px;
+  color: #8e8e93;
+}
+
+.tile-day {
+  font-size: 34px;
   font-weight: bold;
   color: #ffffff;
 }
 
-.hijri {
-  font-size: 15px;
+.tile-month {
+  width: 72px;
+  font-size: 13px;
+  font-weight: bold;
+  text-align: center;
+  color: #ffffff;
+  lines: 2;
+}
+
+.hijri-day {
   color: #ff9f0a;
-  margin-top: 2px;
+}
+
+.hijri-month {
+  color: #ff9f0a;
 }
 
 .hero {
@@ -175,6 +221,11 @@ export default {
   background-color: #0d3b2c;
 }
 
+.hero-main {
+  flex-direction: column;
+  align-items: center;
+}
+
 .hero-label {
   font-size: 18px;
   font-weight: bold;
@@ -185,6 +236,11 @@ export default {
   font-size: 48px;
   font-weight: bold;
   color: #ffffff;
+}
+
+.hero-side {
+  flex-direction: column;
+  align-items: center;
 }
 
 .pill {
@@ -202,6 +258,14 @@ export default {
   font-size: 13px;
   color: #8ee6c0;
   margin-top: 8px;
+}
+
+.card {
+  flex-direction: column;
+  width: 176px;
+  padding: 14px;
+  border-radius: 22px;
+  background-color: #1c1c1e;
 }
 
 .section {
@@ -235,5 +299,101 @@ export default {
   height: 1px;
   margin: 8px 0;
   background-color: #2c2c2e;
+}
+
+/* Wide screens (Band 9 Pro): smaller type, and the next prayer card lays out
+   side by side */
+.w-page {
+  height: 274px;
+  padding: 10px 8px 12px 8px;
+}
+
+.w-title {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.w-dates {
+  margin-bottom: 6px;
+}
+
+.w-tile {
+  width: 86px;
+  padding: 6px 4px;
+  border-radius: 12px;
+}
+
+.w-tile-top {
+  font-size: 8px;
+}
+
+.w-tile-day {
+  font-size: 22px;
+}
+
+.w-tile-month {
+  width: 78px;
+  font-size: 9px;
+}
+
+.w-hero {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  border-radius: 14px;
+}
+
+.w-hero-main {
+  align-items: flex-start;
+}
+
+.w-hero-label {
+  font-size: 10px;
+}
+
+.w-hero-time {
+  font-size: 24px;
+}
+
+.w-hero-side {
+  align-items: flex-end;
+}
+
+.w-pill {
+  padding: 3px 7px;
+  border-radius: 9px;
+}
+
+.w-pill-text {
+  font-size: 9px;
+}
+
+.w-city {
+  font-size: 8px;
+  margin-top: 4px;
+}
+
+.w-card {
+  padding: 8px 10px;
+  border-radius: 14px;
+}
+
+.w-section {
+  font-size: 10px;
+  margin-bottom: 4px;
+}
+
+.w-when {
+  font-size: 8px;
+}
+
+.w-fast {
+  font-size: 10px;
+}
+
+.w-divider {
+  margin: 5px 0;
 }
 </style>

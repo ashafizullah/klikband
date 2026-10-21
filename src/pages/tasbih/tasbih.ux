@@ -1,25 +1,31 @@
 <template>
-  <div class="page">
-    <text class="title">{{t.tasbih}}</text>
+  <div class="page {{w}}page">
+    <text class="title {{w}}title">{{t.tasbih}}</text>
 
-    <!-- The middle section fills the remaining height, keeping the counter centered -->
-    <div class="middle">
-      <div class="circle" onclick="increment">
-        <text class="count">{{count}}</text>
-        <text class="target">/ {{target}}</text>
+    <!-- Bands stack the counter over the buttons; wide screens put them side by side -->
+    <div class="body {{w}}body">
+      <!-- On bands the middle section fills the remaining height, keeping the counter centered -->
+      <div class="{{w ? 'w-middle' : 'middle'}}">
+        <div class="circle {{w}}circle" onclick="increment">
+          <text class="count {{w}}count">{{count}}</text>
+          <text class="target {{w}}target">/ {{target}}</text>
+        </div>
       </div>
-      <div class="bar">
-        <div class="bar-fill" style="width: {{barWidth}}px;"></div>
-      </div>
-      <text class="round">{{t.round}} {{round}}</text>
-    </div>
 
-    <!-- One full-width button per row, easier to tap on the band -->
-    <div class="button" onclick="nextTarget">
-      <text class="button-text">{{t.target}}</text>
-    </div>
-    <div class="button" onclick="reset">
-      <text class="button-text">{{t.reset}}</text>
+      <div class="controls {{w}}controls">
+        <div class="bar {{w}}bar">
+          <div class="bar-fill {{w}}bar-fill" style="width: {{barWidth}}px;"></div>
+        </div>
+        <text class="round {{w}}round">{{t.round}} {{round}}</text>
+
+        <!-- One full-width button per row, easier to tap on the band -->
+        <div class="button {{w}}button" onclick="nextTarget">
+          <text class="button-text {{w}}button-text">{{t.target}}</text>
+        </div>
+        <div class="button {{w}}button" onclick="reset">
+          <text class="button-text {{w}}button-text">{{t.reset}}</text>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -28,13 +34,15 @@
 import vibrator from '@system.vibrator'
 import storage from '@system.storage'
 import { STRINGS, loadLanguage } from '../../common/i18n.js'
-import { keepScreenOn } from '../../common/screen.js'
+import { keepScreenOn, loadLayout } from '../../common/screen.js'
 
 const TARGETS = [33, 99, 100]
-const BAR_WIDTH = 140
+// Progress bar width on bands and on wide screens
+const BAR_WIDTH = { '': 140, 'w-': 76 }
 
 export default {
   private: {
+    w: '',
     t: STRINGS.id,
     count: 0,
     target: 33,
@@ -43,6 +51,10 @@ export default {
   },
 
   onInit() {
+    loadLayout((w) => {
+      this.w = w
+      this.updateBar()
+    })
     loadLanguage((lang) => (this.t = STRINGS[lang]))
     storage.get({
       key: 'tasbih',
@@ -74,7 +86,7 @@ export default {
   },
 
   updateBar() {
-    this.barWidth = Math.round((this.count / this.target) * BAR_WIDTH)
+    this.barWidth = Math.round((this.count / this.target) * BAR_WIDTH[this.w])
   },
 
   increment() {
@@ -119,12 +131,23 @@ export default {
   color: #ffffff;
 }
 
+.body {
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+}
+
 .middle {
   flex: 1;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 176px;
+}
+
+.controls {
+  flex-direction: column;
+  align-items: center;
 }
 
 .circle {
@@ -153,7 +176,7 @@ export default {
 .bar {
   width: 140px;
   height: 6px;
-  margin-top: 20px;
+  margin-top: 4px;
   border-radius: 3px;
   background-color: #2c2c2e;
 }
@@ -168,6 +191,7 @@ export default {
   font-size: 17px;
   color: #8e8e93;
   margin-top: 10px;
+  margin-bottom: 8px;
 }
 
 .button {
@@ -185,5 +209,77 @@ export default {
   font-size: 17px;
   font-weight: bold;
   color: #ffffff;
+}
+
+/* Wide screens (Band 9 Pro): the counter on the left, progress and buttons
+   on the right */
+.w-page {
+  height: 274px;
+  padding: 10px 8px 12px 8px;
+}
+
+.w-title {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.w-body {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 176px;
+}
+
+/* Not combined with .middle, whose flex: 1 would squeeze it in a row */
+.w-middle {
+  justify-content: center;
+  align-items: center;
+  width: 96px;
+}
+
+.w-circle {
+  width: 96px;
+  height: 96px;
+  border-radius: 48px;
+  border-width: 4px;
+}
+
+.w-count {
+  font-size: 34px;
+}
+
+.w-target {
+  font-size: 10px;
+}
+
+.w-controls {
+  width: 76px;
+}
+
+.w-bar {
+  width: 76px;
+  height: 4px;
+  margin-top: 0;
+}
+
+.w-bar-fill {
+  height: 4px;
+}
+
+.w-round {
+  font-size: 10px;
+  margin-top: 5px;
+  margin-bottom: 4px;
+}
+
+.w-button {
+  width: 76px;
+  height: 30px;
+  margin-top: 6px;
+  border-radius: 15px;
+}
+
+.w-button-text {
+  font-size: 10px;
 }
 </style>

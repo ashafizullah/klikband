@@ -38,7 +38,8 @@
   - **Today**: Gregorian and Hijri date, next prayer, and sunnah fasts for today and tomorrow
   - **Post-prayer Dhikr**: guided counter following [Almanhaj](https://almanhaj.or.id/97313-dzikir-setelah-shalat.html)
   - **Morning & Evening Dhikr**: guided counter following [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html)
-  - **Prayer Times**: Indonesian Ministry of Religious Affairs (Kemenag) method, computed offline on the band
+  - **Prayer Times**: Indonesian Ministry of Religious Affairs (Kemenag) method, computed offline on the band; buzzes when a prayer time arrives while the page is open
+  - **Qibla**: direction and distance to the Kaaba from your city, with the sun drawn on the dial so lining it up with the real sun points you to the Qibla, and the yearly sun-over-Kaaba dates
   - **Tasbih**: tap counter with a 33/99/100 target and vibration
   - **Hijri Date**: arithmetic Hijri calendar with a ±2 day manual correction
   - **Islamic Holidays**: countdown to 8 Islamic holidays, nearest first
@@ -49,7 +50,12 @@
   - **Calendar**: monthly calendar with Hijri dates, Islamic holidays and fasting days marked; tap a day for details
   - **Day Counter**: days until or since your own dates, with monthly or yearly repeat
   - **Scoreboard**: two-side counter with free points, badminton (21 points, best of 3) or padel/tennis scoring (15-30-40, deuce, sets, tiebreak), with undo
+  - **Counter**: up to six tally counters with preset names (guests, people, items, laps, reps)
+  - **Calculator**: + − × ÷ with percent and sign change
 - **Settings**: city (46 Indonesian cities, WIB/WITA/WIT) and language (Indonesian, English, 中文)
+- **About**: app version and device info (storage, model, OS and platform version)
+
+Reading and counting pages keep the screen on while open.
 
 ## Limitations
 

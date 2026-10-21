@@ -38,7 +38,8 @@
   - **Hari Ini**: tanggal Masehi dan Hijriah, sholat berikutnya, serta puasa sunnah hari ini dan besok
   - **Dzikir Sholat**: penghitung berpanduan sesuai [Almanhaj](https://almanhaj.or.id/97313-dzikir-setelah-shalat.html)
   - **Dzikir Pagi Petang**: penghitung berpanduan sesuai [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html)
-  - **Jadwal Sholat**: metode Kemenag RI, dihitung offline di band
+  - **Jadwal Sholat**: metode Kemenag RI, dihitung offline di band; bergetar saat masuk waktu sholat selama halamannya terbuka
+  - **Arah Kiblat**: arah dan jarak ke Ka'bah dari kotamu, dengan posisi matahari di kompas sehingga cukup menyamakannya dengan matahari sungguhan untuk menghadap kiblat, plus jadwal Rashdul Qiblat
   - **Tasbih**: penghitung ketuk dengan target 33/99/100 dan getar
   - **Hijriah**: kalender Hijriah aritmetika dengan koreksi manual ±2 hari
   - **Hari Besar Islam**: hitung mundur 8 hari besar Islam, diurutkan dari yang terdekat
@@ -49,7 +50,12 @@
   - **Kalender**: kalender bulanan dengan tanggal Hijriah, hari besar Islam dan hari puasa ditandai; ketuk tanggal untuk detail
   - **Hitung Hari**: berapa hari menuju atau sejak tanggal pentingmu, bisa diulang bulanan atau tahunan
   - **Papan Skor**: penghitung skor dua sisi: poin bebas, badminton (21 poin, best of 3) atau padel/tenis (15-30-40, deuce, set, tiebreak), dengan tombol batal
+  - **Penghitung**: hingga enam penghitung dengan nama pilihan (tamu, orang, barang, putaran, repetisi)
+  - **Kalkulator**: + − × ÷ dengan persen dan ganti tanda
 - **Pengaturan**: kota (46 kota di Indonesia, WIB/WITA/WIT) dan bahasa (Indonesia, English, 中文)
+- **Tentang**: versi aplikasi dan info perangkat (penyimpanan, model, versi OS dan platform)
+
+Halaman bacaan dan penghitung membuat layar tetap menyala selama dibuka.
 
 ## Batasan
 

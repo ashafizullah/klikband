@@ -5,7 +5,7 @@
 <h1 align="center">KlikBand</h1>
 
 <p align="center">
-  A free, open-source quick app for Xiaomi Smart Band 9 (may also work on other Xiaomi Vela bands such as Band 10, untested): a clock, prayer times, guided dhikr, tasbih, Hijri date, Islamic holidays, an umrah guide, a calendar, a day counter and a scoreboard. Fully offline, no account.
+  A free, open-source quick app for Xiaomi Smart Band 9, with its own layout for Band 9 Pro (Band 10 should also work): a clock, prayer times, guided dhikr, tasbih, Hijri date, Islamic holidays, an umrah guide, a calendar, a day counter and a scoreboard. Fully offline, no account.
 </p>
 
 <p align="center">
@@ -39,7 +39,7 @@
   - **Today**: Gregorian and Hijri date, next prayer, and sunnah fasts for today and tomorrow
   - **Post-prayer Dhikr**: guided counter following [Almanhaj](https://almanhaj.or.id/97313-dzikir-setelah-shalat.html)
   - **Morning & Evening Dhikr**: guided counter following [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html)
-  - **Prayer Times**: Indonesian Ministry of Religious Affairs (Kemenag) method, computed offline on the band; buzzes when a prayer time arrives while the page is open
+  - **Prayer Times**: Indonesian Ministry of Religious Affairs (Kemenag) method, computed offline on the band; buzzes and shows a message when a prayer time arrives while Clock, Today or Prayer Times is open
   - **Qibla**: direction and distance to the Kaaba from your city, with the sun drawn on the dial so lining it up with the real sun points you to the Qibla, and the yearly sun-over-Kaaba dates
   - **Tasbih**: tap counter with a 33/99/100 target and vibration
   - **Hijri Date**: arithmetic Hijri calendar with a ±2 day manual correction
@@ -62,7 +62,7 @@ Reading and counting pages keep the screen on while open.
 
 The Smart Band 9 has no GPS, and Xiaomi does not offer the location (`system.geolocation`) or internet (`system.fetch`) APIs on this band. Everything runs offline, and the city is picked manually.
 
-The layout is designed for the Band 9 screen (192×490). Other Xiaomi Vela bands such as Band 10 may work but are untested; wider or round screens (Band 9 Pro, Xiaomi/REDMI watches) will not look right.
+The layout is designed for the Band 9 screen (192×490). Band 9 Pro (336×480) gets its own layout and Band 10 (212×520) uses the Band 9 one; both were checked in the Vela emulator only, not on a real device. Round screens (Xiaomi/REDMI watches) are not supported.
 
 ## Install on the band
 

@@ -5,7 +5,7 @@
 <h1 align="center">KlikBand</h1>
 
 <p align="center">
-  Quick app gratis dan open source untuk Xiaomi Smart Band 9 (mungkin juga jalan di band Xiaomi Vela lain seperti Band 10, belum diuji): jam, jadwal sholat, dzikir berpanduan, tasbih, kalender Hijriah, hari besar Islam, panduan umrah, kalender bulanan, hitung hari, dan papan skor. Sepenuhnya offline, tanpa akun.
+  Quick app gratis dan open source untuk Xiaomi Smart Band 9, dengan tata letak khusus untuk Band 9 Pro (Band 10 juga seharusnya bisa): jam, jadwal sholat, dzikir berpanduan, tasbih, kalender Hijriah, hari besar Islam, panduan umrah, kalender bulanan, hitung hari, dan papan skor. Sepenuhnya offline, tanpa akun.
 </p>
 
 <p align="center">
@@ -39,7 +39,7 @@
   - **Hari Ini**: tanggal Masehi dan Hijriah, sholat berikutnya, serta puasa sunnah hari ini dan besok
   - **Dzikir Sholat**: penghitung berpanduan sesuai [Almanhaj](https://almanhaj.or.id/97313-dzikir-setelah-shalat.html)
   - **Dzikir Pagi Petang**: penghitung berpanduan sesuai [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html)
-  - **Jadwal Sholat**: metode Kemenag RI, dihitung offline di band; bergetar saat masuk waktu sholat selama halamannya terbuka
+  - **Jadwal Sholat**: metode Kemenag RI, dihitung offline di band; bergetar dan menampilkan pesan saat masuk waktu sholat selama halaman Jam, Hari Ini atau Jadwal Sholat terbuka
   - **Arah Kiblat**: arah dan jarak ke Ka'bah dari kotamu, dengan posisi matahari di kompas sehingga cukup menyamakannya dengan matahari sungguhan untuk menghadap kiblat, plus jadwal Rashdul Qiblat
   - **Tasbih**: penghitung ketuk dengan target 33/99/100 dan getar
   - **Hijriah**: kalender Hijriah aritmetika dengan koreksi manual ±2 hari
@@ -62,7 +62,7 @@ Halaman bacaan dan penghitung membuat layar tetap menyala selama dibuka.
 
 Smart Band 9 tidak punya GPS, dan Xiaomi tidak menyediakan API lokasi (`system.geolocation`) maupun internet (`system.fetch`) di band ini. Semua berjalan offline, dan kota dipilih manual.
 
-Tata letaknya dirancang untuk layar Band 9 (192×490). Band Xiaomi Vela lain seperti Band 10 mungkin bisa, tetapi belum diuji; layar yang lebih lebar atau bulat (Band 9 Pro, jam Xiaomi/REDMI) tidak akan tampil rapi.
+Tata letaknya dirancang untuk layar Band 9 (192×490). Band 9 Pro (336×480) punya tata letak sendiri dan Band 10 (212×520) memakai tata letak Band 9; keduanya baru dicek di emulator Vela, belum di perangkat asli. Layar bulat (jam Xiaomi/REDMI) tidak didukung.
 
 ## Pasang ke band
 

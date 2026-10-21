@@ -1,0 +1,220 @@
+<template>
+  <div class="page">
+    <div class="display">
+      <text class="expression">{{expression}}</text>
+      <text class="value" style="font-size: {{valueSize}}px;">{{value}}</text>
+    </div>
+
+    <div class="row" for="{{row in rows}}">
+      <div class="key" for="{{k in row}}" style="background-color: {{k.color}};" onclick="press(k.key)">
+        <!-- The band font has no ⌫ glyph, so backspace is an icon -->
+        <image if="{{k.key === '⌫'}}" class="key-icon" src="/common/icons/backspace.png"></image>
+        <text else class="key-text">{{k.label}}</text>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { evaluate, numberToEntry, formatEntry } from '../../common/calculator.js'
+import { STRINGS, loadLanguage } from '../../common/i18n.js'
+
+const KEYS = [
+  ['C', '⌫', '%', '÷'],
+  ['7', '8', '9', '×'],
+  ['4', '5', '6', '−'],
+  ['1', '2', '3', '+'],
+  ['±', '0', '.', '=']
+]
+const OPERATORS = ['÷', '×', '−', '+']
+const MAX_DIGITS = 12
+
+function keyColor(key) {
+  if (key === '=') return '#ff9f0a'
+  if (OPERATORS.indexOf(key) >= 0) return '#3a2a0a'
+  if (key === 'C' || key === '⌫' || key === '%' || key === '±') return '#3a3a3c'
+  return '#1c1c1e'
+}
+
+export default {
+  private: {
+    t: STRINGS.id,
+    expression: '',
+    value: '0',
+    valueSize: 34,
+    rows: []
+  },
+
+  onInit() {
+    // tokens: finished numbers and operators; entry: the number being typed
+    // ('' right after an operator); done: a result is showing
+    this.tokens = []
+    this.entry = '0'
+    this.done = false
+    this.render()
+    loadLanguage((lang) => {
+      this.t = STRINGS[lang]
+      this.render()
+    })
+  },
+
+  format(entry) {
+    return formatEntry(entry, this.t.thousands, this.t.decimal)
+  },
+
+  render() {
+    const t = this.t
+    this.rows = KEYS.map((row) =>
+      row.map((key) => ({ key, label: key === '.' ? t.decimal : key, color: keyColor(key) }))
+    )
+    const shown = this.tokens.map((tok) => (OPERATORS.indexOf(tok) >= 0 ? tok : this.format(tok)))
+    // Only the end of a long expression fits on one line
+    const expression = shown.join(' ') + (this.done ? ' =' : '')
+    this.expression = expression.length > 20 ? '...' + expression.slice(-17) : expression
+    this.value = this.entry === 'error' ? t.calcError : this.format(this.entry || '0')
+    const length = this.value.length
+    this.valueSize = length <= 8 ? 34 : length <= 11 ? 26 : 20
+  },
+
+  press(key) {
+    if (this.entry === 'error' && key !== 'C') return
+    if (key === 'C') this.clear()
+    else if (key === '⌫') this.backspace()
+    else if (key === '=') this.equals()
+    else if (OPERATORS.indexOf(key) >= 0) this.operator(key)
+    else if (key === '%') this.entry = numberToEntry(parseFloat(this.entry || '0') / 100)
+    else if (key === '±') this.negate()
+    else this.digit(key)
+    this.render()
+  },
+
+  clear() {
+    this.tokens = []
+    this.entry = '0'
+    this.done = false
+  },
+
+  // After a result, typing starts a new calculation
+  digit(key) {
+    if (this.done) this.clear()
+    const digits = this.entry.replace(/[-.]/g, '').length
+    if (key === '.') {
+      if (this.entry === '') this.entry = '0'
+      if (this.entry.indexOf('.') < 0) this.entry += '.'
+    } else if (this.entry === '0' || this.entry === '') {
+      this.entry = key
+    } else if (this.entry === '-0') {
+      this.entry = '-' + key
+    } else if (digits < MAX_DIGITS) {
+      this.entry += key
+    }
+  },
+
+  // An operator after a result keeps calculating with it
+  operator(op) {
+    if (this.done) {
+      this.tokens = []
+      this.done = false
+    }
+    if (this.entry === '') this.tokens[this.tokens.length - 1] = op
+    else this.tokens.push(this.entry.replace(/\.$/, ''), op)
+    this.entry = ''
+  },
+
+  equals() {
+    if (this.done) return
+    const tokens = this.tokens.slice()
+    if (this.entry === '') tokens.pop()
+    else tokens.push(this.entry.replace(/\.$/, ''))
+    if (tokens.length < 3) return
+    const result = evaluate(tokens)
+    this.tokens = tokens
+    this.entry = result === null ? 'error' : numberToEntry(result)
+    this.done = true
+  },
+
+  backspace() {
+    if (this.done) return this.clear()
+    if (this.entry === '') {
+      // Undo the operator and go back to editing the number before it
+      this.tokens.pop()
+      this.entry = this.tokens.pop() || '0'
+      return
+    }
+    this.entry = this.entry.slice(0, -1)
+    if (this.entry === '' || this.entry === '-') this.entry = '0'
+  },
+
+  negate() {
+    if (this.done) {
+      this.tokens = []
+      this.done = false
+    }
+    const entry = this.entry || '0'
+    this.entry = entry[0] === '-' ? entry.slice(1) : '-' + entry
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 24px 8px;
+  background-color: #000000;
+}
+
+.display {
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  width: 176px;
+  height: 92px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  border-radius: 22px;
+  background-color: #1c1c1e;
+}
+
+.expression {
+  width: 152px;
+  font-size: 14px;
+  color: #8e8e93;
+  text-align: right;
+}
+
+.value {
+  width: 152px;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: right;
+}
+
+.row {
+  flex-direction: row;
+  justify-content: space-between;
+  width: 176px;
+  margin-bottom: 8px;
+}
+
+.key {
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 56px;
+  border-radius: 20px;
+}
+
+.key-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.key-text {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+}
+</style>

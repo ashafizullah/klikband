@@ -1,0 +1,204 @@
+<template>
+  <scroll class="page" scroll-y="true">
+    <!-- The whole name pill is the tap target: each tap picks the next preset label -->
+    <div class="name" onclick="rename">
+      <text class="title">{{label}}</text>
+      <text class="name-hint">{{t.tapToRename}}</text>
+    </div>
+
+    <div class="circle" onclick="increment">
+      <text class="count" style="font-size: {{countSize}}px;">{{count}}</text>
+    </div>
+
+    <!-- One full-width button per row, easier to tap on the band -->
+    <div class="button" onclick="undo">
+      <text class="button-text" style="color: {{count > 0 ? '#ffffff' : '#636366'}};">−1</text>
+    </div>
+    <!-- Inline colors: a changing class broke button sizes on the band -->
+    <div class="button" style="background-color: {{confirming === 'reset' ? '#ff453a' : '#1c1c1e'}};" onclick="reset">
+      <text class="button-text">{{confirming === 'reset' ? t.sure : t.reset}}</text>
+    </div>
+    <div class="button" style="background-color: {{confirming === 'remove' ? '#ff453a' : '#1c1c1e'}};" onclick="remove">
+      <text class="button-text" style="color: {{confirming === 'remove' ? '#ffffff' : '#ff453a'}};">{{confirming === 'remove' ? t.sure : t.remove}}</text>
+    </div>
+  </scroll>
+</template>
+
+<script>
+import router from '@system.router'
+import vibrator from '@system.vibrator'
+import { COUNTER_LABELS, loadCounters, saveCounters } from '../../common/counters.js'
+import { STRINGS, loadLanguage } from '../../common/i18n.js'
+import { keepScreenOn } from '../../common/screen.js'
+
+// Reset and delete need a second tap within this time
+const CONFIRM_MS = 3000
+
+export default {
+  // Index of the counter (router params arrive as strings)
+  protected: {
+    index: 0
+  },
+
+  private: {
+    t: STRINGS.id,
+    label: '',
+    count: 0,
+    countSize: 56,
+    confirming: ''
+  },
+
+  onInit() {
+    this.index = parseInt(this.index, 10)
+    this.list = []
+    this.entry = { label: 'other', count: 0 }
+    loadLanguage((lang) => {
+      this.t = STRINGS[lang]
+      this.render()
+    })
+    loadCounters((list) => {
+      this.list = list
+      if (list[this.index]) this.entry = list[this.index]
+      this.render()
+    })
+  },
+
+  onShow() {
+    keepScreenOn(true)
+  },
+
+  onHide() {
+    keepScreenOn(false)
+  },
+
+  onDestroy() {
+    clearTimeout(this.confirmTimer)
+  },
+
+  render() {
+    this.label = this.t.counterLabels[this.entry.label]
+    this.count = this.entry.count
+    // Smaller digits as the number grows, so it stays inside the circle
+    const digits = String(this.count).length
+    this.countSize = digits <= 3 ? 56 : digits === 4 ? 46 : digits === 5 ? 38 : 30
+  },
+
+  save() {
+    this.list[this.index] = this.entry
+    saveCounters(this.list)
+    this.render()
+  },
+
+  increment() {
+    this.entry.count += 1
+    vibrator.vibrate({ mode: 'short' })
+    this.save()
+  },
+
+  undo() {
+    if (this.entry.count === 0) return
+    this.entry.count -= 1
+    this.save()
+  },
+
+  rename() {
+    const i = COUNTER_LABELS.indexOf(this.entry.label)
+    this.entry.label = COUNTER_LABELS[(i + 1) % COUNTER_LABELS.length]
+    this.save()
+  },
+
+  // First tap asks "Sure?", a second tap within CONFIRM_MS does it
+  confirm(action) {
+    if (this.confirming !== action) {
+      clearTimeout(this.confirmTimer)
+      this.confirming = action
+      this.confirmTimer = setTimeout(() => (this.confirming = ''), CONFIRM_MS)
+      return false
+    }
+    clearTimeout(this.confirmTimer)
+    this.confirming = ''
+    return true
+  },
+
+  reset() {
+    if (!this.confirm('reset')) return
+    this.entry.count = 0
+    this.save()
+  },
+
+  remove() {
+    if (!this.confirm('remove')) return
+    this.list.splice(this.index, 1)
+    saveCounters(this.list)
+    router.back()
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 24px 8px;
+  background-color: #000000;
+}
+
+.name {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 176px;
+  height: 56px;
+  margin-bottom: 12px;
+  border-radius: 28px;
+  background-color: #1c1c1e;
+}
+
+.name-hint {
+  font-size: 12px;
+  color: #8e8e93;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.circle {
+  justify-content: center;
+  align-items: center;
+  width: 164px;
+  height: 164px;
+  margin-bottom: 14px;
+  border-radius: 82px;
+  border-width: 6px;
+  border-color: #bf5af2;
+  background-color: #2e1a3d;
+}
+
+.count {
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.button {
+  justify-content: center;
+  align-items: center;
+  width: 176px;
+  height: 48px;
+  margin-bottom: 8px;
+  border-radius: 24px;
+  background-color: #1c1c1e;
+}
+
+.button-text {
+  width: 176px;
+  text-align: center;
+  font-size: 17px;
+  font-weight: bold;
+  color: #ffffff;
+}
+</style>

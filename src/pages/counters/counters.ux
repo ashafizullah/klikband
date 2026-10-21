@@ -1,0 +1,127 @@
+<template>
+  <scroll class="page" scroll-y="true">
+    <text class="title">{{t.counters}}</text>
+
+    <text if="{{items.length === 0}}" class="empty">{{t.noCounters}}</text>
+
+    <div class="card" for="{{items}}" onclick="open($idx)">
+      <text class="label">{{$item.label}}</text>
+      <text class="count">{{$item.count}}</text>
+    </div>
+
+    <div if="{{items.length < max}}" class="button" onclick="add">
+      <text class="button-text">+ {{t.add}}</text>
+    </div>
+  </scroll>
+</template>
+
+<script>
+import router from '@system.router'
+import { COUNTER_LABELS, MAX_COUNTERS, loadCounters, saveCounters } from '../../common/counters.js'
+import { STRINGS, loadLanguage } from '../../common/i18n.js'
+
+export default {
+  private: {
+    t: STRINGS.id,
+    items: [],
+    max: MAX_COUNTERS
+  },
+
+  onInit() {
+    this.list = []
+    loadLanguage((lang) => {
+      this.t = STRINGS[lang]
+      this.render()
+    })
+  },
+
+  // Also runs when returning from a counter
+  onShow() {
+    loadCounters((list) => {
+      this.list = list
+      this.render()
+    })
+  },
+
+  render() {
+    const t = this.t
+    this.items = this.list.map((c) => ({ label: t.counterLabels[c.label], count: c.count }))
+  },
+
+  open(index) {
+    router.push({ uri: '/pages/counter', params: { index } })
+  },
+
+  // New counters take the first label not in use yet
+  add() {
+    const used = this.list.map((c) => c.label)
+    const label = COUNTER_LABELS.find((l) => used.indexOf(l) < 0) || 'other'
+    const list = this.list.concat([{ label, count: 0 }])
+    saveCounters(list)
+    this.open(list.length - 1)
+  }
+}
+</script>
+
+<style>
+.page {
+  flex-direction: column;
+  align-items: center;
+  width: 192px;
+  height: 490px;
+  padding: 36px 8px 24px 8px;
+  background-color: #000000;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.empty {
+  font-size: 16px;
+  color: #8e8e93;
+  margin: 20px 0;
+}
+
+.card {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 176px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  border-radius: 22px;
+  background-color: #1c1c1e;
+}
+
+.label {
+  font-size: 17px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.count {
+  font-size: 24px;
+  font-weight: bold;
+  color: #bf5af2;
+}
+
+.button {
+  justify-content: center;
+  align-items: center;
+  width: 176px;
+  height: 52px;
+  margin-top: 4px;
+  border-radius: 26px;
+  background-color: #2e1a3d;
+}
+
+.button-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: #bf5af2;
+}
+</style>

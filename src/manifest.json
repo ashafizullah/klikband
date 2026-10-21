@@ -110,6 +110,15 @@
       },
       "pages/about": {
         "component": "about"
+      },
+      "pages/counters": {
+        "component": "counters"
+      },
+      "pages/counter": {
+        "component": "counter"
+      },
+      "pages/calculator": {
+        "component": "calculator"
       }
     }
   }

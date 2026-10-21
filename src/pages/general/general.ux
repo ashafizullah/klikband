@@ -23,7 +23,9 @@ const LABEL_WIDTH = 96
 const MENU = [
   { key: 'calendar', color: '#FF453A' },
   { key: 'countdown', color: '#FF9F0A' },
-  { key: 'score', color: '#3D7BFF' }
+  { key: 'score', color: '#3D7BFF' },
+  { key: 'counters', color: '#BF5AF2' },
+  { key: 'calculator', color: '#636366' }
 ]
 
 function buildMenu(lang) {

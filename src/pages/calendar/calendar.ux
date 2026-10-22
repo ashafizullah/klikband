@@ -1,37 +1,37 @@
 <template>
-  <scroll class="page {{w}}page" scroll-y="true">
+  <scroll class="page {{w}}page" style="{{frame}}" scroll-y="true">
     <text class="month {{w}}month" onclick="goToday">{{monthTitle}}</text>
-    <text class="span {{w}}span">{{hijriTitle}}</text>
-    <div class="header {{w}}header">
-      <div class="nav {{w}}nav" onclick="shift(-1)">
+    <text class="span {{w}}span {{r}}fit">{{hijriTitle}}</text>
+    <div class="header {{w}}header {{r}}fit">
+      <div class="nav {{w}}nav {{r}}nav" onclick="shift(-1)">
         <text class="nav-text {{w}}nav-text">‹</text>
       </div>
-      <div class="nav {{w}}nav" onclick="shift(1)">
+      <div class="nav {{w}}nav {{r}}nav" onclick="shift(1)">
         <text class="nav-text {{w}}nav-text">›</text>
       </div>
     </div>
 
-    <div class="week">
-      <div class="cell {{w}}cell" for="{{wd in weekdays}}">
+    <div class="week {{r}}fit">
+      <div class="cell {{w}}cell {{r}}cell" for="{{wd in weekdays}}">
         <text class="weekday {{$idx === 0 ? 'sunday' : ''}} {{w}}weekday">{{wd}}</text>
       </div>
     </div>
-    <div class="week" for="{{week in weeks}}">
-      <div class="cell {{cell.day === selected ? 'cell-selected' : ''}} {{cell.today ? 'cell-today' : ''}} {{w}}cell"
+    <div class="week {{r}}fit" for="{{week in weeks}}">
+      <div class="cell {{cell.day === selected ? 'cell-selected' : ''}} {{cell.today ? 'cell-today' : ''}} {{w}}cell {{r}}cell"
         for="{{cell in week.cells}}" onclick="select(cell.day)">
         <text if="{{cell.day}}" class="day {{cell.sunday ? 'sunday' : ''}} {{cell.holiday ? 'holiday' : ''}} {{cell.today ? 'today-text' : ''}} {{w}}day">{{cell.day}}</text>
         <text if="{{cell.day}}" class="hday {{cell.fast}} {{cell.today ? 'today-text' : ''}} {{w}}hday">{{cell.hijriDay}}</text>
       </div>
     </div>
 
-    <div class="card {{w}}card">
+    <div class="card {{w}}card {{r}}fit">
       <text class="detail-date {{w}}detail-date">{{detailDate}}</text>
       <text class="detail-hijri {{w}}detail-hijri">{{detailHijri}}</text>
       <text if="{{detailHoliday}}" class="detail-holiday {{w}}detail-holiday">{{detailHoliday}}</text>
       <text class="detail-fast {{detailFastStyle}} {{w}}detail-fast">{{detailFast}}</text>
     </div>
 
-    <div class="legend {{w}}legend">
+    <div class="legend {{w}}legend {{r}}fit">
       <div class="legend-row {{w}}legend-row">
         <div class="dot dot-holiday {{w}}dot"></div>
         <text class="legend-text {{w}}legend-text">{{t.legendHoliday}}</text>
@@ -57,6 +57,8 @@ import { loadLayout } from '../../common/screen.js'
 export default {
   private: {
     w: '',
+    frame: '',
+    r: '',
     t: STRINGS.id,
     weekdays: STRINGS.id.weekdaysShort,
     monthTitle: '',
@@ -71,7 +73,11 @@ export default {
   },
 
   onInit() {
-    loadLayout((w) => (this.w = w))
+    loadLayout((w, frame, r) => {
+      this.w = w
+      this.frame = frame
+      this.r = r
+    })
     this.offset = 0
     const now = new Date()
     this.year = now.getFullYear()
@@ -415,5 +421,18 @@ export default {
 
 .w-legend-text {
   font-size: 8px;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
+}
+
+.r-cell {
+  width: 22px;
+}
+
+.r-nav {
+  width: 76px;
 }
 </style>

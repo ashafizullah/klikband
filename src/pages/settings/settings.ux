@@ -1,17 +1,17 @@
 <template>
-  <scroll class="page {{w}}page" scroll-y="true">
+  <scroll class="page {{w}}page" style="{{frame}}" scroll-y="true">
     <text class="title {{w}}title">{{title}}</text>
 
-    <text class="section {{w}}section">{{cityLabel}}</text>
-    <div class="group {{w}}group">
+    <text class="section {{w}}section {{r}}fit">{{cityLabel}}</text>
+    <div class="group {{w}}group {{r}}fit">
       <div class="option {{w}}option" onclick="openCities">
         <text class="option-label {{w}}option-label">{{cityName}}</text>
         <text class="chevron {{w}}chevron">›</text>
       </div>
     </div>
 
-    <text class="section section-next {{w}}section {{w}}section-next">{{languageLabel}}</text>
-    <div class="group {{w}}group">
+    <text class="section section-next {{w}}section {{w}}section-next {{r}}fit">{{languageLabel}}</text>
+    <div class="group {{w}}group {{r}}fit">
       <div class="option {{w}}option" for="{{languages}}" onclick="select($item.code)">
         <text class="option-label {{w}}option-label">{{$item.label}}</text>
         <div class="radio {{$item.code === active ? 'radio-active' : ''}} {{w}}radio"></div>
@@ -29,6 +29,8 @@ import { loadLayout } from '../../common/screen.js'
 export default {
   private: {
     w: '',
+    frame: '',
+    r: '',
     languages: LANGUAGES,
     active: 'id',
     title: STRINGS.id.settings,
@@ -38,7 +40,11 @@ export default {
   },
 
   onInit() {
-    loadLayout((w) => (this.w = w))
+    loadLayout((w, frame, r) => {
+      this.w = w
+      this.frame = frame
+      this.r = r
+    })
     loadLanguage((lang) => this.apply(lang))
   },
 
@@ -180,5 +186,10 @@ export default {
 
 .w-radio-active {
   border-width: 4px;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
 }
 </style>

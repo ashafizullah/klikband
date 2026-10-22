@@ -1,9 +1,9 @@
 <template>
-  <scroll class="page {{w}}page" scroll-y="true">
+  <scroll class="page {{w}}page" style="{{frame}}" scroll-y="true">
     <text class="title {{w}}title">{{t.today}}</text>
 
     <!-- Gregorian and Hijri dates as two calendar tiles -->
-    <div class="dates {{w}}dates">
+    <div class="dates {{w}}dates {{r}}fit">
       <div class="tile {{w}}tile">
         <text class="tile-top {{w}}tile-top">{{weekday}}</text>
         <text class="tile-day {{w}}tile-day">{{gDay}}</text>
@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <div class="hero {{w}}hero">
+    <div class="hero {{w}}hero {{r}}fit">
       <div class="hero-main {{w}}hero-main">
         <text class="hero-label {{w}}hero-label">{{nextLabel}}</text>
         <text class="hero-time {{w}}hero-time">{{nextTime}}</text>
@@ -29,7 +29,7 @@
       </div>
     </div>
 
-    <div class="card {{w}}card">
+    <div class="card {{w}}card {{r}}fit">
       <text class="section {{w}}section">{{t.fasting}}</text>
       <text class="when {{w}}when">{{t.todayLabel}}</text>
       <text class="fast {{w}}fast {{todayStyle}}">{{todayFasts}}</text>
@@ -59,6 +59,8 @@ function fastStyle(keys) {
 export default {
   private: {
     w: '',
+    frame: '',
+    r: '',
     t: STRINGS.id,
     weekday: '',
     gDay: '',
@@ -80,7 +82,11 @@ export default {
     this.cityData = CITIES[0]
     this.offset = 0
     this.refresh()
-    loadLayout((w) => (this.w = w))
+    loadLayout((w, frame, r) => {
+      this.w = w
+      this.frame = frame
+      this.r = r
+    })
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
       this.refresh()
@@ -395,5 +401,10 @@ export default {
 
 .w-divider {
   margin: 5px 0;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
 }
 </style>

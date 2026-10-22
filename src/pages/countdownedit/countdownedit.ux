@@ -1,10 +1,10 @@
 <template>
-  <scroll class="page {{w}}page" scroll-y="true">
+  <scroll class="page {{w}}page" style="{{frame}}" scroll-y="true">
     <text class="title {{w}}title">{{index >= 0 ? t.countdown : t.add}}</text>
 
-    <div class="field {{w}}field" for="{{fields}}">
+    <div class="field {{w}}field {{r}}fit" for="{{fields}}">
       <text class="field-name {{w}}field-name">{{$item.name}}</text>
-      <div class="stepper {{w}}stepper">
+      <div class="stepper {{w}}stepper {{r}}fit">
         <div class="step {{w}}step" onclick="change($item.key, -1)">
           <text class="step-text {{w}}step-text">−</text>
         </div>
@@ -15,10 +15,10 @@
       </div>
     </div>
 
-    <div class="button button-save {{w}}button" onclick="save">
+    <div class="button button-save {{w}}button {{r}}fit" onclick="save">
       <text class="button-text {{w}}button-text">{{t.save}}</text>
     </div>
-    <div if="{{index >= 0}}" class="button button-delete {{w}}button" onclick="remove">
+    <div if="{{index >= 0}}" class="button button-delete {{w}}button {{r}}fit" onclick="remove">
       <text class="button-text button-text-delete {{w}}button-text">{{t.remove}}</text>
     </div>
   </scroll>
@@ -38,12 +38,18 @@ export default {
 
   private: {
     w: '',
+    frame: '',
+    r: '',
     t: STRINGS.id,
     fields: []
   },
 
   onInit() {
-    loadLayout((w) => (this.w = w))
+    loadLayout((w, frame, r) => {
+      this.w = w
+      this.frame = frame
+      this.r = r
+    })
     this.index = parseInt(this.index, 10)
     const now = new Date()
     this.entry = { label: 'birthday', y: now.getFullYear(), m: now.getMonth(), d: now.getDate(), repeat: 'yearly' }
@@ -244,5 +250,10 @@ function cycle(values, current, n) {
 
 .w-button-text {
   font-size: 11px;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
 }
 </style>

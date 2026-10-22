@@ -1,11 +1,11 @@
 <template>
-  <scroll class="page {{w}}page" scroll-y="true">
+  <scroll class="page {{w}}page" style="{{frame}}" scroll-y="true">
     <text class="title {{w}}title">{{title}}</text>
     <text class="subtitle {{w}}subtitle">{{location}}</text>
     <text class="subtitle subtitle-last {{w}}subtitle {{w}}subtitle-last">{{dateText}}</text>
 
-    <div class="panels {{w}}panels">
-      <div class="hero {{w}}hero">
+    <div class="panels {{w}}panels {{r}}fit">
+      <div class="hero {{w}}hero {{r}}hero">
         <text class="hero-label {{w}}hero-label">{{nextLabel}}</text>
         <text class="hero-time {{w}}hero-time">{{nextTime}}</text>
         <div class="pill {{w}}pill">
@@ -13,8 +13,8 @@
         </div>
       </div>
 
-      <div class="list {{w}}list">
-        <div class="row {{w}}row {{$item.next ? 'row-next' : ''}}" for="{{rows}}">
+      <div class="list {{w}}list {{r}}list">
+        <div class="row {{w}}row {{r}}row {{$item.next ? 'row-next' : ''}}" for="{{rows}}">
           <text class="name {{w}}cell {{$item.style}}">{{$item.label}}</text>
           <text class="time {{w}}cell {{$item.style}}">{{$item.time}}</text>
         </div>
@@ -33,6 +33,8 @@ import { keepScreenOn, loadLayout } from '../../common/screen.js'
 export default {
   private: {
     w: '',
+    frame: '',
+    r: '',
     title: '',
     location: '',
     dateText: '',
@@ -46,7 +48,11 @@ export default {
     this.t = STRINGS.id
     this.city = CITIES[0]
     this.refresh()
-    loadLayout((w) => (this.w = w))
+    loadLayout((w, frame, r) => {
+      this.w = w
+      this.frame = frame
+      this.r = r
+    })
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
       this.refresh()
@@ -271,5 +277,22 @@ export default {
 
 .w-cell {
   font-size: 10px;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
+}
+
+.r-hero {
+  width: 64px;
+}
+
+.r-list {
+  width: 92px;
+}
+
+.r-row {
+  padding: 0 5px;
 }
 </style>

@@ -1,18 +1,18 @@
 <template>
-  <div class="page {{w}}page">
-    <div class="display {{w}}display">
+  <scroll class="page {{w}}page" style="{{frame}}" scroll-y="true">
+    <div class="display {{w}}display {{r}}fit {{r}}display">
       <text class="expression {{w}}expression">{{expression}}</text>
       <text class="value" style="font-size: {{valueSize}}px;">{{value}}</text>
     </div>
 
-    <div class="row {{w}}row" for="{{row in rows}}">
-      <div class="key {{w}}key" for="{{k in row}}" style="background-color: {{k.color}};" onclick="press(k.key)">
+    <div class="row {{w}}row {{r}}fit" for="{{row in rows}}">
+      <div class="key {{w}}key {{r}}key" for="{{k in row}}" style="background-color: {{k.color}};" onclick="press(k.key)">
         <!-- The band font has no ⌫ glyph, so backspace is an icon -->
         <image if="{{k.key === '⌫'}}" class="key-icon {{w}}key-icon" src="/common/icons/backspace.png"></image>
         <text else class="key-text {{w}}key-text">{{k.label}}</text>
       </div>
     </div>
-  </div>
+  </scroll>
 </template>
 
 <script>
@@ -40,6 +40,8 @@ function keyColor(key) {
 export default {
   private: {
     w: '',
+    frame: '',
+    r: '',
     t: STRINGS.id,
     expression: '',
     value: '0',
@@ -54,8 +56,10 @@ export default {
     this.entry = '0'
     this.done = false
     this.render()
-    loadLayout((w) => {
+    loadLayout((w, frame, r) => {
       this.w = w
+      this.frame = frame
+      this.r = r
       this.render()
     })
     loadLanguage((lang) => {
@@ -260,5 +264,19 @@ export default {
 
 .w-key-text {
   font-size: 13px;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
+}
+
+.r-display {
+  height: 36px;
+}
+
+.r-key {
+  width: 37px;
+  height: 28px;
 }
 </style>

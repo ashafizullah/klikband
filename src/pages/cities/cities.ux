@@ -1,7 +1,7 @@
 <template>
-  <scroll class="page {{w}}page" scroll-y="true">
+  <scroll class="page {{w}}page" style="{{frame}}" scroll-y="true">
     <text class="title {{w}}title">{{title}}</text>
-    <div class="group {{w}}group">
+    <div class="group {{w}}group {{r}}fit">
       <div class="option {{w}}option" for="{{items}}" onclick="select($item.name)">
         <div class="text">
           <text class="name {{w}}name">{{$item.name}}</text>
@@ -22,13 +22,19 @@ import { loadLayout } from '../../common/screen.js'
 export default {
   private: {
     w: '',
+    frame: '',
+    r: '',
     title: STRINGS.id.city,
     active: CITIES[0].name,
     items: CITIES.map((c) => ({ name: c.name, zone: TIME_ZONES[c.tz] }))
   },
 
   onInit() {
-    loadLayout((w) => (this.w = w))
+    loadLayout((w, frame, r) => {
+      this.w = w
+      this.frame = frame
+      this.r = r
+    })
     loadLanguage((lang) => (this.title = STRINGS[lang].city))
     loadCity((city) => (this.active = city.name))
   },
@@ -140,5 +146,10 @@ export default {
 
 .w-radio-active {
   border-width: 4px;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
 }
 </style>

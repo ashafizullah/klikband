@@ -1,15 +1,15 @@
 <template>
-  <scroll class="page {{w}}page" scroll-y="true">
+  <scroll class="page {{w}}page" style="{{frame}}" scroll-y="true">
     <text class="title {{w}}title">{{t.counters}}</text>
 
     <text if="{{items.length === 0}}" class="empty {{w}}empty">{{t.noCounters}}</text>
 
-    <div class="card {{w}}card" for="{{items}}" onclick="open($idx)">
+    <div class="card {{w}}card {{r}}fit" for="{{items}}" onclick="open($idx)">
       <text class="label {{w}}label">{{$item.label}}</text>
       <text class="count {{w}}count">{{$item.count}}</text>
     </div>
 
-    <div if="{{items.length < max}}" class="button {{w}}button" onclick="add">
+    <div if="{{items.length < max}}" class="button {{w}}button {{r}}fit" onclick="add">
       <text class="button-text {{w}}button-text">+ {{t.add}}</text>
     </div>
   </scroll>
@@ -24,13 +24,19 @@ import { loadLayout } from '../../common/screen.js'
 export default {
   private: {
     w: '',
+    frame: '',
+    r: '',
     t: STRINGS.id,
     items: [],
     max: MAX_COUNTERS
   },
 
   onInit() {
-    loadLayout((w) => (this.w = w))
+    loadLayout((w, frame, r) => {
+      this.w = w
+      this.frame = frame
+      this.r = r
+    })
     this.list = []
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
@@ -167,5 +173,10 @@ export default {
 
 .w-button-text {
   font-size: 11px;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
 }
 </style>

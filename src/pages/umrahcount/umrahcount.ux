@@ -1,24 +1,24 @@
 <template>
-  <scroll class="page {{w}}page" scroll-y="true">
+  <scroll class="page {{w}}page" style="{{frame}}" scroll-y="true">
     <text class="title {{w}}title">{{title}}</text>
 
     <div class="circle {{w}}circle" onclick="increment">
       <text class="count {{w}}count">{{count}}</text>
       <text class="target {{w}}target">/ {{rounds}}</text>
     </div>
-    <text class="status {{w}}status" style="color: {{count >= rounds ? '#30d158' : '#ffffff'}};">{{status}}</text>
-    <text if="{{hint}}" class="hint {{w}}hint">{{hint}}</text>
+    <text class="status {{w}}status {{r}}fit" style="color: {{count >= rounds ? '#30d158' : '#ffffff'}};">{{status}}</text>
+    <text if="{{hint}}" class="hint {{w}}hint {{r}}fit">{{hint}}</text>
 
     <!-- One full-width button per row, easier to tap on the band -->
-    <div class="button {{w}}button" onclick="undo">
+    <div class="button {{w}}button {{r}}fit" onclick="undo">
       <text class="button-text {{w}}button-text" style="color: {{count > 0 ? '#ffffff' : '#636366'}};">{{t.undo}}</text>
     </div>
     <!-- Inline colors: a changing class broke button sizes on the band -->
-    <div class="button {{w}}button" style="background-color: {{confirming ? '#ff453a' : '#1c1c1e'}};" onclick="reset">
+    <div class="button {{w}}button {{r}}fit" style="background-color: {{confirming ? '#ff453a' : '#1c1c1e'}};" onclick="reset">
       <text class="button-text {{w}}button-text">{{confirming ? t.sure : t.reset}}</text>
     </div>
 
-    <div class="card {{w}}card" for="{{readings}}">
+    <div class="card {{w}}card {{r}}fit" for="{{readings}}">
       <text class="latin {{w}}latin">{{$item.latin}}</text>
       <div class="divider {{w}}divider"></div>
       <text class="meaning {{w}}meaning">{{$item.meaning}}</text>
@@ -44,6 +44,8 @@ export default {
 
   private: {
     w: '',
+    frame: '',
+    r: '',
     t: STRINGS.id,
     title: '',
     count: 0,
@@ -55,7 +57,11 @@ export default {
   },
 
   onInit() {
-    loadLayout((w) => (this.w = w))
+    loadLayout((w, frame, r) => {
+      this.w = w
+      this.frame = frame
+      this.r = r
+    })
     if (!COUNTERS[this.type]) this.type = 'thawaf'
     this.lang = 'id'
     this.rounds = COUNTERS[this.type].rounds
@@ -300,5 +306,10 @@ export default {
 
 .w-meaning {
   font-size: 8px;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
 }
 </style>

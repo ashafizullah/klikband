@@ -1,13 +1,13 @@
 <template>
-  <scroll class="page {{w}}page" scroll-y="true">
+  <scroll class="page {{w}}page" style="{{frame}}" scroll-y="true">
     <text class="title {{w}}title">{{t.umrah}}</text>
-    <div class="card {{w}}card" for="{{items}}" onclick="open($idx)">
+    <div class="card {{w}}card {{r}}fit" for="{{items}}" onclick="open($idx)">
       <div class="number {{w}}number">
         <text class="number-text {{w}}number-text">{{$idx + 1}}</text>
       </div>
       <text class="label {{w}}label">{{$item}}</text>
     </div>
-    <text class="note {{w}}note">{{t.source}}: Almanhaj.or.id</text>
+    <text class="note {{w}}note {{r}}fit">{{t.source}}: Almanhaj.or.id</text>
   </scroll>
 </template>
 
@@ -20,12 +20,18 @@ import { loadLayout } from '../../common/screen.js'
 export default {
   private: {
     w: '',
+    frame: '',
+    r: '',
     t: STRINGS.id,
     items: UMRAH_STEPS.map((s) => s.title.id)
   },
 
   onInit() {
-    loadLayout((w) => (this.w = w))
+    loadLayout((w, frame, r) => {
+      this.w = w
+      this.frame = frame
+      this.r = r
+    })
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
       this.items = UMRAH_STEPS.map((s) => s.title[lang])
@@ -135,5 +141,10 @@ export default {
 .w-note {
   font-size: 8px;
   margin-top: 2px;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
 }
 </style>

@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="design/header.id.png" alt="KlikBand on Xiaomi Smart Band 9, 9 Pro and 10">
+  <img src="design/header.id.png" alt="KlikBand on Xiaomi Smart Band, REDMI Watch and Xiaomi Watch">
 </p>
 
 <p align="center">
-  Quick app gratis dan open source untuk Xiaomi Smart Band 9, dengan tata letak khusus untuk Band 9 Pro (Band 10 juga seharusnya bisa): jam, jadwal sholat, dzikir berpanduan, tasbih, kalender Hijriah, hari besar Islam, panduan umrah, kalender bulanan, hitung hari, dan papan skor. Sepenuhnya offline, tanpa akun.
+  Quick app gratis dan open source untuk perangkat Xiaomi Vela: Xiaomi Smart Band 9, 9 Pro, 8 Pro dan 10, REDMI Watch 5, serta jam bulat Xiaomi Watch S3, S4 dan S5: jam, jadwal sholat, dzikir berpanduan, tasbih, kalender Hijriah, hari besar Islam, panduan umrah, kalender bulanan, hitung hari, dan papan skor. Sepenuhnya offline, tanpa akun.
 </p>
 
 <p align="center">
@@ -12,7 +12,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/github/license/ashafizullah/klikband?color=blue" alt="MIT License"></a>
   <br>
   <img src="https://img.shields.io/badge/Xiaomi%20Vela-quick%20app-FF6900?logo=xiaomi&logoColor=white" alt="Xiaomi Vela quick app">
-  <img src="https://img.shields.io/badge/device-Xiaomi%20Smart%20Band%209-lightgrey" alt="Xiaomi Smart Band 9">
+  <img src="https://img.shields.io/badge/device-Smart%20Band%20%C2%B7%20REDMI%20Watch%20%C2%B7%20Xiaomi%20Watch-lightgrey" alt="Xiaomi Smart Band, REDMI Watch, Xiaomi Watch">
   <a href="https://gadgetbridge.org/"><img src="https://img.shields.io/badge/install%20via-Gadgetbridge-3DDC84?logo=android&logoColor=white" alt="Install via Gadgetbridge"></a>
   <img src="https://img.shields.io/badge/languages-EN%20%7C%20ID%20%7C%20%E4%B8%AD%E6%96%87-lightgrey" alt="English, Indonesian, Chinese">
 </p>
@@ -37,7 +37,7 @@
   - **Hari Ini**: tanggal Masehi dan Hijriah, sholat berikutnya, serta puasa sunnah hari ini dan besok
   - **Dzikir Sholat**: penghitung berpanduan sesuai [Almanhaj](https://almanhaj.or.id/97313-dzikir-setelah-shalat.html)
   - **Dzikir Pagi Petang**: penghitung berpanduan sesuai [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html)
-  - **Jadwal Sholat**: metode Kemenag RI, dihitung offline di band; bergetar dan menampilkan pesan saat masuk waktu sholat selama halaman Jam, Hari Ini atau Jadwal Sholat terbuka
+  - **Jadwal Sholat**: metode Kemenag RI, dihitung offline di perangkat; bergetar dan menampilkan pesan saat masuk waktu sholat selama halaman Jam, Hari Ini atau Jadwal Sholat terbuka
   - **Arah Kiblat**: arah dan jarak ke Ka'bah dari kotamu, dengan posisi matahari di kompas sehingga cukup menyamakannya dengan matahari sungguhan untuk menghadap kiblat, plus jadwal Rashdul Qiblat
   - **Tasbih**: penghitung ketuk dengan target 33/99/100 dan getar
   - **Hijriah**: kalender Hijriah aritmetika dengan koreksi manual ±2 hari
@@ -58,15 +58,29 @@ Halaman bacaan dan penghitung membuat layar tetap menyala selama dibuka.
 
 ## Batasan
 
-Smart Band 9 tidak punya GPS, dan Xiaomi tidak menyediakan API lokasi (`system.geolocation`) maupun internet (`system.fetch`) di band ini. Semua berjalan offline, dan kota dipilih manual.
+Smart Band 9 tidak punya GPS, dan Xiaomi tidak menyediakan API lokasi (`system.geolocation`) maupun internet (`system.fetch`) di band ini. Karena itu KlikBand tidak memakai keduanya di perangkat mana pun: semua berjalan offline, dan kota dipilih manual.
 
-Tata letaknya dirancang untuk layar Band 9 (192×490). Band 9 Pro (336×480) punya tata letak sendiri dan Band 10 (212×520) memakai tata letak Band 9; keduanya baru dicek di emulator Vela, belum di perangkat asli. Layar bulat (jam Xiaomi/REDMI) tidak didukung.
+Tata letaknya dirancang untuk layar Band 9 (192×490) dan menyesuaikan layar perangkatnya:
+
+| Perangkat | Layar | Tata letak | Diuji |
+|---|---|---|---|
+| Smart Band 9 | 192×490 | band | perangkat asli |
+| Smart Band 10 | 212×520 | band | emulator Vela |
+| Smart Band 9 Pro, 8 Pro | 336×480 | lebar | emulator Vela (9 Pro) |
+| REDMI Watch 5 | 432×514 | lebar | emulator Vela |
+| Watch S3, S4, S4 Sport, S5, S1 Pro | bulat 466–480 | bulat | emulator Vela (S4) |
+
+Perangkat bertanda "emulator Vela" belum dicoba di perangkat asli, dan pemasangan lewat Gadgetbridge bisa berbeda tiap model. Laporan sangat diterima.
 
 ## Pasang ke band
 
-KlikBand dipasang dari HP **Android** (iPhone belum bisa) lewat [Gadgetbridge](https://gadgetbridge.org/). Pemasangan pertama butuh sekitar 30–45 menit dan sekali memakai komputer, untuk mengambil kunci band dari Mi Fitness. Update berikutnya cukup 1 menit.
+KlikBand dipasang dari HP **Android** (iPhone belum bisa) lewat [Gadgetbridge](https://gadgetbridge.org/). Pemasangan pertama butuh sekitar 30–45 menit dan sekali memakai komputer, untuk mengambil kunci band dari Mi Fitness. Update berikutnya cukup 1 menit. Langkahnya sama untuk semua band dan jam yang didukung.
 
 👉 **[Panduan pemasangan langkah demi langkah](docs/INSTALL.id.md)** (untuk pemula, lengkap dengan cara mengatasi masalah dan FAQ)
+
+🎬 **[Video tutorial pemasangan](https://youtu.be/WpygHpV-c_4)**
+
+<a href="https://youtu.be/WpygHpV-c_4"><img src="https://i.ytimg.com/vi/WpygHpV-c_4/hqdefault.jpg" width="480" alt="Cara Pasang KlikBand di Xiaomi Smart Band"></a>
 
 ## Build
 

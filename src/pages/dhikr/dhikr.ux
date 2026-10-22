@@ -1,40 +1,40 @@
 <template>
-  <scroll id="scroller" class="page {{w}}page" scroll-y="true">
+  <scroll id="scroller" class="page {{w}}page" style="{{frame}}" scroll-y="true">
     <text class="title {{w}}title">{{title}}</text>
 
     <!-- Bands stack the text over the counter; wide screens put them side by side -->
-    <div if="{{!finished}}" class="content {{w}}content">
-      <div class="text-col {{w}}text-col">
+    <div if="{{!finished}}" class="content {{w}}content {{r}}fit">
+      <div class="text-col {{w}}text-col {{r}}col-text">
         <text class="step {{w}}step">{{step + 1}} / {{total}}</text>
         <div if="{{note}}" class="note {{w}}note">
           <text class="note-text {{w}}note-text">{{note}}</text>
         </div>
-        <text class="latin {{w}}latin {{longText ? 'latin-long' : ''}} {{longText ? w + 'latin-long' : ''}}">{{latin}}</text>
-        <text class="meaning {{w}}meaning">{{meaning}}</text>
+        <text class="latin {{w}}latin {{r}}col-text {{longText ? 'latin-long' : ''}} {{longText ? w + 'latin-long' : ''}}">{{latin}}</text>
+        <text class="meaning {{w}}meaning {{r}}col-text">{{meaning}}</text>
       </div>
 
-      <div class="action-col {{w}}action-col">
-        <div class="circle {{w}}circle" onclick="increment">
+      <div class="action-col {{w}}action-col {{r}}col-action">
+        <div class="circle {{w}}circle {{r}}circle" onclick="increment">
           <text class="count {{w}}count">{{count}}</text>
           <text class="target {{w}}target">/ {{target}}</text>
         </div>
 
-        <div class="button button-main button-row {{w}}button {{w}}button-row" onclick="advance">
+        <div class="button button-main button-row {{w}}button {{w}}button-row {{r}}col-action" onclick="advance">
           <text class="button-text {{w}}button-text">{{t.next}}</text>
         </div>
         <!-- Previous and reset share a row so the screen holds fewer buttons -->
-        <div class="pair {{w}}pair">
-          <div class="button button-half {{w}}button {{w}}button-half" onclick="back">
+        <div class="pair {{w}}pair {{r}}col-action">
+          <div class="button button-half {{w}}button {{w}}button-half {{r}}col-action" onclick="back">
             <text class="button-text button-text-small {{w}}button-text" style="color: {{step > 0 ? '#ffffff' : '#636366'}};">{{t.previous}}</text>
           </div>
-          <div class="button button-half {{w}}button {{w}}button-half" onclick="restart">
+          <div class="button button-half {{w}}button {{w}}button-half {{r}}col-action" onclick="restart">
             <text class="button-text button-text-small {{w}}button-text">{{t.reset}}</text>
           </div>
         </div>
       </div>
     </div>
 
-    <div else class="content content-done">
+    <div else class="content content-done {{r}}fit">
       <div class="circle circle-done {{w}}circle {{w}}circle-done" onclick="restart">
         <text class="count {{w}}count">✓</text>
       </div>
@@ -67,6 +67,8 @@ export default {
 
   private: {
     w: '',
+    frame: '',
+    r: '',
     t: STRINGS.id,
     lang: 'id',
     title: '',
@@ -82,7 +84,11 @@ export default {
   },
 
   onInit() {
-    loadLayout((w) => (this.w = w))
+    loadLayout((w, frame, r) => {
+      this.w = w
+      this.frame = frame
+      this.r = r
+    })
     this.config = SETS[this.set] || SETS.prayer
     this.steps = this.config.steps()
     this.total = this.steps.length
@@ -421,5 +427,24 @@ export default {
 .w-button-wide {
   width: 120px;
   margin-top: 10px;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
+}
+
+.r-col-text {
+  width: 88px;
+}
+
+.r-col-action {
+  width: 66px;
+}
+
+.r-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
 }
 </style>

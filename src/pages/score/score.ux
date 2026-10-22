@@ -1,30 +1,30 @@
 <template>
-  <div class="page {{w}}page">
+  <div class="page {{w}}page" style="{{frame}}">
     <!-- Tap to change the mode; locked once the match has started -->
     <div class="mode {{w}}mode" onclick="nextMode">
       <text class="mode-text {{w}}mode-text" style="color: {{canChangeMode ? '#ffffff' : '#636366'}};">{{modeName}}</text>
     </div>
 
     <!-- The middle section fills the remaining height, so the buttons stay put -->
-    <div class="middle {{w}}middle">
-      <div class="side side-a {{w}}side" onclick="add('a')">
-        <text class="points {{w}}points">{{aPoints}}</text>
+    <div class="middle {{w}}middle {{r}}fit">
+      <div class="side side-a {{w}}side {{r}}side" onclick="add('a')">
+        <text class="points {{w}}points {{r}}points">{{aPoints}}</text>
         <text if="{{aDetail}}" class="detail {{w}}detail" style="color: {{winner === 'a' ? '#30d158' : '#8ab4ff'}};">{{aDetail}}</text>
       </div>
-      <div class="side side-b {{w}}side" onclick="add('b')">
-        <text class="points {{w}}points">{{bPoints}}</text>
+      <div class="side side-b {{w}}side {{r}}side" onclick="add('b')">
+        <text class="points {{w}}points {{r}}points">{{bPoints}}</text>
         <text if="{{bDetail}}" class="detail {{w}}detail" style="color: {{winner === 'b' ? '#30d158' : '#ff9a94'}};">{{bDetail}}</text>
       </div>
     </div>
 
     <!-- One full-width button per row, easier to tap on the band -->
-    <div class="buttons {{w}}buttons">
-      <div class="button {{w}}button" onclick="undo">
-        <text class="button-text {{w}}button-text" style="color: {{canUndo ? '#ffffff' : '#636366'}};">{{t.undo}}</text>
+    <div class="buttons {{w}}buttons {{r}}fit">
+      <div class="button {{w}}button {{r}}button" onclick="undo">
+        <text class="button-text {{w}}button-text {{r}}button-text" style="color: {{canUndo ? '#ffffff' : '#636366'}};">{{t.undo}}</text>
       </div>
       <!-- Inline colors: a changing class here broke the button size on the band -->
-      <div class="button {{w}}button" style="background-color: {{confirming ? '#ff453a' : '#1c1c1e'}};" onclick="reset">
-        <text class="button-text {{w}}button-text">{{confirming ? t.sure : t.reset}}</text>
+      <div class="button {{w}}button {{r}}button" style="background-color: {{confirming ? '#ff453a' : '#1c1c1e'}};" onclick="reset">
+        <text class="button-text {{w}}button-text {{r}}button-text">{{confirming ? t.sure : t.reset}}</text>
       </div>
     </div>
   </div>
@@ -45,6 +45,8 @@ const CONFIRM_MS = 3000
 export default {
   private: {
     w: '',
+    frame: '',
+    r: '',
     t: STRINGS.id,
     modeName: '',
     aPoints: '0',
@@ -58,7 +60,11 @@ export default {
   },
 
   onInit() {
-    loadLayout((w) => (this.w = w))
+    loadLayout((w, frame, r) => {
+      this.w = w
+      this.frame = frame
+      this.r = r
+    })
     this.match = newMatch('points')
     this.history = []
     this.render()
@@ -311,5 +317,27 @@ export default {
 .w-button-text {
   width: 86px;
   font-size: 10px;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
+}
+
+.r-side {
+  width: 74px;
+  height: 84px;
+}
+
+.r-button {
+  width: 76px;
+}
+
+.r-button-text {
+  width: 76px;
+}
+
+.r-points {
+  font-size: 36px;
 }
 </style>

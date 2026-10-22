@@ -1,12 +1,12 @@
 <template>
-  <scroll class="page {{w}}page" scroll-y="true">
+  <scroll class="page {{w}}page" style="{{frame}}" scroll-y="true">
     <text class="title {{w}}title">{{title}}</text>
-    <div class="grid {{w}}grid">
-      <div class="card {{w}}card" for="{{menu}}" onclick="openPage($item.uri)">
+    <div class="grid {{w}}grid {{r}}fit">
+      <div class="card {{w}}card {{r}}card" for="{{menu}}" onclick="openPage($item.uri)">
         <div class="icon {{w}}icon" style="background-color: {{$item.color}};">
           <image class="icon-image {{w}}icon-image" src="{{$item.icon}}"></image>
         </div>
-        <text class="label {{w}}label">{{$item.label}}</text>
+        <text class="label {{w}}label {{r}}label">{{$item.label}}</text>
       </div>
     </div>
   </scroll>
@@ -39,12 +39,18 @@ function buildMenu(lang) {
 export default {
   private: {
     w: '',
+    frame: '',
+    r: '',
     title: STRINGS.id.general,
     menu: buildMenu('id')
   },
 
   onInit() {
-    loadLayout((w) => (this.w = w))
+    loadLayout((w, frame, r) => {
+      this.w = w
+      this.frame = frame
+      this.r = r
+    })
     loadLanguage((lang) => this.apply(lang))
   },
 
@@ -164,5 +170,18 @@ export default {
   width: 75px;
   font-size: 10px;
   text-align: center;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
+}
+
+.r-card {
+  width: 78px;
+}
+
+.r-label {
+  width: 68px;
 }
 </style>

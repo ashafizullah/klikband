@@ -1,14 +1,14 @@
 <template>
-  <scroll class="page {{w}}page" scroll-y="true">
+  <scroll class="page {{w}}page" style="{{frame}}" scroll-y="true">
     <image class="logo {{w}}logo" src="/common/logo.png"></image>
     <text class="name {{w}}name">KlikBand</text>
     <text class="version {{w}}version">{{t.version}} {{version}}</text>
 
-    <div class="card {{w}}card">
+    <div class="card {{w}}card {{r}}fit">
       <text class="description {{w}}description">{{t.description}}</text>
     </div>
 
-    <div class="card {{w}}card">
+    <div class="card {{w}}card {{r}}fit">
       <text class="label {{w}}label">GitHub</text>
       <text class="value {{w}}value">ashafizullah/klikband</text>
       <div class="divider {{w}}divider"></div>
@@ -16,7 +16,7 @@
       <text class="value {{w}}value">MIT</text>
     </div>
 
-    <div class="card {{w}}card">
+    <div class="card {{w}}card {{r}}fit">
       <text class="label {{w}}label">{{t.storage}}</text>
       <text class="value {{w}}value">{{storageUsed}}</text>
       <div class="bar {{w}}bar">
@@ -26,13 +26,13 @@
     </div>
 
     <!-- Only where the battery API exists (not on Smart Band 9 / 9 Pro) -->
-    <div class="card {{w}}card" if="{{batteryLevel}}">
+    <div class="card {{w}}card {{r}}fit" if="{{batteryLevel}}">
       <text class="label {{w}}label">{{t.battery}}</text>
       <text class="value {{w}}value">{{batteryLevel}}</text>
       <text class="detail {{w}}detail">{{batteryState}}</text>
     </div>
 
-    <div class="card {{w}}card">
+    <div class="card {{w}}card {{r}}fit">
       <text class="label {{w}}label">{{t.model}}</text>
       <text class="value {{w}}value">{{model}}</text>
       <div class="divider {{w}}divider"></div>
@@ -67,6 +67,8 @@ function formatBytes(bytes) {
 export default {
   private: {
     w: '',
+    frame: '',
+    r: '',
     t: STRINGS.id,
     version: '',
     storageUsed: '-',
@@ -81,7 +83,11 @@ export default {
   },
 
   onInit() {
-    loadLayout((w) => (this.w = w))
+    loadLayout((w, frame, r) => {
+      this.w = w
+      this.frame = frame
+      this.r = r
+    })
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
       this.refresh()
@@ -276,5 +282,10 @@ export default {
 
 .w-divider {
   margin: 6px 0;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
 }
 </style>

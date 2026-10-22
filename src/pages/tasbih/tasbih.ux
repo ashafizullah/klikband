@@ -1,28 +1,28 @@
 <template>
-  <div class="page {{w}}page">
+  <div class="page {{w}}page" style="{{frame}}">
     <text class="title {{w}}title">{{t.tasbih}}</text>
 
     <!-- Bands stack the counter over the buttons; wide screens put them side by side -->
-    <div class="body {{w}}body">
+    <div class="body {{w}}body {{r}}fit">
       <!-- On bands the middle section fills the remaining height, keeping the counter centered -->
-      <div class="{{w ? 'w-middle' : 'middle'}}">
-        <div class="circle {{w}}circle" onclick="increment">
-          <text class="count {{w}}count">{{count}}</text>
+      <div class="{{w ? 'w-middle' : 'middle'}} {{r}}mid">
+        <div class="circle {{w}}circle {{r}}circle" onclick="increment">
+          <text class="count {{w}}count {{r}}count">{{count}}</text>
           <text class="target {{w}}target">/ {{target}}</text>
         </div>
       </div>
 
-      <div class="controls {{w}}controls">
-        <div class="bar {{w}}bar">
+      <div class="controls {{w}}controls {{r}}controls">
+        <div class="bar {{w}}bar {{r}}bar">
           <div class="bar-fill {{w}}bar-fill" style="width: {{barWidth}}px;"></div>
         </div>
         <text class="round {{w}}round">{{t.round}} {{round}}</text>
 
         <!-- One full-width button per row, easier to tap on the band -->
-        <div class="button {{w}}button" onclick="nextTarget">
+        <div class="button {{w}}button {{r}}button" onclick="nextTarget">
           <text class="button-text {{w}}button-text">{{t.target}}</text>
         </div>
-        <div class="button {{w}}button" onclick="reset">
+        <div class="button {{w}}button {{r}}button" onclick="reset">
           <text class="button-text {{w}}button-text">{{t.reset}}</text>
         </div>
       </div>
@@ -37,12 +37,14 @@ import { STRINGS, loadLanguage } from '../../common/i18n.js'
 import { keepScreenOn, loadLayout } from '../../common/screen.js'
 
 const TARGETS = [33, 99, 100]
-// Progress bar width on bands and on wide screens
-const BAR_WIDTH = { '': 140, 'w-': 76 }
+// Progress bar width on bands, on wide screens and on round watches
+const BAR_WIDTH = { '': 140, 'w-': 76, 'r-': 68 }
 
 export default {
   private: {
     w: '',
+    frame: '',
+    r: '',
     t: STRINGS.id,
     count: 0,
     target: 33,
@@ -51,8 +53,10 @@ export default {
   },
 
   onInit() {
-    loadLayout((w) => {
+    loadLayout((w, frame, r) => {
       this.w = w
+      this.frame = frame
+      this.r = r
       this.updateBar()
     })
     loadLanguage((lang) => (this.t = STRINGS[lang]))
@@ -86,7 +90,7 @@ export default {
   },
 
   updateBar() {
-    this.barWidth = Math.round((this.count / this.target) * BAR_WIDTH[this.w])
+    this.barWidth = Math.round((this.count / this.target) * BAR_WIDTH[this.r || this.w])
   },
 
   increment() {
@@ -281,5 +285,36 @@ export default {
 
 .w-button-text {
   font-size: 10px;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
+}
+
+.r-mid {
+  width: 86px;
+}
+
+.r-circle {
+  width: 86px;
+  height: 86px;
+  border-radius: 43px;
+}
+
+.r-count {
+  font-size: 30px;
+}
+
+.r-controls {
+  width: 68px;
+}
+
+.r-bar {
+  width: 68px;
+}
+
+.r-button {
+  width: 68px;
 }
 </style>

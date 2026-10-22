@@ -1,7 +1,7 @@
 <template>
-  <scroll class="page {{w}}page" scroll-y="true">
+  <scroll class="page {{w}}page" style="{{frame}}" scroll-y="true">
     <!-- The whole name pill is the tap target: each tap picks the next preset label -->
-    <div class="name {{w}}name" onclick="rename">
+    <div class="name {{w}}name {{r}}fit" onclick="rename">
       <text class="title {{w}}title">{{label}}</text>
       <text class="name-hint {{w}}name-hint">{{t.tapToRename}}</text>
     </div>
@@ -11,14 +11,14 @@
     </div>
 
     <!-- One full-width button per row, easier to tap on the band -->
-    <div class="button {{w}}button" onclick="undo">
+    <div class="button {{w}}button {{r}}fit" onclick="undo">
       <text class="button-text {{w}}button-text" style="color: {{count > 0 ? '#ffffff' : '#636366'}};">−1</text>
     </div>
     <!-- Inline colors: a changing class broke button sizes on the band -->
-    <div class="button {{w}}button" style="background-color: {{confirming === 'reset' ? '#ff453a' : '#1c1c1e'}};" onclick="reset">
+    <div class="button {{w}}button {{r}}fit" style="background-color: {{confirming === 'reset' ? '#ff453a' : '#1c1c1e'}};" onclick="reset">
       <text class="button-text {{w}}button-text">{{confirming === 'reset' ? t.sure : t.reset}}</text>
     </div>
-    <div class="button {{w}}button" style="background-color: {{confirming === 'remove' ? '#ff453a' : '#1c1c1e'}};" onclick="remove">
+    <div class="button {{w}}button {{r}}fit" style="background-color: {{confirming === 'remove' ? '#ff453a' : '#1c1c1e'}};" onclick="remove">
       <text class="button-text {{w}}button-text" style="color: {{confirming === 'remove' ? '#ffffff' : '#ff453a'}};">{{confirming === 'remove' ? t.sure : t.remove}}</text>
     </div>
   </scroll>
@@ -42,6 +42,8 @@ export default {
 
   private: {
     w: '',
+    frame: '',
+    r: '',
     t: STRINGS.id,
     label: '',
     count: 0,
@@ -53,8 +55,10 @@ export default {
     this.index = parseInt(this.index, 10)
     this.list = []
     this.entry = { label: 'other', count: 0 }
-    loadLayout((w) => {
+    loadLayout((w, frame, r) => {
       this.w = w
+      this.frame = frame
+      this.r = r
       this.render()
     })
     loadLanguage((lang) => {
@@ -245,5 +249,10 @@ export default {
 
 .w-button-text {
   font-size: 10px;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
 }
 </style>

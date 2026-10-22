@@ -1,14 +1,14 @@
 <template>
-  <div class="page {{w}}page">
+  <scroll class="page {{w}}page" style="{{frame}}" scroll-y="true">
     <text class="title {{w}}title">{{t.hijri}}</text>
-    <div class="card {{w}}card">
+    <div class="card {{w}}card {{r}}fit">
       <text class="weekday {{w}}weekday">{{weekday}}</text>
       <text class="day {{w}}day">{{day}}</text>
       <text class="month {{w}}month">{{month}}</text>
       <text class="year {{w}}year">{{year}} H</text>
     </div>
     <text class="gregorian {{w}}gregorian">{{gregorian}}</text>
-    <div class="offset {{w}}offset">
+    <div class="offset {{w}}offset {{r}}fit">
       <div class="button {{w}}button" onclick="shift(-1)">
         <text class="button-text {{w}}button-text">−</text>
       </div>
@@ -17,8 +17,8 @@
         <text class="button-text {{w}}button-text">+</text>
       </div>
     </div>
-    <text class="note {{w}}note">{{t.hijriNote}}</text>
-  </div>
+    <text class="note {{w}}note {{r}}fit">{{t.hijriNote}}</text>
+  </scroll>
 </template>
 
 <script>
@@ -29,6 +29,8 @@ import { loadLayout } from '../../common/screen.js'
 export default {
   private: {
     w: '',
+    frame: '',
+    r: '',
     t: STRINGS.id,
     offset: 0,
     offsetText: '0 hari',
@@ -40,7 +42,11 @@ export default {
   },
 
   onInit() {
-    loadLayout((w) => (this.w = w))
+    loadLayout((w, frame, r) => {
+      this.w = w
+      this.frame = frame
+      this.r = r
+    })
     this.render()
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
@@ -229,5 +235,10 @@ export default {
 .w-note {
   font-size: 8px;
   margin-top: 6px;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
 }
 </style>

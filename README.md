@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="design/header.png" alt="KlikBand on Xiaomi Smart Band 9, 9 Pro and 10">
+  <img src="design/header.png" alt="KlikBand on Xiaomi Smart Band, REDMI Watch and Xiaomi Watch">
 </p>
 
 <p align="center">
-  A free, open-source quick app for Xiaomi Smart Band 9, with its own layout for Band 9 Pro (Band 10 should also work): a clock, prayer times, guided dhikr, tasbih, Hijri date, Islamic holidays, an umrah guide, a calendar, a day counter and a scoreboard. Fully offline, no account.
+  A free, open-source quick app for Xiaomi Vela wearables: Xiaomi Smart Band 9, 9 Pro, 8 Pro and 10, REDMI Watch 5, and the round Xiaomi Watch S3, S4 and S5: a clock, prayer times, guided dhikr, tasbih, Hijri date, Islamic holidays, an umrah guide, a calendar, a day counter and a scoreboard. Fully offline, no account.
 </p>
 
 <p align="center">
@@ -12,7 +12,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/github/license/ashafizullah/klikband?color=blue" alt="MIT License"></a>
   <br>
   <img src="https://img.shields.io/badge/Xiaomi%20Vela-quick%20app-FF6900?logo=xiaomi&logoColor=white" alt="Xiaomi Vela quick app">
-  <img src="https://img.shields.io/badge/device-Xiaomi%20Smart%20Band%209-lightgrey" alt="Xiaomi Smart Band 9">
+  <img src="https://img.shields.io/badge/device-Smart%20Band%20%C2%B7%20REDMI%20Watch%20%C2%B7%20Xiaomi%20Watch-lightgrey" alt="Xiaomi Smart Band, REDMI Watch, Xiaomi Watch">
   <a href="https://gadgetbridge.org/"><img src="https://img.shields.io/badge/install%20via-Gadgetbridge-3DDC84?logo=android&logoColor=white" alt="Install via Gadgetbridge"></a>
   <img src="https://img.shields.io/badge/languages-EN%20%7C%20ID%20%7C%20%E4%B8%AD%E6%96%87-lightgrey" alt="English, Indonesian, Chinese">
 </p>
@@ -37,7 +37,7 @@
   - **Today**: Gregorian and Hijri date, next prayer, and sunnah fasts for today and tomorrow
   - **Post-prayer Dhikr**: guided counter following [Almanhaj](https://almanhaj.or.id/97313-dzikir-setelah-shalat.html)
   - **Morning & Evening Dhikr**: guided counter following [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html)
-  - **Prayer Times**: Indonesian Ministry of Religious Affairs (Kemenag) method, computed offline on the band; buzzes and shows a message when a prayer time arrives while Clock, Today or Prayer Times is open
+  - **Prayer Times**: Indonesian Ministry of Religious Affairs (Kemenag) method, computed offline on the device; buzzes and shows a message when a prayer time arrives while Clock, Today or Prayer Times is open
   - **Qibla**: direction and distance to the Kaaba from your city, with the sun drawn on the dial so lining it up with the real sun points you to the Qibla, and the yearly sun-over-Kaaba dates
   - **Tasbih**: tap counter with a 33/99/100 target and vibration
   - **Hijri Date**: arithmetic Hijri calendar with a ±2 day manual correction
@@ -58,15 +58,29 @@ Reading and counting pages keep the screen on while open.
 
 ## Limitations
 
-The Smart Band 9 has no GPS, and Xiaomi does not offer the location (`system.geolocation`) or internet (`system.fetch`) APIs on this band. Everything runs offline, and the city is picked manually.
+The Smart Band 9 has no GPS, and Xiaomi does not offer the location (`system.geolocation`) or internet (`system.fetch`) APIs on it. KlikBand therefore uses neither, on any device: everything runs offline, and the city is picked manually.
 
-The layout is designed for the Band 9 screen (192×490). Band 9 Pro (336×480) gets its own layout and Band 10 (212×520) uses the Band 9 one; both were checked in the Vela emulator only, not on a real device. Round screens (Xiaomi/REDMI watches) are not supported.
+The layout is designed for the Band 9 screen (192×490) and adapts to the screen it runs on:
+
+| Device | Screen | Layout | Tested |
+|---|---|---|---|
+| Smart Band 9 | 192×490 | band | real device |
+| Smart Band 10 | 212×520 | band | Vela emulator |
+| Smart Band 9 Pro, 8 Pro | 336×480 | wide | Vela emulator (9 Pro) |
+| REDMI Watch 5 | 432×514 | wide | Vela emulator |
+| Watch S3, S4, S4 Sport, S5, S1 Pro | round 466–480 | round | Vela emulator (S4) |
+
+Devices marked "Vela emulator" have not been tried on real hardware yet, and installing through Gadgetbridge may differ per model. Reports are welcome.
 
 ## Install on the band
 
-KlikBand is installed from an **Android** phone (iPhone is not supported) with [Gadgetbridge](https://gadgetbridge.org/). The first time takes about 30–45 minutes and needs a computer once, to read the band's key from Mi Fitness. Updates take a minute.
+KlikBand is installed from an **Android** phone (iPhone is not supported) with [Gadgetbridge](https://gadgetbridge.org/). The first time takes about 30–45 minutes and needs a computer once, to read the band's key from Mi Fitness. Updates take a minute. The steps are the same for every supported band and watch.
 
 👉 **[Step-by-step install guide](docs/INSTALL.md)** (written for beginners, with troubleshooting and FAQ)
+
+🎬 **[Video tutorial](https://youtu.be/WpygHpV-c_4)** (in Indonesian)
+
+<a href="https://youtu.be/WpygHpV-c_4"><img src="https://i.ytimg.com/vi/WpygHpV-c_4/hqdefault.jpg" width="480" alt="Cara Pasang KlikBand di Xiaomi Smart Band"></a>
 
 ## Build
 

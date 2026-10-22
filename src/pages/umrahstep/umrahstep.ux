@@ -1,16 +1,16 @@
 <template>
-  <scroll id="scroller" class="page {{w}}page" scroll-y="true">
+  <scroll id="scroller" class="page {{w}}page" style="{{frame}}" scroll-y="true">
     <text class="step {{w}}step">{{index + 1}} / {{total}}</text>
-    <text class="title {{w}}title">{{title}}</text>
+    <text class="title {{w}}title {{r}}fit">{{title}}</text>
 
-    <div class="card {{w}}card">
+    <div class="card {{w}}card {{r}}fit">
       <div class="point {{w}}point" for="{{points}}">
         <text class="bullet {{w}}bullet">•</text>
         <text class="point-text {{w}}point-text">{{$item}}</text>
       </div>
     </div>
 
-    <div class="card {{w}}card" for="{{readings}}">
+    <div class="card {{w}}card {{r}}fit" for="{{readings}}">
       <text class="latin {{w}}latin">{{$item.latin}}</text>
       <div class="divider {{w}}divider"></div>
       <text class="meaning {{w}}meaning">{{$item.meaning}}</text>
@@ -44,6 +44,8 @@ export default {
 
   private: {
     w: '',
+    frame: '',
+    r: '',
     t: STRINGS.id,
     lang: 'id',
     total: UMRAH_STEPS.length,
@@ -54,7 +56,11 @@ export default {
   },
 
   onInit() {
-    loadLayout((w) => (this.w = w))
+    loadLayout((w, frame, r) => {
+      this.w = w
+      this.frame = frame
+      this.r = r
+    })
     this.index = parseInt(this.index, 10) || 0
     this.render()
     loadLanguage((lang) => {
@@ -243,5 +249,10 @@ export default {
 
 .w-button-text {
   font-size: 11px;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
 }
 </style>

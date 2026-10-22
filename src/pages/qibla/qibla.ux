@@ -1,9 +1,9 @@
 <template>
-  <scroll class="page {{w}}page" scroll-y="true">
+  <scroll class="page {{w}}page" style="{{frame}}" scroll-y="true">
     <text class="title {{w}}title">{{t.qibla}}</text>
     <text class="subtitle {{w}}subtitle">{{location}}</text>
 
-    <div class="main {{w}}main">
+    <div class="main {{w}}main {{r}}fit">
       <div class="compass {{w}}compass">
         <text class="cardinal {{w}}cardinal {{$idx === 0 ? 'north' : ''}}" for="{{cardinals}}" style="left: {{$item.x}}px; top: {{$item.y}}px;">{{$item.label}}</text>
         <div class="dot {{w}}dot" for="{{dots}}" style="left: {{$item.x}}px; top: {{$item.y}}px;"></div>
@@ -12,15 +12,15 @@
         <image class="kaaba {{w}}kaaba" src="/common/kaaba.png" style="left: {{kaaba.x}}px; top: {{kaaba.y}}px;"></image>
       </div>
 
-      <div class="info {{w}}info">
+      <div class="info {{w}}info {{r}}info">
         <text class="degrees {{w}}degrees">{{degrees}}</text>
         <text class="direction {{w}}direction">{{direction}}</text>
         <text class="distance {{w}}distance">{{distance}}</text>
-        <text class="hint {{w}}hint">{{hint}}</text>
+        <text class="hint {{w}}hint {{r}}hint">{{hint}}</text>
       </div>
     </div>
 
-    <div class="card {{w}}card" if="{{sunDates.length}}">
+    <div class="card {{w}}card {{r}}fit" if="{{sunDates.length}}">
       <text class="card-title {{w}}card-title">{{t.sunOverKaaba}}</text>
       <text class="card-date {{w}}card-date" for="{{sunDates}}">{{$item}}</text>
       <text class="card-note {{w}}card-note">{{t.sunOverKaabaNote}}</text>
@@ -71,6 +71,8 @@ const groupDigits = (n, sep) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, sep)
 export default {
   private: {
     w: '',
+    frame: '',
+    r: '',
     t: STRINGS.id,
     location: '',
     cardinals: [],
@@ -89,8 +91,10 @@ export default {
     // Heading of the top of the band from the compass, when the device has one
     this.heading = null
     this.render()
-    loadLayout((w) => {
+    loadLayout((w, frame, r) => {
       this.w = w
+      this.frame = frame
+      this.r = r
       this.render()
     })
     loadLanguage((lang) => {
@@ -431,5 +435,18 @@ export default {
 
 .w-card-note {
   font-size: 8px;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
+}
+
+.r-info {
+  width: 62px;
+}
+
+.r-hint {
+  width: 62px;
 }
 </style>

@@ -1,13 +1,13 @@
 <template>
-  <scroll class="page {{w}}page" scroll-y="true">
+  <scroll class="page {{w}}page" style="{{frame}}" scroll-y="true">
     <text class="title {{w}}title">{{t.holidays}}</text>
-    <div class="card {{$idx === 0 ? 'card-next' : ''}} {{w}}card" for="{{items}}">
+    <div class="card {{$idx === 0 ? 'card-next' : ''}} {{w}}card {{r}}fit" for="{{items}}">
       <text class="name {{w}}name">{{$item.name}}</text>
       <text class="hijri {{w}}hijri">{{$item.hijri}}</text>
       <text class="date {{w}}date">{{$item.date}}</text>
       <text class="days {{w}}days">{{$item.days}}</text>
     </div>
-    <text class="note {{w}}note">{{t.hijriNote}}</text>
+    <text class="note {{w}}note {{r}}fit">{{t.hijriNote}}</text>
   </scroll>
 </template>
 
@@ -20,12 +20,18 @@ import { loadLayout } from '../../common/screen.js'
 export default {
   private: {
     w: '',
+    frame: '',
+    r: '',
     t: STRINGS.id,
     items: []
   },
 
   onInit() {
-    loadLayout((w) => (this.w = w))
+    loadLayout((w, frame, r) => {
+      this.w = w
+      this.frame = frame
+      this.r = r
+    })
     this.offset = 0
     this.render()
     loadLanguage((lang) => {
@@ -150,5 +156,10 @@ export default {
 .w-note {
   font-size: 8px;
   margin-top: 2px;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
 }
 </style>

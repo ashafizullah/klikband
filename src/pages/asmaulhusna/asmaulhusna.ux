@@ -1,7 +1,7 @@
 <template>
-  <scroll id="scroller" class="page {{w}}page" scroll-y="true">
+  <scroll id="scroller" class="page {{w}}page" style="{{frame}}" scroll-y="true">
     <text class="title {{w}}title">{{title}}</text>
-    <div class="items">
+    <div class="items {{r}}fit">
       <div class="card {{w}}card" for="{{items}}">
         <div class="header {{w}}header">
           <div class="number {{w}}number">
@@ -13,7 +13,7 @@
       </div>
     </div>
 
-    <div class="pager {{w}}pager">
+    <div class="pager {{w}}pager {{r}}fit">
       <div class="button {{page === 0 ? 'button-disabled' : ''}} {{w}}button" onclick="go(-1)">
         <text class="button-text {{w}}button-text">‹</text>
       </div>
@@ -38,6 +38,8 @@ const PER_PAGE = 11
 export default {
   private: {
     w: '',
+    frame: '',
+    r: '',
     title: STRINGS.id.asmaulhusna,
     lang: 'id',
     page: 0,
@@ -47,7 +49,11 @@ export default {
   },
 
   onInit() {
-    loadLayout((w) => (this.w = w))
+    loadLayout((w, frame, r) => {
+      this.w = w
+      this.frame = frame
+      this.r = r
+    })
     this.render()
     loadLanguage((lang) => {
       this.lang = lang
@@ -246,5 +252,10 @@ export default {
 
 .w-range {
   font-size: 10px;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
 }
 </style>

@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="design/header.zh.png" alt="KlikBand on Xiaomi Smart Band 9, 9 Pro and 10">
+  <img src="design/header.zh.png" alt="KlikBand on Xiaomi Smart Band, REDMI Watch and Xiaomi Watch">
 </p>
 
 <p align="center">
-  适用于小米手环 9 的免费开源快应用，并为小米手环 9 Pro 提供专门布局（小米手环 10 应该也可用）：时钟、礼拜时间、引导式记念、赞珠、伊斯兰历、伊斯兰节日、副朝指南、日历、倒数日和记分牌。完全离线，无需账号。
+  适用于小米 Vela 穿戴设备的免费开源快应用：小米手环 9、9 Pro、8 Pro 和 10，REDMI Watch 5，以及圆屏的小米 Watch S3、S4 和 S5：时钟、礼拜时间、引导式记念、赞珠、伊斯兰历、伊斯兰节日、副朝指南、日历、倒数日和记分牌。完全离线，无需账号。
 </p>
 
 <p align="center">
@@ -12,7 +12,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/github/license/ashafizullah/klikband?color=blue" alt="MIT License"></a>
   <br>
   <img src="https://img.shields.io/badge/Xiaomi%20Vela-quick%20app-FF6900?logo=xiaomi&logoColor=white" alt="Xiaomi Vela quick app">
-  <img src="https://img.shields.io/badge/device-Xiaomi%20Smart%20Band%209-lightgrey" alt="Xiaomi Smart Band 9">
+  <img src="https://img.shields.io/badge/device-Smart%20Band%20%C2%B7%20REDMI%20Watch%20%C2%B7%20Xiaomi%20Watch-lightgrey" alt="Xiaomi Smart Band, REDMI Watch, Xiaomi Watch">
   <a href="https://gadgetbridge.org/"><img src="https://img.shields.io/badge/install%20via-Gadgetbridge-3DDC84?logo=android&logoColor=white" alt="Install via Gadgetbridge"></a>
   <img src="https://img.shields.io/badge/languages-EN%20%7C%20ID%20%7C%20%E4%B8%AD%E6%96%87-lightgrey" alt="English, Indonesian, Chinese">
 </p>
@@ -37,7 +37,7 @@
   - **今日**：公历和伊斯兰历日期、下一次礼拜，以及今明两天的副功斋
   - **礼拜后记念**：按 [Almanhaj](https://almanhaj.or.id/97313-dzikir-setelah-shalat.html) 顺序引导计数
   - **早晚记念**：按 [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html) 顺序引导计数
-  - **礼拜时间**：采用印度尼西亚宗教部（Kemenag）算法，在手环上离线计算；在时钟、今日或礼拜时间页面打开时，到点振动并显示提示
+  - **礼拜时间**：采用印度尼西亚宗教部（Kemenag）算法，在设备上离线计算；在时钟、今日或礼拜时间页面打开时，到点振动并显示提示
   - **朝向**：从所在城市到天房的方向和距离，表盘上显示太阳位置，对准真实太阳即可面向朝向，并列出每年太阳直射天房的日期
   - **赞珠**：点按计数，可设 33/99/100 目标，并有振动提示
   - **伊斯兰历**：算术伊斯兰历，可手动校正 ±2 天
@@ -58,15 +58,29 @@
 
 ## 限制
 
-小米手环 9 没有 GPS，小米也未在该手环上开放定位（`system.geolocation`）和网络（`system.fetch`）接口。所有功能均离线运行，城市需手动选择。
+小米手环 9 没有 GPS，小米也未在该手环上开放定位（`system.geolocation`）和网络（`system.fetch`）接口。因此 KlikBand 在所有设备上都不使用这两项：所有功能均离线运行，城市需手动选择。
 
-界面按小米手环 9 的屏幕（192×490）设计。小米手环 9 Pro（336×480）有专门布局，小米手环 10（212×520）沿用手环 9 的布局；两者仅在 Vela 模拟器中检查过，未在真机上测试。不支持圆形屏幕（小米/REDMI 手表）。
+界面按小米手环 9 的屏幕（192×490）设计，并会适配所运行设备的屏幕：
+
+| 设备 | 屏幕 | 布局 | 测试 |
+|---|---|---|---|
+| 小米手环 9 | 192×490 | 手环 | 真机 |
+| 小米手环 10 | 212×520 | 手环 | Vela 模拟器 |
+| 小米手环 9 Pro、8 Pro | 336×480 | 宽屏 | Vela 模拟器（9 Pro） |
+| REDMI Watch 5 | 432×514 | 宽屏 | Vela 模拟器 |
+| 小米 Watch S3、S4、S4 Sport、S5、S1 Pro | 圆形 466–480 | 圆形 | Vela 模拟器（S4） |
+
+标注“Vela 模拟器”的设备尚未在真机上试过，通过 Gadgetbridge 安装的情况也可能因型号而异。欢迎反馈。
 
 ## 安装到手环
 
-KlikBand 通过 **Android** 手机（不支持 iPhone）上的 [Gadgetbridge](https://gadgetbridge.org/) 安装。首次安装约需 30–45 分钟，并需要用一次电脑从 Mi Fitness 读取手环钥匙。之后更新只要 1 分钟。
+KlikBand 通过 **Android** 手机（不支持 iPhone）上的 [Gadgetbridge](https://gadgetbridge.org/) 安装。首次安装约需 30–45 分钟，并需要用一次电脑从 Mi Fitness 读取手环钥匙。之后更新只要 1 分钟。所有支持的手环和手表步骤相同。
 
 👉 **[分步安装指南](docs/INSTALL.zh.md)**（面向新手，含常见问题和问答）
+
+🎬 **[视频教程](https://youtu.be/WpygHpV-c_4)**（印尼语）
+
+<a href="https://youtu.be/WpygHpV-c_4"><img src="https://i.ytimg.com/vi/WpygHpV-c_4/hqdefault.jpg" width="480" alt="Cara Pasang KlikBand di Xiaomi Smart Band"></a>
 
 ## 构建
 

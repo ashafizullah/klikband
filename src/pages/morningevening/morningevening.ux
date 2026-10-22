@@ -1,7 +1,7 @@
 <template>
-  <div class="page {{w}}page">
+  <div class="page {{w}}page" style="{{frame}}">
     <text class="title {{w}}title">{{t.morningevening}}</text>
-    <div class="cards {{w}}cards">
+    <div class="cards {{w}}cards {{r}}fit">
       <div class="card {{w}}card {{suggested === 'morning' ? 'card-suggested' : ''}}" onclick="openSet('morning')">
         <div class="icon {{w}}icon icon-morning">
           <image class="icon-image {{w}}icon-image" src="/common/icons/today.png"></image>
@@ -32,13 +32,19 @@ import { loadLayout } from '../../common/screen.js'
 export default {
   private: {
     w: '',
+    frame: '',
+    r: '',
     t: STRINGS.id,
     // Highlight evening from noon onwards, morning otherwise
     suggested: new Date().getHours() >= 12 ? 'evening' : 'morning'
   },
 
   onInit() {
-    loadLayout((w) => (this.w = w))
+    loadLayout((w, frame, r) => {
+      this.w = w
+      this.frame = frame
+      this.r = r
+    })
     loadLanguage((lang) => (this.t = STRINGS[lang]))
   },
 
@@ -175,5 +181,10 @@ export default {
 .w-time {
   font-size: 8px;
   text-align: center;
+}
+
+/* Round watches: full-width blocks narrow to what the circle shows */
+.r-fit {
+  width: 160px;
 }
 </style>

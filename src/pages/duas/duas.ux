@@ -3,28 +3,34 @@
     <text class="title {{w}}title {{r}}fit">{{t.duas}}</text>
     <text class="step {{w}}step">{{index + 1}} / {{total}}</text>
 
-    <div class="card {{w}}card {{r}}fit">
-      <text class="latin {{w}}latin">{{latin}}</text>
-      <div class="divider {{w}}divider"></div>
-      <text class="meaning {{w}}meaning">{{meaning}}</text>
-      <text if="{{source}}" class="source {{w}}source">{{source}}</text>
-    </div>
+    <!-- Built once the script is known, all at once: putting the Arabic image
+         in place of the Latin text after the page opened misplaces what follows -->
+    <div if="{{ready}}" class="content">
+      <div class="card {{w}}card {{r}}fit">
+        <!-- Arabic is an image: the watch text engine cannot join the letters -->
+        <image if="{{arabicImage}}" class="arabic {{w}}arabic {{r}}arabic" src="{{arabicImage}}" style="width: {{arabicWidth}}px; height: {{arabicHeight}}px;"></image>
+        <text else class="latin {{w}}latin">{{latin}}</text>
+        <div class="divider {{w}}divider"></div>
+        <text class="meaning {{w}}meaning">{{meaning}}</text>
+        <text if="{{source}}" class="source {{w}}source">{{source}}</text>
+      </div>
 
-    <!-- One full-width button per row, easier to tap on the band -->
-    <div class="button button-main {{w}}button {{r}}fit" onclick="go(1)">
-      <text class="button-text {{w}}button-text" style="color: {{index < total - 1 ? '#ffffff' : '#636366'}};">{{t.next}}</text>
+      <!-- One full-width button per row, easier to tap on the band -->
+      <div class="button button-main {{w}}button {{r}}fit" onclick="go(1)">
+        <text class="button-text {{w}}button-text" style="color: {{index < total - 1 ? '#ffffff' : '#636366'}};">{{t.next}}</text>
+      </div>
+      <div class="button {{w}}button {{r}}fit" onclick="go(-1)">
+        <text class="button-text {{w}}button-text" style="color: {{index > 0 ? '#ffffff' : '#636366'}};">{{t.previous}}</text>
+      </div>
     </div>
-    <div class="button {{w}}button {{r}}fit" onclick="go(-1)">
-      <text class="button-text {{w}}button-text" style="color: {{index > 0 ? '#ffffff' : '#636366'}};">{{t.previous}}</text>
-    </div>
-    <text class="note {{w}}note {{r}}fit">{{t.source}}: Almanhaj.or.id</text>
   </scroll>
 </template>
 
 <script>
 import storage from '@system.storage'
 import DUAS from '../../common/duas.js'
-import { STRINGS, loadLanguage } from '../../common/i18n.js'
+import { STRINGS, loadLanguage, loadScript } from '../../common/i18n.js'
+import { DUAS as ARABIC_IMAGES } from '../../common/arabicimages.js'
 import { keepScreenOn, loadLayout } from '../../common/screen.js'
 
 export default {
@@ -36,7 +42,12 @@ export default {
     lang: 'id',
     index: 0,
     total: DUAS.length,
+    arabic: false,
+    ready: false,
     latin: '',
+    arabicImage: '',
+    arabicWidth: 0,
+    arabicHeight: 0,
     meaning: '',
     source: ''
   },
@@ -46,12 +57,19 @@ export default {
       this.w = w
       this.frame = frame
       this.r = r
+      // The Arabic image depends on the layout
+      this.render()
     })
     this.render()
     loadLanguage((lang) => {
       this.lang = lang
       this.t = STRINGS[lang]
       this.render()
+    })
+    loadScript((script) => {
+      this.arabic = script === 'arabic'
+      this.render()
+      this.ready = true
     })
     // Reopen at the last dua read
     storage.get({
@@ -78,6 +96,12 @@ export default {
     const dua = DUAS[this.index]
     const t = this.t
     this.latin = dua.latin
+    // [band, narrow] images; falls back to Latin if the images are missing
+    const images = this.arabic && ARABIC_IMAGES[dua.arabic]
+    const image = images ? images[this.w ? 1 : 0] : null
+    this.arabicImage = image ? image[0] : ''
+    this.arabicWidth = image ? image[1] : 0
+    this.arabicHeight = image ? image[2] : 0
     this.meaning = dua.meaning[this.lang]
     if (!dua.source) this.source = ''
     else if (t === STRINGS.zh) this.source = dua.source + ' ' + t.narrated
@@ -118,6 +142,11 @@ export default {
   font-size: 14px;
   color: #ff6b6b;
   margin-bottom: 12px;
+}
+
+.content {
+  flex-direction: column;
+  align-items: center;
 }
 
 .card {
@@ -171,14 +200,6 @@ export default {
   color: #ffffff;
 }
 
-.note {
-  width: 168px;
-  font-size: 13px;
-  color: #636366;
-  text-align: center;
-  margin-top: 4px;
-}
-
 /* Wide screens (Band 9 Pro): the band layout at about 0.6x, since px
    there is scaled 1.75x */
 .w-page {
@@ -199,6 +220,16 @@ export default {
   padding: 8px;
   margin-bottom: 5px;
   border-radius: 13px;
+}
+
+/* The wide card is 160 px inside, the image 144: center it. Round cards
+   are 144 px inside already */
+.w-arabic {
+  margin-left: 8px;
+}
+
+.r-arabic {
+  margin-left: 0;
 }
 
 .w-latin {
@@ -226,11 +257,6 @@ export default {
 
 .w-button-text {
   font-size: 10px;
-}
-
-.w-note {
-  font-size: 8px;
-  margin-top: 2px;
 }
 
 /* Round watches: full-width blocks narrow to what the circle shows */

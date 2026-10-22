@@ -48,7 +48,7 @@
   - **伊斯兰历**：算术伊斯兰历，可手动校正 ±2 天
   - **伊斯兰节日**：8 个伊斯兰节日倒计时，按远近排序
   - **真主九十九尊名**：99 个尊名及其含义
-  - **先知的祈祷**：按 [Almanhaj](https://almanhaj.or.id/83989-doa-doa-nabi-shallallahu-alaihi-wa-sallam.html) 收录先知 ﷺ 的 47 段祈祷，附拉丁转写、含义和辑录者
+  - **先知的祈祷**：按 [Almanhaj](https://almanhaj.or.id/83989-doa-doa-nabi-shallallahu-alaihi-wa-sallam.html) 收录先知 ﷺ 的 47 段祈祷，按记念文字设置显示拉丁转写或阿拉伯文，附含义和辑录者
   - **副朝指南**：按 [Almanhaj](https://almanhaj.or.id/2252-tata-cara-umrah.html) 的副朝步骤，附念词及环绕/奔走圈数计数
 - **通用**
   - **日历**：月历，显示伊斯兰历日期，并标注伊斯兰节日和斋戒日；点按日期查看详情
@@ -56,7 +56,7 @@
   - **记分牌**：双方计分：自由计分、羽毛球（21 分，三局两胜）或板式网球/网球（15-30-40、平分、盘、抢七），可撤销
   - **计数器**：最多六个计数器，可选名称（客人、人数、物品、圈数、次数）
   - **计算器**：加减乘除，支持百分比和正负号
-- **设置**：城市（印度尼西亚 46 个城市，WIB/WITA/WIT 时区）、语言（印尼语、英语、中文）和记念文字（拉丁字母或阿拉伯文）
+- **设置**：城市（印度尼西亚 46 个城市，WIB/WITA/WIT 时区）、语言（印尼语、英语、中文）和记念与祈祷文字（拉丁字母或阿拉伯文）
 - **关于**：应用版本、文本和计算的来源，以及设备信息（存储空间、型号、系统和平台版本）
 
 阅读和计数页面打开时屏幕保持常亮。
@@ -111,8 +111,8 @@ src/
 │   ├── umrah.js         # 副朝指南数据
 │   ├── dhikr.js         # 礼拜后记念
 │   ├── dhikrmorningevening.js  # 早晚记念
-│   ├── arabicimages.js  # 自动生成：阿拉伯文记念 -> 图片
-│   ├── arabic/          # 自动生成：阿拉伯文记念图片
+│   ├── arabicimages.js  # 自动生成：阿拉伯文记念与祈祷 -> 图片
+│   ├── arabic/          # 自动生成：阿拉伯文记念与祈祷图片
 │   ├── fasting.js       # 副功斋与禁斋日
 │   ├── holidays.js      # 伊斯兰节日日期
 │   ├── calendar.js      # 月历网格
@@ -121,10 +121,10 @@ src/
 │   └── icons/           # 菜单图标
 └── pages/               # 每个页面一个文件夹
 tools/
-└── arabic-images.py     # 将阿拉伯文记念绘制为图片
+└── arabic-images.py     # 将阿拉伯文记念与祈祷绘制为图片
 ```
 
-手表无法连写阿拉伯字母，因此阿拉伯文记念以 Amiri 字体绘制的图片显示。修改 `arabic` 文本后，先运行一次 `pip install uharfbuzz freetype-py pillow`，再运行 `python3 tools/arabic-images.py`。
+手表无法连写阿拉伯字母，因此阿拉伯文记念与祈祷以 Amiri 字体绘制的图片显示。修改 `arabic` 文本后，先运行一次 `pip install uharfbuzz freetype-py pillow`，再运行 `python3 tools/arabic-images.py`。
 
 如需更改默认城市，请修改 `src/common/cities.js` 中的第一项。
 

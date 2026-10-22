@@ -48,7 +48,7 @@
   - **Hijri Date**: arithmetic Hijri calendar with a ±2 day manual correction
   - **Islamic Holidays**: countdown to 8 Islamic holidays, nearest first
   - **Asmaul Husna**: the 99 Names of Allah with meanings
-  - **Prophet's Duas**: 47 duas of the Prophet ﷺ following [Almanhaj](https://almanhaj.or.id/83989-doa-doa-nabi-shallallahu-alaihi-wa-sallam.html), with Latin transliteration, meaning and narrator
+  - **Prophet's Duas**: 47 duas of the Prophet ﷺ following [Almanhaj](https://almanhaj.or.id/83989-doa-doa-nabi-shallallahu-alaihi-wa-sallam.html), in Latin transliteration or Arabic (per the dhikr text setting), with meaning and narrator
   - **Umrah Guide**: step-by-step umrah following [Almanhaj](https://almanhaj.or.id/2252-tata-cara-umrah.html), with duas and a tawaf/sa'i round counter
 - **General**
   - **Calendar**: monthly calendar with Hijri dates, Islamic holidays and fasting days marked; tap a day for details
@@ -56,7 +56,7 @@
   - **Scoreboard**: two-side counter with free points, badminton (21 points, best of 3) or padel/tennis scoring (15-30-40, deuce, sets, tiebreak), with undo
   - **Counter**: up to six tally counters with preset names (guests, people, items, laps, reps)
   - **Calculator**: + − × ÷ with percent and sign change
-- **Settings**: city (46 Indonesian cities, WIB/WITA/WIT), language (Indonesian, English, 中文) and dhikr text (Latin or Arabic)
+- **Settings**: city (46 Indonesian cities, WIB/WITA/WIT), language (Indonesian, English, 中文) and dhikr and dua text (Latin or Arabic)
 - **About**: app version, the sources of the texts and calculations, and device info (storage, model, OS and platform version)
 
 Reading and counting pages keep the screen on while open.
@@ -111,8 +111,8 @@ src/
 │   ├── umrah.js         # umrah guide steps and readings
 │   ├── dhikr.js         # post-prayer dhikr
 │   ├── dhikrmorningevening.js  # morning and evening dhikr
-│   ├── arabicimages.js  # generated: Arabic dhikr text -> images
-│   ├── arabic/          # generated: Arabic dhikr drawn as images
+│   ├── arabicimages.js  # generated: Arabic dhikr and dua text -> images
+│   ├── arabic/          # generated: Arabic dhikr and duas drawn as images
 │   ├── fasting.js       # sunnah and forbidden fasting days
 │   ├── holidays.js      # Islamic holiday dates
 │   ├── calendar.js      # monthly calendar grid
@@ -121,10 +121,10 @@ src/
 │   └── icons/           # menu icons
 └── pages/               # one folder per screen
 tools/
-└── arabic-images.py     # draws the Arabic dhikr as images
+└── arabic-images.py     # draws the Arabic dhikr and duas as images
 ```
 
-The watch cannot join Arabic letters, so the Arabic dhikr are shown as images drawn in the Amiri font. After changing an `arabic` text, run `pip install uharfbuzz freetype-py pillow` once, then `python3 tools/arabic-images.py`.
+The watch cannot join Arabic letters, so the Arabic dhikr and duas are shown as images drawn in the Amiri font. After changing an `arabic` text, run `pip install uharfbuzz freetype-py pillow` once, then `python3 tools/arabic-images.py`.
 
 To change the default city, edit the first entry in `src/common/cities.js`.
 

@@ -21,7 +21,7 @@ export function saveLanguage(code) {
   storage.set({ key: 'language', value: code })
 }
 
-// Script the dhikr text is shown in: 'latin' (default) or 'arabic'
+// Script the dhikr and dua texts are shown in: 'latin' (default) or 'arabic'
 export const SCRIPTS = ['latin', 'arabic']
 
 export function loadScript(cb) {
@@ -144,7 +144,7 @@ export const STRINGS = {
     sourceHijri: 'Hisab urfi (tabular)',
     quranText: "Teks Al-Qur'an",
     language: 'Bahasa',
-    script: 'Teks dzikir',
+    script: 'Teks dzikir & doa',
     scripts: { latin: 'Latin', arabic: 'Arab' },
     clockScreen: 'Layar Jam',
     clockScreens: { auto: 'Otomatis', on: 'Nyala terus' },
@@ -311,7 +311,7 @@ export const STRINGS = {
     sourceHijri: 'Tabular calendar',
     quranText: 'Quran text',
     language: 'Language',
-    script: 'Dhikr text',
+    script: 'Dhikr & dua text',
     scripts: { latin: 'Latin', arabic: 'Arabic' },
     clockScreen: 'Clock screen',
     clockScreens: { auto: 'Auto', on: 'Always on' },
@@ -478,7 +478,7 @@ export const STRINGS = {
     sourceHijri: '算术历法（tabular）',
     quranText: '古兰经经文',
     language: '语言',
-    script: '记念文字',
+    script: '记念与祈祷文字',
     scripts: { latin: '拉丁字母', arabic: '阿拉伯文' },
     clockScreen: '时钟屏幕',
     clockScreens: { auto: '自动熄屏', on: '保持常亮' },

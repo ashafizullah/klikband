@@ -48,7 +48,7 @@
   - **Hijriah**: kalender Hijriah aritmetika dengan koreksi manual ±2 hari
   - **Hari Besar Islam**: hitung mundur 8 hari besar Islam, diurutkan dari yang terdekat
   - **Asmaul Husna**: 99 nama Allah beserta artinya
-  - **Doa-doa Nabi**: 47 doa Nabi ﷺ sesuai [Almanhaj](https://almanhaj.or.id/83989-doa-doa-nabi-shallallahu-alaihi-wa-sallam.html), dalam bacaan Latin atau tulisan Arab (mengikuti pengaturan teks dzikir), dengan arti dan perawinya
+  - **Doa-doa Nabi**: 47 doa Nabi ﷺ sesuai [Almanhaj](https://almanhaj.or.id/83989-doa-doa-nabi-shallallahu-alaihi-wa-sallam.html), dalam bacaan Latin atau tulisan Arab (mengikuti pengaturan teks dzikir & doa), dengan arti dan perawinya
   - **Panduan Umrah**: tata cara umrah langkah demi langkah sesuai [Almanhaj](https://almanhaj.or.id/2252-tata-cara-umrah.html), lengkap dengan bacaan dan penghitung putaran thawaf/sa'i
 - **Umum**
   - **Kalender**: kalender bulanan dengan tanggal Hijriah, hari besar Islam dan hari puasa ditandai; ketuk tanggal untuk detail

@@ -48,7 +48,7 @@
   - **Hijri Date**: arithmetic Hijri calendar with a ±2 day manual correction
   - **Islamic Holidays**: countdown to 8 Islamic holidays, nearest first
   - **Asmaul Husna**: the 99 Names of Allah with meanings
-  - **Prophet's Duas**: 47 duas of the Prophet ﷺ following [Almanhaj](https://almanhaj.or.id/83989-doa-doa-nabi-shallallahu-alaihi-wa-sallam.html), in Latin transliteration or Arabic (per the dhikr text setting), with meaning and narrator
+  - **Prophet's Duas**: 47 duas of the Prophet ﷺ following [Almanhaj](https://almanhaj.or.id/83989-doa-doa-nabi-shallallahu-alaihi-wa-sallam.html), in Latin transliteration or Arabic (per the dhikr & dua text setting), with meaning and narrator
   - **Umrah Guide**: step-by-step umrah following [Almanhaj](https://almanhaj.or.id/2252-tata-cara-umrah.html), with duas and a tawaf/sa'i round counter
 - **General**
   - **Calendar**: monthly calendar with Hijri dates, Islamic holidays and fasting days marked; tap a day for details

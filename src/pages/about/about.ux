@@ -9,15 +9,6 @@
     </div>
 
     <div class="card {{w}}card {{r}}fit">
-      <text class="heading {{w}}heading">{{t.sources}}</text>
-      <div class="source" for="{{sources}}">
-        <div if="{{$idx > 0}}" class="divider {{w}}divider"></div>
-        <text class="label {{w}}label">{{$item.name}}</text>
-        <text class="value {{w}}value">{{$item.source}}</text>
-      </div>
-    </div>
-
-    <div class="card {{w}}card {{r}}fit">
       <text class="label {{w}}label">GitHub</text>
       <text class="value {{w}}value">ashafizullah/klikband</text>
       <div class="divider {{w}}divider"></div>
@@ -53,6 +44,21 @@
       <div class="divider {{w}}divider"></div>
       <text class="label {{w}}label">{{t.screen}}</text>
       <text class="value {{w}}value">{{screen}}</text>
+    </div>
+
+    <!-- Sources are long, so they sit last and stay folded until tapped -->
+    <div class="card {{w}}card {{r}}fit">
+      <div class="toggle" onclick="toggleSources">
+        <text class="heading heading-toggle {{w}}heading">{{t.sources}}</text>
+        <text class="toggle-sign {{w}}toggle-sign">{{showSources ? '-' : '+'}}</text>
+      </div>
+      <div if="{{showSources}}" class="sources {{w}}sources">
+        <div class="source" for="{{sources}}">
+          <div if="{{$idx > 0}}" class="divider {{w}}divider"></div>
+          <text class="label {{w}}label">{{$item.name}}</text>
+          <text class="value {{w}}value">{{$item.source}}</text>
+        </div>
+      </div>
     </div>
   </scroll>
 </template>
@@ -94,6 +100,7 @@ export default {
     r: '',
     t: STRINGS.id,
     sources: buildSources(STRINGS.id),
+    showSources: false,
     version: '',
     storageUsed: '-',
     storageBar: 0,
@@ -123,6 +130,10 @@ export default {
     } catch (e) {
       this.version = '-'
     }
+  },
+
+  toggleSources() {
+    this.showSources = !this.showSources
   },
 
   // Each API is optional on some devices, so every call fails quietly to "-"
@@ -219,6 +230,23 @@ export default {
   margin-bottom: 8px;
 }
 
+.toggle {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toggle-sign {
+  font-size: 22px;
+  font-weight: bold;
+  color: #8e8e93;
+}
+
+.sources {
+  flex-direction: column;
+  margin-top: 8px;
+}
+
 .source {
   flex-direction: column;
 }
@@ -295,6 +323,19 @@ export default {
 .w-heading {
   font-size: 10px;
   margin-bottom: 5px;
+}
+
+/* After .w-heading so the toggle row stays centred on every screen */
+.heading-toggle {
+  margin-bottom: 0;
+}
+
+.w-toggle-sign {
+  font-size: 13px;
+}
+
+.w-sources {
+  margin-top: 5px;
 }
 
 .w-label {

@@ -9,7 +9,7 @@
     <div class="track {{w}}track">
       <div class="seconds-fill {{w}}seconds-fill" style="width: {{secondsBar}}px;"></div>
     </div>
-    <text class="hijri {{w}}hijri">{{hijri}}</text>
+    <text class="hijri {{w}}hijri" style="font-size: {{hijriSize}}px;">{{hijri}}</text>
 
     <div class="panels {{w}}panels">
       <div class="hero {{w}}hero">
@@ -45,6 +45,7 @@ import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/
 import { CITIES, loadCity } from '../../common/cities.js'
 import { toHijriWithOffset, loadHijriOffset } from '../../common/hijri.js'
 import { loadLayout } from '../../common/screen.js'
+import { textWidth } from '../../common/text.js'
 
 // The five daily prayers shown in the schedule
 const DAILY = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']
@@ -53,6 +54,11 @@ const DAILY = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']
 // on bands and on wide screens
 const SECONDS_WIDTH = { '': 120, 'w-': 176 }
 const PRAYER_WIDTH = { '': 148, 'w-': 62 }
+
+// Hijri date sizes, largest first: the first one that fits the line is used,
+// so long month names don't push "H" onto a second line
+const HIJRI_SIZES = { '': [15, 14, 13, 12], 'w-': [10, 9, 8] }
+const HIJRI_WIDTH = 176
 
 const pad = (n) => (n < 10 ? '0' : '') + n
 
@@ -76,6 +82,7 @@ export default {
     minutes: '',
     secondsBar: 0,
     hijri: '',
+    hijriSize: 15,
     nextLabel: '',
     nextTime: '',
     prayerBar: 0,
@@ -153,6 +160,8 @@ export default {
 
     const h = toHijriWithOffset(now, this.offset)
     this.hijri = h.day + ' ' + t.hijriMonths[h.month - 1] + ' ' + h.year + ' H'
+    const sizes = HIJRI_SIZES[this.w]
+    this.hijriSize = sizes.find((size) => textWidth(this.hijri, size) <= HIJRI_WIDTH) || sizes[sizes.length - 1]
 
     const next = nextPrayer(now, this.cityData)
     this.nextKey = next.key

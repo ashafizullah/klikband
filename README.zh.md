@@ -1,8 +1,6 @@
 <p align="center">
-  <img src="design/icon.png" width="128" alt="KlikBand icon">
+  <img src="design/header.zh.png" alt="KlikBand on Xiaomi Smart Band 9, 9 Pro and 10">
 </p>
-
-<h1 align="center">KlikBand</h1>
 
 <p align="center">
   适用于小米手环 9 的免费开源快应用，并为小米手环 9 Pro 提供专门布局（小米手环 10 应该也可用）：时钟、礼拜时间、引导式记念、赞珠、伊斯兰历、伊斯兰节日、副朝指南、日历、倒数日和记分牌。完全离线，无需账号。

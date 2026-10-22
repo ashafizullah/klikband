@@ -1,8 +1,6 @@
 <p align="center">
-  <img src="design/icon.png" width="128" alt="KlikBand icon">
+  <img src="design/header.png" alt="KlikBand on Xiaomi Smart Band 9, 9 Pro and 10">
 </p>
-
-<h1 align="center">KlikBand</h1>
 
 <p align="center">
   A free, open-source quick app for Xiaomi Smart Band 9, with its own layout for Band 9 Pro (Band 10 should also work): a clock, prayer times, guided dhikr, tasbih, Hijri date, Islamic holidays, an umrah guide, a calendar, a day counter and a scoreboard. Fully offline, no account.

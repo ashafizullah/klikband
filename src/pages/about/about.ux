@@ -77,7 +77,7 @@ const BAR_WIDTH = 148
 function buildSources(t) {
   const almanhaj = 'almanhaj.or.id'
   return [
-    { name: t.dhikr, source: almanhaj },
+    { name: t.dhikr, source: 'rumaysho.com' },
     { name: t.morningevening, source: almanhaj },
     { name: t.quranText, source: 'tanzil.net' },
     { name: t.duas, source: almanhaj },

@@ -39,7 +39,7 @@
 - **Clock**: a watch-face-style page with the time, Gregorian and Hijri date, the next prayer with a countdown and progress bar, and today's five prayers. The screen turns off as usual; turn on Clock screen › Always on in Settings to keep it on so the prayer-time buzz arrives on time; swipe left for shortcuts to Post-prayer Dhikr, Morning & Evening Dhikr and Qibla
 - **Islam**
   - **Today**: Gregorian and Hijri date, next prayer, and sunnah fasts for today and tomorrow
-  - **Post-prayer Dhikr**: guided counter following [Almanhaj](https://almanhaj.or.id/97313-dzikir-setelah-shalat.html)
+  - **Post-prayer Dhikr**: guided counter following [Rumaysho](https://rumaysho.com/1997-dzikir-setelah-shalat.html)
   - **Morning & Evening Dhikr**: guided counter following [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html)
   - Both show the dhikr in Latin transliteration or in Arabic, with Ayat al-Kursi and the surahs in full, numbered by verse ([Tanzil](https://tanzil.net) text)
   - **Prayer Times**: Indonesian Ministry of Religious Affairs (Kemenag) method, computed offline on the device; buzzes and shows a message when a prayer time arrives while Clock, Today or Prayer Times is open

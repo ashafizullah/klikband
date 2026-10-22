@@ -39,7 +39,7 @@
 - **Jam**: halaman bergaya watch face berisi jam, tanggal Masehi dan Hijriah, sholat berikutnya dengan hitung mundur dan bar progres, serta jadwal 5 waktu hari ini. Layar mati seperti biasa; pilih Layar Jam › Nyala terus di Pengaturan agar layar tetap menyala dan getaran waktu sholat datang tepat waktu; geser ke kiri untuk pintasan ke Dzikir Sholat, Dzikir Pagi Petang dan Arah Kiblat
 - **Islam**
   - **Hari Ini**: tanggal Masehi dan Hijriah, sholat berikutnya, serta puasa sunnah hari ini dan besok
-  - **Dzikir Sholat**: penghitung berpanduan sesuai [Almanhaj](https://almanhaj.or.id/97313-dzikir-setelah-shalat.html)
+  - **Dzikir Sholat**: penghitung berpanduan sesuai [Rumaysho](https://rumaysho.com/1997-dzikir-setelah-shalat.html)
   - **Dzikir Pagi Petang**: penghitung berpanduan sesuai [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html)
   - Keduanya menampilkan dzikir dalam transliterasi Latin atau tulisan Arab, dengan Ayat Kursi dan surat-surat ditulis lengkap bernomor ayat (teks [Tanzil](https://tanzil.net))
   - **Jadwal Sholat**: metode Kemenag RI, dihitung offline di perangkat; bergetar dan menampilkan pesan saat masuk waktu sholat selama halaman Jam, Hari Ini atau Jadwal Sholat terbuka

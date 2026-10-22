@@ -7,6 +7,10 @@
 </p>
 
 <p align="center">
+  ⚠️ <b>Unofficial.</b> KlikBand is a community-made Xiaomi Vela quick app. It is not made, endorsed or supported by Xiaomi.
+</p>
+
+<p align="center">
   <a href="https://github.com/ashafizullah/klikband/releases/latest"><img src="https://img.shields.io/github/v/release/ashafizullah/klikband?label=release" alt="Release"></a>
   <a href="https://github.com/ashafizullah/klikband/releases"><img src="https://img.shields.io/github/downloads/ashafizullah/klikband/total?color=1fa77a" alt="Downloads"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/ashafizullah/klikband?color=blue" alt="MIT License"></a>

@@ -7,6 +7,10 @@
 </p>
 
 <p align="center">
+  ⚠️ <b>Tidak resmi.</b> KlikBand adalah quick app Xiaomi Vela buatan komunitas. Tidak dibuat, didukung, maupun disahkan oleh Xiaomi.
+</p>
+
+<p align="center">
   <a href="https://github.com/ashafizullah/klikband/releases/latest"><img src="https://img.shields.io/github/v/release/ashafizullah/klikband?label=release" alt="Release"></a>
   <a href="https://github.com/ashafizullah/klikband/releases"><img src="https://img.shields.io/github/downloads/ashafizullah/klikband/total?color=1fa77a" alt="Downloads"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/ashafizullah/klikband?color=blue" alt="MIT License"></a>

@@ -44,7 +44,7 @@ import { prayerAlert, LATE_ALERT } from '../../common/alert.js'
 import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
 import { CITIES, loadCity } from '../../common/cities.js'
 import { toHijriWithOffset, loadHijriOffset } from '../../common/hijri.js'
-import { loadLayout, keepScreenOn } from '../../common/screen.js'
+import { loadLayout, keepScreenOn, loadClockScreen } from '../../common/screen.js'
 import { textWidth } from '../../common/text.js'
 
 // The five daily prayers shown in the schedule
@@ -120,11 +120,12 @@ export default {
     this.timer = setInterval(() => this.tick(), 1000)
   },
 
-  // The screen stays on while Clock is open, so the prayer-time alert can
-  // fire. If it was turned off anyway, the first tick after waking catches
-  // up, alerting for a prayer time that passed in the meantime
+  // The screen turns off as usual unless Settings keeps it on for Clock, so
+  // the prayer-time alert fires on time. Timers stop while the screen is
+  // off; the first tick after waking catches up, alerting for a prayer time
+  // that passed in the meantime
   onShow() {
-    keepScreenOn(true)
+    loadClockScreen((code) => keepScreenOn(code === 'on'))
     this.tick()
   },
 

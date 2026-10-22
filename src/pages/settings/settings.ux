@@ -25,6 +25,14 @@
         <div class="radio {{$item.code === script ? 'radio-active' : ''}} {{w}}radio"></div>
       </div>
     </div>
+
+    <text class="section section-next {{w}}section {{w}}section-next {{r}}fit">{{clockScreenLabel}}</text>
+    <div class="group {{w}}group {{r}}fit">
+      <div class="option {{w}}option" for="{{clockScreens}}" onclick="selectClockScreen($item.code)">
+        <text class="option-label {{w}}option-label">{{$item.label}}</text>
+        <div class="radio {{$item.code === clockScreen ? 'radio-active' : ''}} {{w}}radio"></div>
+      </div>
+    </div>
   </scroll>
 </template>
 
@@ -32,7 +40,7 @@
 import router from '@system.router'
 import { LANGUAGES, SCRIPTS, STRINGS, loadLanguage, saveLanguage, loadScript, saveScript } from '../../common/i18n.js'
 import { CITIES, loadCity } from '../../common/cities.js'
-import { loadLayout } from '../../common/screen.js'
+import { loadLayout, CLOCK_SCREENS, loadClockScreen, saveClockScreen } from '../../common/screen.js'
 
 export default {
   private: {
@@ -47,6 +55,9 @@ export default {
     scriptLabel: STRINGS.id.script,
     scripts: [],
     script: 'latin',
+    clockScreenLabel: STRINGS.id.clockScreen,
+    clockScreens: [],
+    clockScreen: 'auto',
     cityName: CITIES[0].name
   },
 
@@ -58,6 +69,7 @@ export default {
     })
     loadLanguage((lang) => this.apply(lang))
     loadScript((code) => (this.script = code))
+    loadClockScreen((code) => (this.clockScreen = code))
   },
 
   // Also runs when returning from the city picker
@@ -79,6 +91,11 @@ export default {
     this.script = code
   },
 
+  selectClockScreen(code) {
+    saveClockScreen(code)
+    this.clockScreen = code
+  },
+
   apply(lang) {
     this.active = lang
     this.title = STRINGS[lang].settings
@@ -86,6 +103,8 @@ export default {
     this.cityLabel = STRINGS[lang].city
     this.scriptLabel = STRINGS[lang].script
     this.scripts = SCRIPTS.map((code) => ({ code, label: STRINGS[lang].scripts[code] }))
+    this.clockScreenLabel = STRINGS[lang].clockScreen
+    this.clockScreens = CLOCK_SCREENS.map((code) => ({ code, label: STRINGS[lang].clockScreens[code] }))
   }
 }
 </script>

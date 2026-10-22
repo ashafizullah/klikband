@@ -1,11 +1,29 @@
 import brightness from '@system.brightness'
 import device from '@system.device'
+import storage from '@system.storage'
 
 // Keep the screen on while a reading or counting page is visible
 export function keepScreenOn(on) {
   try {
     brightness.setKeepScreenOn({ keepScreenOn: on })
   } catch (e) {}
+}
+
+// Whether Clock keeps the screen on: 'auto' (default, turns off as usual)
+// or 'on'
+export const CLOCK_SCREENS = ['auto', 'on']
+
+export function loadClockScreen(cb) {
+  storage.get({
+    key: 'clockScreen',
+    default: 'auto',
+    success: (data) => cb(CLOCK_SCREENS.indexOf(data) >= 0 ? data : 'auto'),
+    fail: () => cb('auto')
+  })
+}
+
+export function saveClockScreen(code) {
+  storage.set({ key: 'clockScreen', value: code })
 }
 
 // Wide screens such as Band 9 Pro (336 x 480) get their own layout. Pages add

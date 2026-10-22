@@ -332,8 +332,10 @@ export default {
   border-radius: 14px;
 }
 
+/* Strong contrast throughout so the schedule stays readable in sunlight:
+   the next prayer is a solid green row with black text */
 .next {
-  background-color: #0d3b2c;
+  background-color: #34d399;
 }
 
 .dot {
@@ -344,24 +346,26 @@ export default {
 }
 
 .upcoming-dot {
-  background-color: #8e8e93;
+  background-color: #ffffff;
 }
 
 .next-dot {
-  background-color: #34d399;
+  background-color: #000000;
 }
 
 .past-dot {
-  background-color: #3a3a3c;
+  background-color: #636366;
 }
 
 .row-label {
   flex: 1;
-  font-size: 15px;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .row-time {
-  font-size: 15px;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .upcoming-text {
@@ -369,17 +373,16 @@ export default {
 }
 
 .next-text {
-  font-weight: bold;
-  color: #34d399;
+  color: #000000;
 }
 
 .past-text {
-  color: #636366;
+  color: #aeaeb2;
 }
 
 .footer {
   font-size: 13px;
-  color: #636366;
+  color: #aeaeb2;
   margin-top: 8px;
 }
 
@@ -477,7 +480,7 @@ export default {
 }
 
 .w-row-text {
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .w-footer {

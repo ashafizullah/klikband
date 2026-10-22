@@ -1,15 +1,17 @@
 // Dhikr after the obligatory prayers, in the order given by
 // https://almanhaj.or.id/97313-dzikir-setelah-shalat.html
-// Each step: Latin text, repetitions, meaning per language, and an optional note.
-// Long Qur'an passages are shown as a reading prompt instead of full text.
+// Each step: Latin and Arabic text, repetitions, meaning per language, and an optional note.
+// Qur'an text: Tanzil Quran Text (Simple), CC BY 3.0, https://tanzil.net
 export default [
   {
     latin: 'Astaghfirullah',
+    arabic: 'أَسْتَغْفِرُ اللهَ',
     count: 3,
     meaning: { id: 'Aku memohon ampun kepada Allah', en: 'I seek forgiveness from Allah', zh: '我向真主求饶恕' }
   },
   {
     latin: "Allahumma antas salaam wa minkas salaam, tabaarakta yaa dzal jalaali wal ikraam",
+    arabic: 'اللَّهُمَّ أَنْتَ السَّلامُ، وَمِنْكَ السَّلامُ، تَبَارَكْتَ يَا ذَا الجَلالِ وَالإكْرَامِ',
     count: 1,
     meaning: {
       id: 'Ya Allah Engkau-lah as salam, dan keselamatan hanya dari-Mu, Maha Suci Engkau wahai Dzat yang memiliki semua keagungan dan kemuliaan.',
@@ -19,6 +21,7 @@ export default [
   },
   {
     latin: "Laa ilaaha illallah wahdahu laa syariika lah, lahul mulku wa lahul hamdu wa huwa 'alaa kulli syai-in qodiir. Allahumma laa maani'a limaa a'thoyta wa laa mu'thiya limaa mana'ta wa laa yanfa'u dzal jaddi minkal jaddu",
+    arabic: 'لا إلَهَ إلَّا اللهُ وَحْدَهُ لا شَرِيكَ لَهُ، لَهُ المُلْكُ وَلَهُ الحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، اللَّهُمَّ لا مَانِعَ لِمَا أَعْطَيْتَ، وَلا مُعْطِيَ لِمَا مَنَعْتَ، وَلا يَنْفَعُ ذَا الجَدِّ مِنْكَ الجَدُّ',
     count: 1,
     meaning: {
       id: 'Tiada ilah yang berhak disembah selain Allah semata, tidak ada sekutu bagi-Nya. Segala pujian dan kerajaan adalah milik Allah. Allah Maha Kuasa atas segala sesuatu. Ya Allah, tidak ada yang mencegah apa yang Engkau berikan dan tidak ada yang memberi apa yang Engkau cegah. Tidak berguna kekayaan dan kemuliaan (bagi pemiliknya). Dari Engkau-lah semua kekayaan dan kemuliaan.',
@@ -28,6 +31,7 @@ export default [
   },
   {
     latin: "Laa ilaaha illallah wahdahu laa syariika lah, lahul mulku wa lahul hamdu wa huwa 'alaa kulli syai-in qodiir. Laa hawla wa laa quwwata illaa billaah. Laa ilaaha illallah wa laa na'budu illaa iyyaah. Lahun ni'mah wa lahul fadhlu wa lahuts tsanaa-ul hasan. Laa ilaaha illallah mukhlishiina lahud diin wa law karihal kaafiruun",
+    arabic: 'لا إلَهَ إلَّا اللهُ وَحْدَهُ لا شَرِيكَ لَهُ، لَهُ المُلْكُ وَلَهُ الحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، لا حَوْلَ وَلا قُوَّةَ إلَّا بِاللهِ، لا إلَهَ إلَّا اللهُ وَلا نَعْبُدُ إلَّا إيَّاهُ، لَهُ النِّعْمَةُ وَلَهُ الفَضْلُ وَلَهُ الثَّنَاءُ الحَسَنُ، لا إلَهَ إلَّا اللهُ مُخْلِصِينَ لَهُ الدِّينَ وَلَوْ كَرِهَ الكَافِرُونَ',
     count: 1,
     meaning: {
       id: 'Tiada ilah yang berhak disembah selain Allah semata, tidak ada sekutu bagi-Nya. Segala pujian dan kerajaan adalah milik Allah. Allah Maha Kuasa atas segala sesuatu. Tidak ada daya dan upaya kecuali dengan pertolongan Allah. Tiada ilah yang berhak disembah kecuali Allah. Kami tidak menyembah kecuali kepada-Nya. Semua nikmat, anugerah dan pujian yang baik adalah milik Allah. Tiada ilah yang berhak disembah kecuali Allah, dengan memurnikan ibadah hanya kepada-Nya, sekalipun orang-orang kafir tidak menyukainya.',
@@ -37,6 +41,7 @@ export default [
   },
   {
     latin: 'Subhanallah',
+    arabic: 'سُبْحَانَ اللهِ',
     count: 33,
     meaning: { id: 'Maha Suci Allah', en: 'Glory be to Allah', zh: '赞主清净' },
     note: {
@@ -47,16 +52,19 @@ export default [
   },
   {
     latin: 'Alhamdulillah',
+    arabic: 'الحَمْدُ لِلَّهِ',
     count: 33,
     meaning: { id: 'Segala puji bagi Allah', en: 'All praise is due to Allah', zh: '一切赞颂全归真主' }
   },
   {
     latin: 'Allahu Akbar',
+    arabic: 'اللهُ أَكْبَرُ',
     count: 33,
     meaning: { id: 'Allah Maha Besar', en: 'Allah is the Greatest', zh: '真主至大' }
   },
   {
     latin: "Laa ilaaha illallah wahdahu laa syariika lah, lahul mulku wa lahul hamdu wa huwa 'alaa kulli syai-in qodiir",
+    arabic: 'لا إلَهَ إلَّا اللهُ وَحْدَهُ لا شَرِيكَ لَهُ، لَهُ المُلْكُ وَلَهُ الحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',
     count: 1,
     meaning: {
       id: 'Tidak ada sembahan yang berhak disembah melainkan Allah semata, tidak ada sekutu bagi-Nya. Bagi-Nya segala kerajaan dan pujian. Dia Mahakuasa atas segala sesuatu.',
@@ -66,12 +74,23 @@ export default [
     note: { id: 'Pelengkap seratus', en: 'Completes the hundred', zh: '凑满一百' }
   },
   {
-    latin: 'Al-Falaq, An-Nas',
+    latin:
+      "Bismillaahir rahmaanir rahiim. Qul a'uudzu birobbil falaq (1) Min syarri maa kholaq (2) Wa min syarri ghoosiqin idzaa waqob (3) Wa min syarrin naffaatsaati fil 'uqod (4) Wa min syarri haasidin idzaa hasad (5)",
+    arabic: 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ (١) مِنْ شَرِّ مَا خَلَقَ (٢) وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ (٣) وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ (٤) وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ (٥)',
     count: 1,
-    meaning: { id: "Baca mu'awwidzatain (Al-Falaq dan An-Nas)", en: 'Recite Al-Falaq and An-Nas', zh: '诵读《曙光章》和《世人章》' }
+    meaning: { id: 'Baca surat Al-Falaq', en: 'Recite Surah Al-Falaq', zh: '诵读《曙光章》' }
   },
   {
-    latin: 'Ayat Kursi',
+    latin:
+      "Bismillaahir rahmaanir rahiim. Qul a'uudzu birobbin naas (1) Malikin naas (2) Ilaahin naas (3) Min syarril waswaasil khonnaas (4) Alladzii yuwaswisu fii shuduurin naas (5) Minal jinnati wan naas (6)",
+    arabic: 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ قُلْ أَعُوذُ بِرَبِّ النَّاسِ (١) مَلِكِ النَّاسِ (٢) إِلَٰهِ النَّاسِ (٣) مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ (٤) الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ (٥) مِنَ الْجِنَّةِ وَالنَّاسِ (٦)',
+    count: 1,
+    meaning: { id: 'Baca surat An-Nas', en: 'Recite Surah An-Nas', zh: '诵读《世人章》' }
+  },
+  {
+    latin:
+      "Allaahu laa ilaaha illaa huwal hayyul qoyyuum, laa ta'khudzuhuu sinatuw wa laa naum, lahuu maa fis samaawaati wa maa fil ardh, man dzal ladzii yasyfa'u 'indahuu illaa bi idznih, ya'lamu maa baina aidiihim wa maa kholfahum, wa laa yuhiithuuna bisyai-im min 'ilmihii illaa bimaa syaa', wasi'a kursiyyuhus samaawaati wal ardh, wa laa ya-uuduhuu hifzhuhumaa, wa huwal 'aliyyul 'azhiim (255)",
+    arabic: 'اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ (٢٥٥)',
     count: 1,
     meaning: { id: 'Baca QS. Al-Baqarah: 255', en: 'Recite Al-Baqarah 2:255', zh: '诵读《黄牛章》第255节' }
   }

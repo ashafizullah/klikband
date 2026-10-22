@@ -17,12 +17,20 @@
         <div class="radio {{$item.code === active ? 'radio-active' : ''}} {{w}}radio"></div>
       </div>
     </div>
+
+    <text class="section section-next {{w}}section {{w}}section-next {{r}}fit">{{scriptLabel}}</text>
+    <div class="group {{w}}group {{r}}fit">
+      <div class="option {{w}}option" for="{{scripts}}" onclick="selectScript($item.code)">
+        <text class="option-label {{w}}option-label">{{$item.label}}</text>
+        <div class="radio {{$item.code === script ? 'radio-active' : ''}} {{w}}radio"></div>
+      </div>
+    </div>
   </scroll>
 </template>
 
 <script>
 import router from '@system.router'
-import { LANGUAGES, STRINGS, loadLanguage, saveLanguage } from '../../common/i18n.js'
+import { LANGUAGES, SCRIPTS, STRINGS, loadLanguage, saveLanguage, loadScript, saveScript } from '../../common/i18n.js'
 import { CITIES, loadCity } from '../../common/cities.js'
 import { loadLayout } from '../../common/screen.js'
 
@@ -36,6 +44,9 @@ export default {
     title: STRINGS.id.settings,
     languageLabel: STRINGS.id.language,
     cityLabel: STRINGS.id.city,
+    scriptLabel: STRINGS.id.script,
+    scripts: [],
+    script: 'latin',
     cityName: CITIES[0].name
   },
 
@@ -46,6 +57,7 @@ export default {
       this.r = r
     })
     loadLanguage((lang) => this.apply(lang))
+    loadScript((code) => (this.script = code))
   },
 
   // Also runs when returning from the city picker
@@ -62,11 +74,18 @@ export default {
     this.apply(code)
   },
 
+  selectScript(code) {
+    saveScript(code)
+    this.script = code
+  },
+
   apply(lang) {
     this.active = lang
     this.title = STRINGS[lang].settings
     this.languageLabel = STRINGS[lang].language
     this.cityLabel = STRINGS[lang].city
+    this.scriptLabel = STRINGS[lang].script
+    this.scripts = SCRIPTS.map((code) => ({ code, label: STRINGS[lang].scripts[code] }))
   }
 }
 </script>

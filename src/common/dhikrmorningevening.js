@@ -1,10 +1,14 @@
 // Morning and evening dhikr, in the order and counts given by
 // https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html
-// The article has Arabic and Indonesian only; the Latin transliteration follows Hisnul Muslim.
+// The article has Arabic and Indonesian only; the Arabic follows the article, the Latin
+// transliteration follows Hisnul Muslim. Qur'an text: Tanzil Quran Text (Simple), CC BY 3.0,
+// https://tanzil.net
 // `only` limits a step to 'morning' or 'evening'; `evening` overrides text for the evening set.
 const ITEMS = [
   {
-    latin: 'Ayat Kursi',
+    latin:
+      "Allaahu laa ilaaha illaa huwal hayyul qoyyuum, laa ta'khudzuhuu sinatuw wa laa naum, lahuu maa fis samaawaati wa maa fil ardh, man dzal ladzii yasyfa'u 'indahuu illaa bi idznih, ya'lamu maa baina aidiihim wa maa kholfahum, wa laa yuhiithuuna bisyai-im min 'ilmihii illaa bimaa syaa', wasi'a kursiyyuhus samaawaati wal ardh, wa laa ya-uuduhuu hifzhuhumaa, wa huwal 'aliyyul 'azhiim (255)",
+    arabic: 'اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ (٢٥٥)',
     count: 1,
     meaning: {
       id: "Diawali A'uudzu billaahi minasy syaithoonir rojiim, lalu baca QS. Al-Baqarah: 255",
@@ -12,12 +16,31 @@ const ITEMS = [
       zh: '先念求护词，再诵读《黄牛章》第255节'
     }
   },
-  { latin: 'Al-Ikhlas', count: 3, meaning: { id: 'Baca surat Al-Ikhlas', en: 'Recite Surah Al-Ikhlas', zh: '诵读《忠诚章》' } },
-  { latin: 'Al-Falaq', count: 3, meaning: { id: 'Baca surat Al-Falaq', en: 'Recite Surah Al-Falaq', zh: '诵读《曙光章》' } },
-  { latin: 'An-Nas', count: 3, meaning: { id: 'Baca surat An-Nas', en: 'Recite Surah An-Nas', zh: '诵读《世人章》' } },
+  {
+    latin:
+      'Bismillaahir rahmaanir rahiim. Qul huwallaahu ahad (1) Allaahush shomad (2) Lam yalid wa lam yuulad (3) Wa lam yakul lahuu kufuwan ahad (4)',
+    arabic: 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ قُلْ هُوَ اللَّهُ أَحَدٌ (١) اللَّهُ الصَّمَدُ (٢) لَمْ يَلِدْ وَلَمْ يُولَدْ (٣) وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ (٤)',
+    count: 3,
+    meaning: { id: 'Baca surat Al-Ikhlas', en: 'Recite Surah Al-Ikhlas', zh: '诵读《忠诚章》' }
+  },
+  {
+    latin:
+      "Bismillaahir rahmaanir rahiim. Qul a'uudzu birobbil falaq (1) Min syarri maa kholaq (2) Wa min syarri ghoosiqin idzaa waqob (3) Wa min syarrin naffaatsaati fil 'uqod (4) Wa min syarri haasidin idzaa hasad (5)",
+    arabic: 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ (١) مِنْ شَرِّ مَا خَلَقَ (٢) وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ (٣) وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ (٤) وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ (٥)',
+    count: 3,
+    meaning: { id: 'Baca surat Al-Falaq', en: 'Recite Surah Al-Falaq', zh: '诵读《曙光章》' }
+  },
+  {
+    latin:
+      "Bismillaahir rahmaanir rahiim. Qul a'uudzu birobbin naas (1) Malikin naas (2) Ilaahin naas (3) Min syarril waswaasil khonnaas (4) Alladzii yuwaswisu fii shuduurin naas (5) Minal jinnati wan naas (6)",
+    arabic: 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ قُلْ أَعُوذُ بِرَبِّ النَّاسِ (١) مَلِكِ النَّاسِ (٢) إِلَٰهِ النَّاسِ (٣) مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ (٤) الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ (٥) مِنَ الْجِنَّةِ وَالنَّاسِ (٦)',
+    count: 3,
+    meaning: { id: 'Baca surat An-Nas', en: 'Recite Surah An-Nas', zh: '诵读《世人章》' }
+  },
   {
     latin:
       "Ashbahnaa wa ashbahal mulku lillaah, walhamdu lillaah, laa ilaaha illallaah wahdahu laa syariika lah, lahul mulku wa lahul hamdu wa huwa 'alaa kulli syai-in qodiir. Robbi as-aluka khoiro maa fii haadzal yaum wa khoiro maa ba'dahu, wa a'uudzu bika min syarri maa fii haadzal yaum wa syarri maa ba'dahu. Robbi a'uudzu bika minal kasali wa suu-il kibar. Robbi a'uudzu bika min 'adzaabin fin naari wa 'adzaabin fil qobr",
+    arabic: 'أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لاَ إِلَهَ إِلاَّ اللهُ وَحْدَهُ لاَ شَرِيْكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيْرٌ. رَبِّ أَسْأَلُكَ خَيْرَ مَا فِيْ هَذَا الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ، وَأَعُوْذُ بِكَ مِنْ شَرِّ مَا فِيْ هَذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ، رَبِّ أَعُوْذُ بِكَ مِنَ الْكَسَلِ وَسُوْءِ الْكِبَرِ، رَبِّ أَعُوْذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ',
     count: 1,
     meaning: {
       id: 'Kami memasuki waktu pagi dan kerajaan hanya milik Allah, segala puji bagi Allah. Tiada Rabb yang berhak disembah selain Allah Yang Maha Esa. Ya Rabbku, aku mohon kebaikan di hari ini dan sesudahnya, dan aku berlindung dari kejahatan hari ini dan sesudahnya, dari kemalasan, keburukan di hari tua, siksa neraka dan siksa kubur.',
@@ -27,6 +50,7 @@ const ITEMS = [
     evening: {
       latin:
         "Amsainaa wa amsal mulku lillaah, walhamdu lillaah, laa ilaaha illallaah wahdahu laa syariika lah, lahul mulku wa lahul hamdu wa huwa 'alaa kulli syai-in qodiir. Robbi as-aluka khoiro maa fii haadzihil lailah wa khoiro maa ba'dahaa, wa a'uudzu bika min syarri maa fii haadzihil lailah wa syarri maa ba'dahaa. Robbi a'uudzu bika minal kasali wa suu-il kibar. Robbi a'uudzu bika min 'adzaabin fin naari wa 'adzaabin fil qobr",
+      arabic: 'أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلاَّ اللهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذِهِ اللَّيْلَةِ وَخَيْرَ مَا بَعْدَهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذِهِ اللَّيْلَةِ وَشَرِّ مَا بَعْدَهَا، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ',
       meaning: {
         id: 'Kami memasuki waktu sore dan kerajaan hanya milik Allah, segala puji bagi Allah. Tiada Rabb yang berhak disembah selain Allah Yang Maha Esa. Ya Rabbku, aku mohon kebaikan di malam ini dan sesudahnya, dan aku berlindung dari kejahatan malam ini dan sesudahnya, dari kemalasan, keburukan di hari tua, siksa neraka dan siksa kubur.',
         en: 'We have entered the evening and the dominion belongs to Allah; all praise is for Allah. There is no god but Allah alone. My Lord, I ask You for the good of this night and what follows it, and seek refuge from its evil and what follows it, from laziness and the misery of old age, and from the punishment of the Fire and the grave.',
@@ -36,6 +60,7 @@ const ITEMS = [
   },
   {
     latin: "Allahumma bika ashbahnaa, wa bika amsainaa, wa bika nahyaa, wa bika namuutu, wa ilaikan nusyuur",
+    arabic: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوْتُ، وَإِلَيْكَ النُّشُوْرُ',
     count: 1,
     meaning: {
       id: 'Ya Allah, dengan rahmat-Mu kami memasuki waktu pagi dan waktu sore, dengan-Mu kami hidup dan mati, dan kepada-Mu kebangkitan.',
@@ -44,6 +69,7 @@ const ITEMS = [
     },
     evening: {
       latin: "Allahumma bika amsainaa, wa bika ashbahnaa, wa bika nahyaa, wa bika namuutu, wa ilaikal mashiir",
+      arabic: 'اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيْرُ',
       meaning: {
         id: 'Ya Allah, dengan rahmat-Mu kami memasuki waktu sore dan waktu pagi, dengan-Mu kami hidup dan mati, dan kepada-Mu tempat kembali.',
         en: 'O Allah, by You we enter the evening and the morning, by You we live and die, and to You is the return.',
@@ -54,6 +80,7 @@ const ITEMS = [
   {
     latin:
       "Allahumma anta robbii laa ilaaha illaa anta, kholaqtanii wa ana 'abduka, wa ana 'alaa 'ahdika wa wa'dika mastatho'tu, a'uudzu bika min syarri maa shona'tu, abuu-u laka bini'matika 'alayya, wa abuu-u bidzanbii, faghfirlii fa innahu laa yaghfirudz dzunuuba illaa anta",
+    arabic: 'اللَّهُمَّ أَنْتَ رَبِّيْ لاَ إِلَهَ إِلاَّ أَنْتَ، خَلَقْتَنِيْ وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوْذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوْءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوْءُ بِذَنْبِيْ فَاغْفِرْ لِيْ فَإِنَّهُ لاَ يَغْفِرُ الذُّنُوْبَ إِلاَّ أَنْتَ',
     count: 1,
     meaning: {
       id: 'Sayyidul Istighfar. Ya Allah, Engkau Rabbku, tiada Rabb yang berhak disembah selain Engkau. Engkau menciptakanku dan aku hamba-Mu, aku berada di atas perjanjian-Mu semampuku. Aku berlindung dari kejahatan perbuatanku, aku mengakui nikmat-Mu dan dosaku, maka ampunilah aku, karena tiada yang mengampuni dosa selain Engkau.',
@@ -64,6 +91,7 @@ const ITEMS = [
   {
     latin:
       "Allahumma 'aafinii fii badanii, Allahumma 'aafinii fii sam'ii, Allahumma 'aafinii fii bashorii, laa ilaaha illaa anta. Allahumma innii a'uudzu bika minal kufri wal faqr, wa a'uudzu bika min 'adzaabil qobr, laa ilaaha illaa anta",
+    arabic: 'اللَّهُمَّ عَافِنِيْ فِيْ بَدَنِيْ، اللَّهُمَّ عَافِنِيْ فِيْ سَمْعِيْ، اللَّهُمَّ عَافِنِيْ فِيْ بَصَرِيْ، لاَ إِلَهَ إِلاَّ أَنْتَ. اللَّهُمَّ إِنِّي أَعُوْذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوْذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لاَ إِلَهَ إِلاَّ أَنْتَ',
     count: 3,
     meaning: {
       id: 'Ya Allah, selamatkanlah tubuhku, pendengaranku, dan penglihatanku. Tiada Rabb yang berhak disembah selain Engkau. Ya Allah, aku berlindung kepada-Mu dari kekufuran, kefakiran, dan siksa kubur.',
@@ -74,6 +102,7 @@ const ITEMS = [
   {
     latin:
       "Allahumma innii as-alukal 'afwa wal 'aafiyah fid dunyaa wal aakhiroh. Allahumma innii as-alukal 'afwa wal 'aafiyah fii diinii wa dun-yaaya wa ahlii wa maalii. Allahummastur 'awrootii wa aamin row'aatii. Allahummahfazhnii min baini yadayya wa min kholfii wa 'an yamiinii wa 'an syimaalii wa min fauqii, wa a'uudzu bi 'azhomatika an ughtaala min tahtii",
+    arabic: 'اللَّهُمَّ إِنِّيْ أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ، اللَّهُمَّ إِنِّيْ أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِيْنِيْ وَدُنْيَايَ وَأَهْلِيْ وَمَالِيْ، اللَّهُمَّ اسْتُرْ عَوْرَاتِيْ وَآمِنْ رَوْعَاتِيْ. اللَّهُمَّ احْفَظْنِيْ مِنْ بَيْنِ يَدَيَّ، وَمِنْ خَلْفِيْ، وَعَنْ يَمِيْنِيْ وَعَنْ شِمَالِيْ، وَمِنْ فَوْقِيْ، وَأَعُوْذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِيْ',
     count: 1,
     meaning: {
       id: 'Ya Allah, aku memohon ampunan dan keselamatan di dunia dan akhirat, dalam agama, dunia, keluarga, dan hartaku. Tutupilah auratku dan tenteramkan aku dari rasa takut. Peliharalah aku dari depan, belakang, kanan, kiri, dan atas, dan aku berlindung dengan keagungan-Mu agar tidak dicelakakan dari bawah.',
@@ -84,6 +113,7 @@ const ITEMS = [
   {
     latin:
       "Allahumma 'aalimal ghoibi wasy syahaadah, faathiros samaawaati wal ardh, robba kulli syai-in wa maliikah, asyhadu an laa ilaaha illaa anta, a'uudzu bika min syarri nafsii, wa min syarrisy syaithooni wa syirkihi, wa an aqtarifa 'alaa nafsii suu-an aw ajurrohu ilaa muslim",
+    arabic: 'اللَّهُمَّ عَالِمَ الْغَيْبِ وَالشَّهَادَةِ فَاطِرَ السَّمَاوَاتِ وَالْأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيْكَهُ، أَشْهَدُ أَنْ لاَ إِلَهَ إِلاَّ أَنْتَ، أَعُوْذُ بِكَ مِنْ شَرِّ نَفْسِيْ، وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ، وَأَنْ أَقْتَرِفَ عَلَى نَفْسِيْ سُوْءًا أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ',
     count: 1,
     meaning: {
       id: 'Ya Allah, Yang Mengetahui yang gaib dan yang nyata, Pencipta langit dan bumi, Rabb dan Penguasa segala sesuatu. Aku bersaksi tiada Rabb yang berhak disembah selain Engkau. Aku berlindung dari kejahatan diriku, setan dan ajakan syiriknya, serta dari berbuat buruk terhadap diriku atau kepada seorang muslim.',
@@ -93,6 +123,7 @@ const ITEMS = [
   },
   {
     latin: "Bismillaahil ladzii laa yadhurru ma'asmihi syai-un fil ardhi wa laa fis samaa', wa huwas samii'ul 'aliim",
+    arabic: 'بِسْمِ اللهِ الَّذِي لاَ يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلاَ فِي السَّمَاءِ وَهُوَ السَّمِيْعُ الْعَلِيْمُ',
     count: 3,
     meaning: {
       id: 'Dengan nama Allah yang bila disebut, segala sesuatu di bumi dan langit tidak akan membahayakan. Dia Maha Mendengar lagi Maha Mengetahui.',
@@ -102,6 +133,7 @@ const ITEMS = [
   },
   {
     latin: "Rodhiitu billaahi robbaa, wa bil islaami diinaa, wa bi Muhammadin shollallahu 'alaihi wa sallama nabiyyaa",
+    arabic: 'رَضِيْتُ بِاللهِ رَبًّا، وَبِالْإِسْلاَمِ دِيْنًا، وَبِمُحَمَّدٍ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا',
     count: 3,
     meaning: {
       id: 'Aku ridha Allah sebagai Rabb, Islam sebagai agama, dan Muhammad shallallahu alaihi wa sallam sebagai nabi.',
@@ -111,6 +143,7 @@ const ITEMS = [
   },
   {
     latin: "Yaa Hayyu yaa Qoyyuum, bi rohmatika astaghiits, ashlih lii sya'nii kullahu, wa laa takilnii ilaa nafsii thorfata 'ain",
+    arabic: 'يَا حَيُّ يَا قَيُّوْمُ بِرَحْمَتِكَ أَسْتَغِيْثُ، أَصْلِحْ لِيْ شَأْنِيْ كُلَّهُ وَلاَ تَكِلْنِيْ إِلَى نَفْسِيْ طَرْفَةَ عَيْنٍ',
     count: 1,
     meaning: {
       id: 'Wahai Rabb Yang Maha Hidup dan Berdiri Sendiri, dengan rahmat-Mu aku memohon pertolongan. Perbaikilah seluruh urusanku dan jangan Engkau serahkan kepada diriku walau sekejap mata.',
@@ -121,6 +154,7 @@ const ITEMS = [
   {
     latin:
       "Ashbahnaa 'alaa fithrotil islaam, wa 'alaa kalimatil ikhlaash, wa 'alaa diini nabiyyinaa Muhammadin shollallahu 'alaihi wa sallam, wa 'alaa millati abiinaa Ibroohiima haniifam muslimaa, wa maa kaana minal musyrikiin",
+    arabic: 'أَصْبَحْنَا عَلَى فِطْرَةِ الْإِسْلاَمِ وَعَلَى كَلِمَةِ الْإِخْلاَصِ، وَعَلَى دِيْنِ نَبِيِّنَا مُحَمَّدٍ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ، وَعَلَى مِلَّةِ أَبِيْنَا إِبْرَاهِيْمَ، حَنِيْفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِيْنَ',
     count: 1,
     meaning: {
       id: 'Di waktu pagi kami berada di atas fitrah Islam, kalimat ikhlas, agama Nabi kami Muhammad, dan agama bapak kami Ibrahim yang lurus dan muslim, dan ia tidak termasuk orang musyrik.',
@@ -130,6 +164,7 @@ const ITEMS = [
     evening: {
       latin:
         "Amsainaa 'alaa fithrotil islaam, wa 'alaa kalimatil ikhlaash, wa 'alaa diini nabiyyinaa Muhammadin shollallahu 'alaihi wa sallam, wa 'alaa millati abiinaa Ibroohiima haniifam muslimaa, wa maa kaana minal musyrikiin",
+      arabic: 'أَمْسَيْنَا عَلَى فِطْرَةِ الْإِسْلاَمِ وَعَلَى كَلِمَةِ الْإِخْلاَصِ، وَعَلَى دِيْنِ نَبِيِّنَا مُحَمَّدٍ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ، وَعَلَى مِلَّةِ أَبِيْنَا إِبْرَاهِيْمَ، حَنِيْفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِيْنَ',
       meaning: {
         id: 'Di waktu sore kami berada di atas fitrah Islam, kalimat ikhlas, agama Nabi kami Muhammad, dan agama bapak kami Ibrahim yang lurus dan muslim, dan ia tidak termasuk orang musyrik.',
         en: 'We have entered the evening upon the natural way of Islam, the word of sincerity, the religion of our Prophet Muhammad, and the way of our father Ibrahim, upright and Muslim, who was not of the polytheists.',
@@ -139,6 +174,7 @@ const ITEMS = [
   },
   {
     latin: "Laa ilaaha illallaah wahdahu laa syariika lah, lahul mulku wa lahul hamdu wa huwa 'alaa kulli syai-in qodiir",
+    arabic: 'لاَ إِلَهَ إِلاَّ اللهُ وَحْدَهُ لاَ شَرِيْكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيْرٌ',
     count: 10,
     meaning: {
       id: 'Tiada Rabb yang berhak disembah selain Allah Yang Maha Esa, tidak ada sekutu bagi-Nya. Bagi-Nya kerajaan dan pujian, Dia Mahakuasa atas segala sesuatu.',
@@ -149,6 +185,7 @@ const ITEMS = [
   },
   {
     latin: "Subhaanallaahi wa bihamdihi 'adada kholqihi, wa ridhoo nafsihi, wa zinata 'arsyihi, wa midaada kalimaatih",
+    arabic: 'سُبْحَانَ اللهِ وَبِحَمْدِهِ، عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ',
     count: 3,
     only: 'morning',
     meaning: {
@@ -159,6 +196,7 @@ const ITEMS = [
   },
   {
     latin: "Allahumma innii as-aluka 'ilman naafi'aa, wa rizqon thoyyibaa, wa 'amalan mutaqobbalaa",
+    arabic: 'اللَّهُمَّ إِنِّيْ أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا طَيِّبًا، وَعَمَلاً مُتَقَبَّلاً',
     count: 1,
     only: 'morning',
     meaning: {
@@ -169,11 +207,13 @@ const ITEMS = [
   },
   {
     latin: 'Subhaanallaahi wa bihamdih',
+    arabic: 'سُبْحَانَ اللهِ وَبِحَمْدِهِ',
     count: 100,
     meaning: { id: 'Maha Suci Allah, aku memuji-Nya', en: 'Glory be to Allah and praise Him', zh: '赞主清净，赞颂归于他' }
   },
   {
     latin: 'Astaghfirullaaha wa atuubu ilaih',
+    arabic: 'أَسْتَغْفِرُ اللهَ وَأَتُوْبُ إِلَيْهِ',
     count: 100,
     meaning: {
       id: 'Aku memohon ampun kepada Allah dan bertaubat kepada-Nya',
@@ -184,6 +224,7 @@ const ITEMS = [
   },
   {
     latin: "A'uudzu bi kalimaatillaahit taammaati min syarri maa kholaq",
+    arabic: 'أَعُوْذُ بِكَلِمَاتِ اللهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ',
     count: 3,
     only: 'evening',
     meaning: {
@@ -200,6 +241,7 @@ export function morningEveningDhikr(period) {
     const override = period === 'evening' && item.evening ? item.evening : {}
     return {
       latin: override.latin || item.latin,
+      arabic: override.arabic || item.arabic,
       count: item.count,
       meaning: override.meaning || item.meaning,
       note: item.note

@@ -73,6 +73,7 @@ function buildSources(t) {
   return [
     { name: t.dhikr, source: almanhaj },
     { name: t.morningevening, source: almanhaj },
+    { name: t.quranText, source: 'tanzil.net' },
     { name: t.duas, source: almanhaj },
     { name: t.umrah, source: almanhaj },
     { name: t.prayer, source: t.sourcePrayer },

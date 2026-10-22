@@ -41,6 +41,7 @@
   - **今日**：公历和伊斯兰历日期、下一次礼拜，以及今明两天的副功斋
   - **礼拜后记念**：按 [Almanhaj](https://almanhaj.or.id/97313-dzikir-setelah-shalat.html) 顺序引导计数
   - **早晚记念**：按 [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html) 顺序引导计数
+  - 两者均可显示拉丁转写或阿拉伯文，宝座经文和各章经文完整显示并标注节号（[Tanzil](https://tanzil.net) 经文）
   - **礼拜时间**：采用印度尼西亚宗教部（Kemenag）算法，在设备上离线计算；在时钟、今日或礼拜时间页面打开时，到点振动并显示提示
   - **朝向**：从所在城市到天房的方向和距离，表盘上显示太阳位置，对准真实太阳即可面向朝向，并列出每年太阳直射天房的日期
   - **赞珠**：点按计数，可设 33/99/100 目标，并有振动提示
@@ -55,7 +56,7 @@
   - **记分牌**：双方计分：自由计分、羽毛球（21 分，三局两胜）或板式网球/网球（15-30-40、平分、盘、抢七），可撤销
   - **计数器**：最多六个计数器，可选名称（客人、人数、物品、圈数、次数）
   - **计算器**：加减乘除，支持百分比和正负号
-- **设置**：城市（印度尼西亚 46 个城市，WIB/WITA/WIT 时区）和语言（印尼语、英语、中文）
+- **设置**：城市（印度尼西亚 46 个城市，WIB/WITA/WIT 时区）、语言（印尼语、英语、中文）和记念文字（拉丁字母或阿拉伯文）
 - **关于**：应用版本、文本和计算的来源，以及设备信息（存储空间、型号、系统和平台版本）
 
 阅读和计数页面打开时屏幕保持常亮。
@@ -110,6 +111,8 @@ src/
 │   ├── umrah.js         # 副朝指南数据
 │   ├── dhikr.js         # 礼拜后记念
 │   ├── dhikrmorningevening.js  # 早晚记念
+│   ├── arabicimages.js  # 自动生成：阿拉伯文记念 -> 图片
+│   ├── arabic/          # 自动生成：阿拉伯文记念图片
 │   ├── fasting.js       # 副功斋与禁斋日
 │   ├── holidays.js      # 伊斯兰节日日期
 │   ├── calendar.js      # 月历网格
@@ -117,7 +120,11 @@ src/
 │   ├── text.js          # 长标签滚动显示辅助函数
 │   └── icons/           # 菜单图标
 └── pages/               # 每个页面一个文件夹
+tools/
+└── arabic-images.py     # 将阿拉伯文记念绘制为图片
 ```
+
+手表无法连写阿拉伯字母，因此阿拉伯文记念以 Amiri 字体绘制的图片显示。修改 `arabic` 文本后，先运行一次 `pip install uharfbuzz freetype-py pillow`，再运行 `python3 tools/arabic-images.py`。
 
 如需更改默认城市，请修改 `src/common/cities.js` 中的第一项。
 
@@ -132,4 +139,4 @@ src/
 
 ## 许可证
 
-[MIT](LICENSE)
+[MIT](LICENSE)。阿拉伯文图片使用 [Amiri](https://github.com/aliftype/amiri) 字体绘制（SIL Open Font License，`tools/fonts/OFL.txt`）。古兰经经文来自 [Tanzil](https://tanzil.net)（CC BY 3.0）。

@@ -41,6 +41,7 @@
   - **Today**: Gregorian and Hijri date, next prayer, and sunnah fasts for today and tomorrow
   - **Post-prayer Dhikr**: guided counter following [Almanhaj](https://almanhaj.or.id/97313-dzikir-setelah-shalat.html)
   - **Morning & Evening Dhikr**: guided counter following [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html)
+  - Both show the dhikr in Latin transliteration or in Arabic, with Ayat al-Kursi and the surahs in full, numbered by verse ([Tanzil](https://tanzil.net) text)
   - **Prayer Times**: Indonesian Ministry of Religious Affairs (Kemenag) method, computed offline on the device; buzzes and shows a message when a prayer time arrives while Clock, Today or Prayer Times is open
   - **Qibla**: direction and distance to the Kaaba from your city, with the sun drawn on the dial so lining it up with the real sun points you to the Qibla, and the yearly sun-over-Kaaba dates
   - **Tasbih**: tap counter with a 33/99/100 target and vibration
@@ -55,7 +56,7 @@
   - **Scoreboard**: two-side counter with free points, badminton (21 points, best of 3) or padel/tennis scoring (15-30-40, deuce, sets, tiebreak), with undo
   - **Counter**: up to six tally counters with preset names (guests, people, items, laps, reps)
   - **Calculator**: + − × ÷ with percent and sign change
-- **Settings**: city (46 Indonesian cities, WIB/WITA/WIT) and language (Indonesian, English, 中文)
+- **Settings**: city (46 Indonesian cities, WIB/WITA/WIT), language (Indonesian, English, 中文) and dhikr text (Latin or Arabic)
 - **About**: app version, the sources of the texts and calculations, and device info (storage, model, OS and platform version)
 
 Reading and counting pages keep the screen on while open.
@@ -110,6 +111,8 @@ src/
 │   ├── umrah.js         # umrah guide steps and readings
 │   ├── dhikr.js         # post-prayer dhikr
 │   ├── dhikrmorningevening.js  # morning and evening dhikr
+│   ├── arabicimages.js  # generated: Arabic dhikr text -> images
+│   ├── arabic/          # generated: Arabic dhikr drawn as images
 │   ├── fasting.js       # sunnah and forbidden fasting days
 │   ├── holidays.js      # Islamic holiday dates
 │   ├── calendar.js      # monthly calendar grid
@@ -117,7 +120,11 @@ src/
 │   ├── text.js          # marquee helpers for long labels
 │   └── icons/           # menu icons
 └── pages/               # one folder per screen
+tools/
+└── arabic-images.py     # draws the Arabic dhikr as images
 ```
+
+The watch cannot join Arabic letters, so the Arabic dhikr are shown as images drawn in the Amiri font. After changing an `arabic` text, run `pip install uharfbuzz freetype-py pillow` once, then `python3 tools/arabic-images.py`.
 
 To change the default city, edit the first entry in `src/common/cities.js`.
 
@@ -132,4 +139,4 @@ To change the default city, edit the first entry in `src/common/cities.js`.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE). The Arabic images are drawn with the [Amiri](https://github.com/aliftype/amiri) font (SIL Open Font License, `tools/fonts/OFL.txt`). Qur'an text from [Tanzil](https://tanzil.net) (CC BY 3.0).

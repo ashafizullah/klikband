@@ -41,6 +41,7 @@
   - **Hari Ini**: tanggal Masehi dan Hijriah, sholat berikutnya, serta puasa sunnah hari ini dan besok
   - **Dzikir Sholat**: penghitung berpanduan sesuai [Almanhaj](https://almanhaj.or.id/97313-dzikir-setelah-shalat.html)
   - **Dzikir Pagi Petang**: penghitung berpanduan sesuai [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html)
+  - Keduanya menampilkan dzikir dalam transliterasi Latin atau tulisan Arab, dengan Ayat Kursi dan surat-surat ditulis lengkap bernomor ayat (teks [Tanzil](https://tanzil.net))
   - **Jadwal Sholat**: metode Kemenag RI, dihitung offline di perangkat; bergetar dan menampilkan pesan saat masuk waktu sholat selama halaman Jam, Hari Ini atau Jadwal Sholat terbuka
   - **Arah Kiblat**: arah dan jarak ke Ka'bah dari kotamu, dengan posisi matahari di kompas sehingga cukup menyamakannya dengan matahari sungguhan untuk menghadap kiblat, plus jadwal Rashdul Qiblat
   - **Tasbih**: penghitung ketuk dengan target 33/99/100 dan getar
@@ -55,7 +56,7 @@
   - **Papan Skor**: penghitung skor dua sisi: poin bebas, badminton (21 poin, best of 3) atau padel/tenis (15-30-40, deuce, set, tiebreak), dengan tombol batal
   - **Penghitung**: hingga enam penghitung dengan nama pilihan (tamu, orang, barang, putaran, repetisi)
   - **Kalkulator**: + − × ÷ dengan persen dan ganti tanda
-- **Pengaturan**: kota (46 kota di Indonesia, WIB/WITA/WIT) dan bahasa (Indonesia, English, 中文)
+- **Pengaturan**: kota (46 kota di Indonesia, WIB/WITA/WIT), bahasa (Indonesia, English, 中文) dan teks dzikir (Latin atau Arab)
 - **Tentang**: versi aplikasi, sumber teks dan perhitungan, serta info perangkat (penyimpanan, model, versi OS dan platform)
 
 Halaman bacaan dan penghitung membuat layar tetap menyala selama dibuka.
@@ -110,6 +111,8 @@ src/
 │   ├── umrah.js         # data panduan umrah
 │   ├── dhikr.js         # dzikir setelah sholat
 │   ├── dhikrmorningevening.js  # dzikir pagi dan petang
+│   ├── arabicimages.js  # hasil generate: teks Arab dzikir -> gambar
+│   ├── arabic/          # hasil generate: dzikir Arab sebagai gambar
 │   ├── fasting.js       # hari puasa sunnah dan hari dilarang puasa
 │   ├── holidays.js      # tanggal hari besar Islam
 │   ├── calendar.js      # grid kalender bulanan
@@ -117,7 +120,11 @@ src/
 │   ├── text.js          # bantuan marquee untuk label panjang
 │   └── icons/           # ikon menu
 └── pages/               # satu folder per layar
+tools/
+└── arabic-images.py     # menggambar dzikir Arab sebagai gambar
 ```
+
+Jam tidak bisa menyambung huruf Arab, jadi dzikir Arab ditampilkan sebagai gambar dengan font Amiri. Setelah mengubah teks `arabic`, jalankan `pip install uharfbuzz freetype-py pillow` sekali, lalu `python3 tools/arabic-images.py`.
 
 Untuk mengganti kota bawaan, ubah entri pertama di `src/common/cities.js`.
 
@@ -132,4 +139,4 @@ Untuk mengganti kota bawaan, ubah entri pertama di `src/common/cities.js`.
 
 ## Lisensi
 
-[MIT](LICENSE)
+[MIT](LICENSE). Gambar teks Arab dibuat dengan font [Amiri](https://github.com/aliftype/amiri) (SIL Open Font License, `tools/fonts/OFL.txt`). Teks Al-Qur'an dari [Tanzil](https://tanzil.net) (CC BY 3.0).

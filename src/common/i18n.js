@@ -21,6 +21,22 @@ export function saveLanguage(code) {
   storage.set({ key: 'language', value: code })
 }
 
+// Script the dhikr text is shown in: 'latin' (default) or 'arabic'
+export const SCRIPTS = ['latin', 'arabic']
+
+export function loadScript(cb) {
+  storage.get({
+    key: 'script',
+    default: 'latin',
+    success: (data) => cb(SCRIPTS.indexOf(data) >= 0 ? data : 'latin'),
+    fail: () => cb('latin')
+  })
+}
+
+export function saveScript(code) {
+  storage.set({ key: 'script', value: code })
+}
+
 export const STRINGS = {
   id: {
     islam: 'Islam',
@@ -126,7 +142,10 @@ export const STRINGS = {
     sources: 'Sumber',
     sourcePrayer: 'Metode Kemenag RI',
     sourceHijri: 'Hisab urfi (tabular)',
+    quranText: "Teks Al-Qur'an",
     language: 'Bahasa',
+    script: 'Teks dzikir',
+    scripts: { latin: 'Latin', arabic: 'Arab' },
     prayer: 'Jadwal Sholat',
     tasbih: 'Tasbih',
     hijri: 'Hijriah',
@@ -288,7 +307,10 @@ export const STRINGS = {
     sources: 'Sources',
     sourcePrayer: 'Kemenag (Indonesia) method',
     sourceHijri: 'Tabular calendar',
+    quranText: 'Quran text',
     language: 'Language',
+    script: 'Dhikr text',
+    scripts: { latin: 'Latin', arabic: 'Arabic' },
     prayer: 'Prayer Times',
     tasbih: 'Tasbih',
     hijri: 'Hijri Date',
@@ -450,7 +472,10 @@ export const STRINGS = {
     sources: '来源',
     sourcePrayer: '印尼宗教部（Kemenag）算法',
     sourceHijri: '算术历法（tabular）',
+    quranText: '古兰经经文',
     language: '语言',
+    script: '记念文字',
+    scripts: { latin: '拉丁字母', arabic: '阿拉伯文' },
     prayer: '礼拜时间',
     tasbih: '赞珠',
     hijri: '伊斯兰历',

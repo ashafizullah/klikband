@@ -36,7 +36,7 @@
 
 ## Fitur
 
-- **Jam**: halaman bergaya watch face berisi jam, tanggal Masehi dan Hijriah, sholat berikutnya dengan hitung mundur dan bar progres, serta jadwal 5 waktu hari ini; geser ke kiri untuk pintasan ke Dzikir Sholat, Dzikir Pagi Petang dan Arah Kiblat
+- **Jam**: halaman bergaya watch face berisi jam, tanggal Masehi dan Hijriah, sholat berikutnya dengan hitung mundur dan bar progres, serta jadwal 5 waktu hari ini. Layar tetap menyala selama dibuka, agar getaran waktu sholat datang tepat waktu; geser ke kiri untuk pintasan ke Dzikir Sholat, Dzikir Pagi Petang dan Arah Kiblat
 - **Islam**
   - **Hari Ini**: tanggal Masehi dan Hijriah, sholat berikutnya, serta puasa sunnah hari ini dan besok
   - **Dzikir Sholat**: penghitung berpanduan sesuai [Almanhaj](https://almanhaj.or.id/97313-dzikir-setelah-shalat.html)
@@ -56,7 +56,7 @@
   - **Penghitung**: hingga enam penghitung dengan nama pilihan (tamu, orang, barang, putaran, repetisi)
   - **Kalkulator**: + − × ÷ dengan persen dan ganti tanda
 - **Pengaturan**: kota (46 kota di Indonesia, WIB/WITA/WIT) dan bahasa (Indonesia, English, 中文)
-- **Tentang**: versi aplikasi dan info perangkat (penyimpanan, model, versi OS dan platform)
+- **Tentang**: versi aplikasi, sumber teks dan perhitungan, serta info perangkat (penyimpanan, model, versi OS dan platform)
 
 Halaman bacaan dan penghitung membuat layar tetap menyala selama dibuka.
 

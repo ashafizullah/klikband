@@ -42,7 +42,7 @@
 
 <script>
 import { nextPrayer, prayerDate, formatMinutes } from '../../common/prayer.js'
-import { prayerAlert } from '../../common/alert.js'
+import { prayerAlert, LATE_ALERT } from '../../common/alert.js'
 import { STRINGS, loadLanguage, formatDuration } from '../../common/i18n.js'
 import { CITIES, TIME_ZONES, loadCity } from '../../common/cities.js'
 import { toHijriWithOffset, loadHijriOffset } from '../../common/hijri.js'
@@ -119,7 +119,7 @@ export default {
     const seconds = Math.ceil((this.target - Date.now()) / 1000)
     // Full refresh at the next prayer, and once a minute for the date
     this.ticks = (this.ticks || 0) + 1
-    if (seconds <= 0) prayerAlert(this.t, this.nextKey)
+    if (seconds <= 0 && seconds > -LATE_ALERT) prayerAlert(this.t, this.nextKey)
     if (seconds <= 0 || this.ticks % 60 === 0) this.refresh()
     else this.countdown = formatDuration(this.t, seconds)
   },

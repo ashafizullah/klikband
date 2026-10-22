@@ -40,11 +40,11 @@
 import router from '@system.router'
 import battery from '@system.battery'
 import { prayerTimes, nextPrayer, prayerDate, formatMinutes, PRAYER_ORDER } from '../../common/prayer.js'
-import { prayerAlert } from '../../common/alert.js'
+import { prayerAlert, LATE_ALERT } from '../../common/alert.js'
 import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
 import { CITIES, loadCity } from '../../common/cities.js'
 import { toHijriWithOffset, loadHijriOffset } from '../../common/hijri.js'
-import { loadLayout } from '../../common/screen.js'
+import { loadLayout, keepScreenOn } from '../../common/screen.js'
 import { textWidth } from '../../common/text.js'
 
 // The five daily prayers shown in the schedule
@@ -120,9 +120,16 @@ export default {
     this.timer = setInterval(() => this.tick(), 1000)
   },
 
-  // The screen turns off as usual; catch up right away when it wakes again
+  // The screen stays on while Clock is open, so the prayer-time alert can
+  // fire. If it was turned off anyway, the first tick after waking catches
+  // up, alerting for a prayer time that passed in the meantime
   onShow() {
-    this.refresh()
+    keepScreenOn(true)
+    this.tick()
+  },
+
+  onHide() {
+    keepScreenOn(false)
   },
 
   onDestroy() {
@@ -139,7 +146,7 @@ export default {
   tick() {
     const now = new Date()
     const left = Math.ceil((this.target - now.getTime()) / 1000)
-    if (left <= 0) prayerAlert(this.t, this.nextKey)
+    if (left <= 0 && left > -LATE_ALERT) prayerAlert(this.t, this.nextKey)
     // Full refresh at the next prayer and at every new minute
     if (left <= 0 || now.getMinutes() !== this.minute) this.refresh()
     else this.updateSeconds(now)

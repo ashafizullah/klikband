@@ -36,7 +36,7 @@
 
 ## Features
 
-- **Clock**: a watch-face-style page with the time, Gregorian and Hijri date, the next prayer with a countdown and progress bar, and today's five prayers; swipe left for shortcuts to Post-prayer Dhikr, Morning & Evening Dhikr and Qibla
+- **Clock**: a watch-face-style page with the time, Gregorian and Hijri date, the next prayer with a countdown and progress bar, and today's five prayers. The screen stays on while it is open, so the prayer-time buzz arrives on time; swipe left for shortcuts to Post-prayer Dhikr, Morning & Evening Dhikr and Qibla
 - **Islam**
   - **Today**: Gregorian and Hijri date, next prayer, and sunnah fasts for today and tomorrow
   - **Post-prayer Dhikr**: guided counter following [Almanhaj](https://almanhaj.or.id/97313-dzikir-setelah-shalat.html)
@@ -56,7 +56,7 @@
   - **Counter**: up to six tally counters with preset names (guests, people, items, laps, reps)
   - **Calculator**: + − × ÷ with percent and sign change
 - **Settings**: city (46 Indonesian cities, WIB/WITA/WIT) and language (Indonesian, English, 中文)
-- **About**: app version and device info (storage, model, OS and platform version)
+- **About**: app version, the sources of the texts and calculations, and device info (storage, model, OS and platform version)
 
 Reading and counting pages keep the screen on while open.
 

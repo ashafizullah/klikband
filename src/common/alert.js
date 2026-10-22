@@ -3,8 +3,14 @@
 import vibrator from '@system.vibrator'
 import prompt from '@system.prompt'
 
+// Timers stop while the screen is off. A prayer time that passed in the
+// meantime still alerts on waking, up to this many seconds late
+export const LATE_ALERT = 30 * 60
+
 export function prayerAlert(t, key) {
-  vibrator.vibrate({ mode: key === 'imsak' ? 'short' : 'long' })
+  try {
+    vibrator.vibrate({ mode: key === 'imsak' ? 'short' : 'long' })
+  } catch (e) {}
   try {
     prompt.showToast({ message: t.prayerTimeNow.replace('{name}', t.prayers[key]), duration: 5000 })
   } catch (e) {}

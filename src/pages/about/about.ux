@@ -9,6 +9,15 @@
     </div>
 
     <div class="card {{w}}card {{r}}fit">
+      <text class="heading {{w}}heading">{{t.sources}}</text>
+      <div class="source" for="{{sources}}">
+        <div if="{{$idx > 0}}" class="divider {{w}}divider"></div>
+        <text class="label {{w}}label">{{$item.name}}</text>
+        <text class="value {{w}}value">{{$item.source}}</text>
+      </div>
+    </div>
+
+    <div class="card {{w}}card {{r}}fit">
       <text class="label {{w}}label">GitHub</text>
       <text class="value {{w}}value">ashafizullah/klikband</text>
       <div class="divider {{w}}divider"></div>
@@ -58,6 +67,19 @@ import { loadLayout } from '../../common/screen.js'
 // Inner width of the card: 176 - 2 * 14 padding
 const BAR_WIDTH = 148
 
+// Where the texts and calculations come from, shown on About
+function buildSources(t) {
+  const almanhaj = 'almanhaj.or.id'
+  return [
+    { name: t.dhikr, source: almanhaj },
+    { name: t.morningevening, source: almanhaj },
+    { name: t.duas, source: almanhaj },
+    { name: t.umrah, source: almanhaj },
+    { name: t.prayer, source: t.sourcePrayer },
+    { name: t.hijri, source: t.sourceHijri }
+  ]
+}
+
 // 31457280 -> "30.0 MB", 2147483648 -> "2.0 GB"
 function formatBytes(bytes) {
   const mb = bytes / (1024 * 1024)
@@ -70,6 +92,7 @@ export default {
     frame: '',
     r: '',
     t: STRINGS.id,
+    sources: buildSources(STRINGS.id),
     version: '',
     storageUsed: '-',
     storageBar: 0,
@@ -90,6 +113,7 @@ export default {
     })
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
+      this.sources = buildSources(this.t)
       this.refresh()
     })
     this.refresh()
@@ -187,6 +211,17 @@ export default {
   color: #ffffff;
 }
 
+.heading {
+  font-size: 15px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.source {
+  flex-direction: column;
+}
+
 .label {
   font-size: 13px;
   color: #8e8e93;
@@ -254,6 +289,11 @@ export default {
 
 .w-description {
   font-size: 9px;
+}
+
+.w-heading {
+  font-size: 10px;
+  margin-bottom: 5px;
 }
 
 .w-label {

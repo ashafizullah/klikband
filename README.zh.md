@@ -111,7 +111,8 @@ src/
 │   ├── umrah.js         # 副朝指南数据
 │   ├── dhikr.js         # 礼拜后记念
 │   ├── dhikrmorningevening.js  # 早晚记念
-│   ├── arabicimages.js  # 自动生成：阿拉伯文记念与祈祷 -> 图片
+│   ├── arabicdhikr.js   # 自动生成：阿拉伯文记念 -> 图片
+│   ├── arabicduas.js    # 自动生成：阿拉伯文祈祷 -> 图片
 │   ├── arabic/          # 自动生成：阿拉伯文记念与祈祷图片
 │   ├── fasting.js       # 副功斋与禁斋日
 │   ├── holidays.js      # 伊斯兰节日日期

@@ -30,7 +30,7 @@
 import storage from '@system.storage'
 import DUAS from '../../common/duas.js'
 import { STRINGS, loadLanguage, loadScript } from '../../common/i18n.js'
-import { DUAS as ARABIC_IMAGES } from '../../common/arabicimages.js'
+import { DUAS as ARABIC_IMAGES } from '../../common/arabicduas.js'
 import { keepScreenOn, loadLayout } from '../../common/screen.js'
 
 export default {

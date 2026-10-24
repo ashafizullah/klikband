@@ -111,7 +111,8 @@ src/
 │   ├── umrah.js         # umrah guide steps and readings
 │   ├── dhikr.js         # post-prayer dhikr
 │   ├── dhikrmorningevening.js  # morning and evening dhikr
-│   ├── arabicimages.js  # generated: Arabic dhikr and dua text -> images
+│   ├── arabicdhikr.js   # generated: Arabic dhikr text -> images
+│   ├── arabicduas.js    # generated: Arabic dua text -> images
 │   ├── arabic/          # generated: Arabic dhikr and duas drawn as images
 │   ├── fasting.js       # sunnah and forbidden fasting days
 │   ├── holidays.js      # Islamic holiday dates

@@ -111,7 +111,8 @@ src/
 │   ├── umrah.js         # data panduan umrah
 │   ├── dhikr.js         # dzikir setelah sholat
 │   ├── dhikrmorningevening.js  # dzikir pagi dan petang
-│   ├── arabicimages.js  # hasil generate: teks Arab dzikir dan doa -> gambar
+│   ├── arabicdhikr.js   # hasil generate: teks Arab dzikir -> gambar
+│   ├── arabicduas.js    # hasil generate: teks Arab doa -> gambar
 │   ├── arabic/          # hasil generate: dzikir dan doa Arab sebagai gambar
 │   ├── fasting.js       # hari puasa sunnah dan hari dilarang puasa
 │   ├── holidays.js      # tanggal hari besar Islam

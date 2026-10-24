@@ -56,7 +56,7 @@
   - **Scoreboard**: two-side counter with free points, badminton (21 points, best of 3) or padel/tennis scoring (15-30-40, deuce, sets, tiebreak), with undo
   - **Counter**: up to six tally counters with preset names (guests, people, items, laps, reps)
   - **Calculator**: + − × ÷ with percent and sign change
-- **Settings**: city (46 Indonesian cities, WIB/WITA/WIT), language (Indonesian, English, 中文) and dhikr and dua text (Latin or Arabic)
+- **Settings**: city (47 Indonesian cities, WIB/WITA/WIT), language (Indonesian, English, 中文) and dhikr and dua text (Latin or Arabic)
 - **About**: app version, the sources of the texts and calculations, and device info (storage, model, OS and platform version)
 
 Reading and counting pages keep the screen on while open.

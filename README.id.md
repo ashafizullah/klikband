@@ -56,7 +56,7 @@
   - **Papan Skor**: penghitung skor dua sisi: poin bebas, badminton (21 poin, best of 3) atau padel/tenis (15-30-40, deuce, set, tiebreak), dengan tombol batal
   - **Penghitung**: hingga enam penghitung dengan nama pilihan (tamu, orang, barang, putaran, repetisi)
   - **Kalkulator**: + − × ÷ dengan persen dan ganti tanda
-- **Pengaturan**: kota (46 kota di Indonesia, WIB/WITA/WIT), bahasa (Indonesia, English, 中文) dan teks dzikir dan doa (Latin atau Arab)
+- **Pengaturan**: kota (47 kota di Indonesia, WIB/WITA/WIT), bahasa (Indonesia, English, 中文) dan teks dzikir dan doa (Latin atau Arab)
 - **Tentang**: versi aplikasi, sumber teks dan perhitungan, serta info perangkat (penyimpanan, model, versi OS dan platform)
 
 Halaman bacaan dan penghitung membuat layar tetap menyala selama dibuka.

@@ -10,6 +10,7 @@ export const CITIES = [
   { name: 'Yogyakarta', lat: -7.7956, lng: 110.3695, tz: 7 },
   { name: 'Jakarta', lat: -6.2088, lng: 106.8456, tz: 7 },
   { name: 'Bandung', lat: -6.9175, lng: 107.6191, tz: 7 },
+  { name: 'Purwakarta', lat: -6.5569, lng: 107.4433, tz: 7 },
   { name: 'Serang', lat: -6.1104, lng: 106.164, tz: 7 },
   { name: 'Surabaya', lat: -7.2575, lng: 112.7521, tz: 7 },
   { name: 'Malang', lat: -7.9666, lng: 112.6326, tz: 7 },

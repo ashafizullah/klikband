@@ -64,11 +64,14 @@ export default {
       key: 'tasbih',
       success: (data) => {
         if (!data) return
-        const s = JSON.parse(data)
-        this.count = s.count
-        this.target = s.target
-        this.round = s.round
-        this.updateBar()
+        // A damaged save starts from zero instead of breaking the page
+        try {
+          const s = JSON.parse(data)
+          this.count = s.count
+          this.target = s.target
+          this.round = s.round
+          this.updateBar()
+        } catch (e) {}
       }
     })
   },

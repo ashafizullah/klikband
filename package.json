@@ -9,11 +9,14 @@
     "start": "aiot start --watch",
     "build": "aiot build",
     "release": "aiot release",
-    "lint": "eslint --format codeframe --fix --ext .ux,.js src/"
+    "lint": "eslint src/"
   },
   "devDependencies": {
     "@aiot-toolkit/jsc": "^1.0.3",
-    "aiot-toolkit": "^2.0.5"
+    "@eslint/js": "^8.57.1",
+    "aiot-toolkit": "^2.0.5",
+    "eslint": "^8.57.1",
+    "globals": "^13.24.0"
   },
   "license": "MIT"
 }

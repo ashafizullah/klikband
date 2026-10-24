@@ -44,10 +44,11 @@
 import { nextPrayer, prayerDate, formatMinutes } from '../../common/prayer.js'
 import { prayerAlert, LATE_ALERT } from '../../common/alert.js'
 import { STRINGS, loadLanguage, formatDuration } from '../../common/i18n.js'
-import { CITIES, TIME_ZONES, loadCity } from '../../common/cities.js'
+import { TIME_ZONES, loadCity } from '../../common/cities.js'
 import { toHijriWithOffset, loadHijriOffset } from '../../common/hijri.js'
 import { fastsFor } from '../../common/fasting.js'
 import { keepScreenOn, loadLayout } from '../../common/screen.js'
+import { loadAll } from '../../common/load.js'
 
 // Style for a fasting line: highlighted when there is a fast, red when fasting is not allowed
 function fastStyle(keys) {
@@ -79,28 +80,17 @@ export default {
   },
 
   onInit() {
-    this.cityData = CITIES[0]
-    this.offset = 0
-    this.refresh()
-    loadLayout((w, frame, r) => {
-      this.w = w
-      this.frame = frame
-      this.r = r
-    })
-    loadLanguage((lang) => {
-      this.t = STRINGS[lang]
+    loadAll({ layout: loadLayout, lang: loadLanguage, city: loadCity, offset: loadHijriOffset }, (v) => {
+      this.w = v.layout[0]
+      this.frame = v.layout[1]
+      this.r = v.layout[2]
+      this.t = STRINGS[v.lang]
+      this.cityData = v.city
+      this.offset = v.offset
       this.refresh()
+      // The countdown ticks every second; the rest only changes at the next prayer
+      this.timer = setInterval(() => this.tick(), 1000)
     })
-    loadCity((city) => {
-      this.cityData = city
-      this.refresh()
-    })
-    loadHijriOffset((offset) => {
-      this.offset = offset
-      this.refresh()
-    })
-    // The countdown ticks every second; the rest only changes at the next prayer
-    this.timer = setInterval(() => this.tick(), 1000)
   },
 
   onShow() {

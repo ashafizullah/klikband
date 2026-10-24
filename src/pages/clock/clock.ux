@@ -44,7 +44,7 @@ import battery from '@system.battery'
 import { prayerTimes, nextPrayer, prayerDate, formatMinutes, PRAYER_ORDER } from '../../common/prayer.js'
 import { prayerAlert, LATE_ALERT } from '../../common/alert.js'
 import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
-import { CITIES, loadCity } from '../../common/cities.js'
+import { loadCity } from '../../common/cities.js'
 import { toHijriWithOffset, loadHijriOffset } from '../../common/hijri.js'
 import {
   loadLayout,
@@ -56,6 +56,7 @@ import {
   saveClockTheme
 } from '../../common/screen.js'
 import { textWidth } from '../../common/text.js'
+import { loadAll } from '../../common/load.js'
 
 // The five daily prayers shown in the schedule
 const DAILY = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']
@@ -105,31 +106,28 @@ export default {
   },
 
   onInit() {
-    this.t = STRINGS.id
-    this.cityData = CITIES[0]
-    this.offset = 0
     this.batteryText = ''
-    this.theme = 'green'
-    this.refresh()
-    loadLayout((w, frame, r) => {
-      this.w = w
-      this.frame = frame
-      this.r = r
-      this.refresh()
-    })
-    loadLanguage((lang) => {
-      this.t = STRINGS[lang]
-      this.refresh()
-    })
-    loadCity((city) => {
-      this.cityData = city
-      this.refresh()
-    })
-    loadHijriOffset((offset) => {
-      this.offset = offset
-      this.refresh()
-    })
-    this.timer = setInterval(() => this.tick(), 1000)
+    loadAll(
+      {
+        layout: loadLayout,
+        lang: loadLanguage,
+        city: loadCity,
+        offset: loadHijriOffset,
+        theme: loadClockTheme
+      },
+      (v) => {
+        this.w = v.layout[0]
+        this.frame = v.layout[1]
+        this.r = v.layout[2]
+        this.t = STRINGS[v.lang]
+        this.cityData = v.city
+        this.offset = v.offset
+        this.theme = v.theme
+        this.c = CLOCK_THEMES[v.theme]
+        this.ready = true
+        this.refresh()
+      }
+    )
   },
 
   // The screen turns off as usual unless Settings keeps it on for Clock, so
@@ -138,16 +136,35 @@ export default {
   // that passed in the meantime
   onShow() {
     loadClockScreen((code) => keepScreenOn(code === 'on'))
-    loadClockTheme((code) => this.applyTheme(code))
+    clearTimeout(this.alarm)
+    clearInterval(this.timer)
+    this.timer = setInterval(() => this.tick(), 1000)
     this.tick()
   },
 
+  // Behind the dhikr and Qibla pages nothing here needs to move, so the
+  // per-second timer stops and a single timeout waits for the next prayer,
+  // whose alert still arrives
   onHide() {
     keepScreenOn(false)
+    clearInterval(this.timer)
+    this.armAlarm()
   },
 
   onDestroy() {
     clearInterval(this.timer)
+    clearTimeout(this.alarm)
+  },
+
+  armAlarm() {
+    clearTimeout(this.alarm)
+    if (!this.ready) return
+    this.alarm = setTimeout(() => {
+      if (Date.now() - this.target < LATE_ALERT * 1000) prayerAlert(this.t, this.nextKey)
+      // Moves on to the following prayer, so showing Clock again does not alert twice
+      this.refresh()
+      this.armAlarm()
+    }, Math.max(0, this.target - Date.now()))
   },
 
   // Listening for swipes takes over the system's swipe-back, so going back
@@ -159,6 +176,7 @@ export default {
 
   // A long press switches to the next color theme, also picked in Settings
   nextTheme() {
+    if (!this.ready) return
     const code = CLOCK_THEME_ORDER[(CLOCK_THEME_ORDER.indexOf(this.theme) + 1) % CLOCK_THEME_ORDER.length]
     saveClockTheme(code)
     this.applyTheme(code)
@@ -177,6 +195,7 @@ export default {
   },
 
   tick() {
+    if (!this.ready) return
     const now = new Date()
     const left = Math.ceil((this.target - now.getTime()) / 1000)
     if (left <= 0 && left > -LATE_ALERT) prayerAlert(this.t, this.nextKey)

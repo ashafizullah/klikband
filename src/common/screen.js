@@ -69,7 +69,8 @@ export function saveClockTheme(code) {
 // full-width blocks so they narrow to what the circle shows, and can add
 // more `.r-` rules where a layout needs it.
 //
-// Calls back with ('' or 'w-', frame, '' or 'r-').
+// Calls back with ('' or 'w-', frame, '' or 'r-'), or the band layout when
+// the device info is not available.
 
 // screenShape needs API level 3; older firmware leaves it out, and round
 // watches are the only square screens
@@ -87,7 +88,10 @@ export function loadLayout(cb) {
         let frame = 'height: ' + height + 'px;'
         if (round) frame += ' padding-top: 24px; padding-bottom: 32px;'
         cb(w, frame, round ? 'r-' : '')
-      }
+      },
+      fail: () => cb('', '', '')
     })
-  } catch (e) {}
+  } catch (e) {
+    cb('', '', '')
+  }
 }

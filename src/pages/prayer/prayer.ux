@@ -27,8 +27,9 @@
 import { PRAYER_ORDER, nextPrayer, prayerDate, formatMinutes } from '../../common/prayer.js'
 import { prayerAlert, LATE_ALERT } from '../../common/alert.js'
 import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
-import { CITIES, TIME_ZONES, loadCity } from '../../common/cities.js'
+import { TIME_ZONES, loadCity } from '../../common/cities.js'
 import { keepScreenOn, loadLayout } from '../../common/screen.js'
+import { loadAll } from '../../common/load.js'
 
 export default {
   private: {
@@ -45,24 +46,16 @@ export default {
   },
 
   onInit() {
-    this.t = STRINGS.id
-    this.city = CITIES[0]
-    this.refresh()
-    loadLayout((w, frame, r) => {
-      this.w = w
-      this.frame = frame
-      this.r = r
-    })
-    loadLanguage((lang) => {
-      this.t = STRINGS[lang]
+    loadAll({ layout: loadLayout, lang: loadLanguage, city: loadCity }, (v) => {
+      this.w = v.layout[0]
+      this.frame = v.layout[1]
+      this.r = v.layout[2]
+      this.t = STRINGS[v.lang]
+      this.city = v.city
       this.refresh()
+      // The countdown ticks every second; the rest only changes at the next prayer
+      this.timer = setInterval(() => this.tick(), 1000)
     })
-    loadCity((city) => {
-      this.city = city
-      this.refresh()
-    })
-    // The countdown ticks every second; the rest only changes at the next prayer
-    this.timer = setInterval(() => this.tick(), 1000)
   },
 
   onShow() {

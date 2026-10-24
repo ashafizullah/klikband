@@ -55,6 +55,7 @@ import { morningEveningDhikr } from '../../common/dhikrmorningevening.js'
 import { STRINGS, loadLanguage, loadScript } from '../../common/i18n.js'
 import { DHIKR as ARABIC_IMAGES } from '../../common/arabicdhikr.js'
 import { keepScreenOn, loadLayout } from '../../common/screen.js'
+import { loadAll } from '../../common/load.js'
 
 // Which dhikr set to show, from the router param `set`
 const SETS = {
@@ -92,24 +93,17 @@ export default {
   },
 
   onInit() {
-    loadLayout((w, frame, r) => {
-      this.w = w
-      this.frame = frame
-      this.r = r
-      // The Arabic image depends on the layout
-      if (this.steps) this.render()
-    })
     this.config = SETS[this.set] || SETS.prayer
     this.steps = this.config.steps()
     this.total = this.steps.length
-    this.render()
-    loadLanguage((lang) => {
-      this.lang = lang
-      this.t = STRINGS[lang]
-      this.render()
-    })
-    loadScript((script) => {
-      this.arabic = script === 'arabic'
+    // The Arabic image depends on the layout and the script
+    loadAll({ layout: loadLayout, lang: loadLanguage, script: loadScript }, (v) => {
+      this.w = v.layout[0]
+      this.frame = v.layout[1]
+      this.r = v.layout[2]
+      this.lang = v.lang
+      this.t = STRINGS[v.lang]
+      this.arabic = v.script === 'arabic'
       this.render()
       this.ready = true
     })

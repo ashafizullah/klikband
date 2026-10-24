@@ -1,30 +1,30 @@
 <template>
-  <scroll class="page {{w}}page" style="{{frame}}" scroll-y="true" onswipe="onSwipe">
+  <scroll class="page {{w}}page" style="{{frame}}" scroll-y="true" onswipe="onSwipe" onlongpress="nextTheme">
     <text class="date {{w}}date">{{gregorian}}</text>
     <div class="time-row">
       <text class="time {{w}}time">{{hours}}</text>
-      <text class="time colon {{w}}colon">:</text>
+      <text class="time colon {{w}}colon" style="color: {{c.accent}};">:</text>
       <text class="time {{w}}time">{{minutes}}</text>
     </div>
     <div class="track {{w}}track {{r}}fit">
-      <div class="seconds-fill {{w}}seconds-fill" style="width: {{secondsBar}}px;"></div>
+      <div class="seconds-fill {{w}}seconds-fill" style="width: {{secondsBar}}px; background-color: {{c.accent}};"></div>
     </div>
     <text class="hijri {{w}}hijri {{r}}fit" style="font-size: {{hijriSize}}px;">{{hijri}}</text>
 
     <div class="panels {{w}}panels {{r}}fit">
-      <div class="hero {{w}}hero {{r}}hero">
+      <div class="hero {{w}}hero {{r}}hero" style="background-color: {{c.heroBg}};">
         <div class="hero-row {{w}}hero-row">
-          <text class="hero-label {{w}}hero-label">{{nextLabel}}</text>
+          <text class="hero-label {{w}}hero-label" style="color: {{c.accent}};">{{nextLabel}}</text>
           <text class="hero-time {{w}}hero-time">{{nextTime}}</text>
         </div>
-        <div class="hero-track {{w}}hero-track {{r}}hero-track">
-          <div class="hero-fill {{w}}hero-fill" style="width: {{prayerBar}}px;"></div>
+        <div class="hero-track {{w}}hero-track {{r}}hero-track" style="background-color: {{c.heroTrack}};">
+          <div class="hero-fill {{w}}hero-fill" style="width: {{prayerBar}}px; background-color: {{c.accent}};"></div>
         </div>
-        <text class="countdown {{w}}countdown">{{countdown}}</text>
+        <text class="countdown {{w}}countdown" style="color: {{c.soft}};">{{countdown}}</text>
       </div>
 
       <div class="schedule {{w}}schedule {{r}}schedule">
-        <div class="row {{w}}row {{$item.style}}" for="{{schedule}}">
+        <div class="row {{w}}row" style="{{$item.bg}}" for="{{schedule}}">
           <div class="dot {{w}}dot {{$item.style}}-dot"></div>
           <text class="row-label {{w}}row-text {{$item.style}}-text">{{$item.label}}</text>
           <text class="row-time {{w}}row-text {{$item.style}}-text">{{$item.time}}</text>
@@ -38,13 +38,23 @@
 
 <script>
 import router from '@system.router'
+import prompt from '@system.prompt'
+import vibrator from '@system.vibrator'
 import battery from '@system.battery'
 import { prayerTimes, nextPrayer, prayerDate, formatMinutes, PRAYER_ORDER } from '../../common/prayer.js'
 import { prayerAlert, LATE_ALERT } from '../../common/alert.js'
 import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
 import { CITIES, loadCity } from '../../common/cities.js'
 import { toHijriWithOffset, loadHijriOffset } from '../../common/hijri.js'
-import { loadLayout, keepScreenOn, loadClockScreen } from '../../common/screen.js'
+import {
+  loadLayout,
+  keepScreenOn,
+  loadClockScreen,
+  CLOCK_THEMES,
+  CLOCK_THEME_ORDER,
+  loadClockTheme,
+  saveClockTheme
+} from '../../common/screen.js'
 import { textWidth } from '../../common/text.js'
 
 // The five daily prayers shown in the schedule
@@ -79,6 +89,7 @@ export default {
     w: '',
     frame: '',
     r: '',
+    c: CLOCK_THEMES.green,
     gregorian: '',
     hours: '',
     minutes: '',
@@ -98,6 +109,7 @@ export default {
     this.cityData = CITIES[0]
     this.offset = 0
     this.batteryText = ''
+    this.theme = 'green'
     this.refresh()
     loadLayout((w, frame, r) => {
       this.w = w
@@ -126,6 +138,7 @@ export default {
   // that passed in the meantime
   onShow() {
     loadClockScreen((code) => keepScreenOn(code === 'on'))
+    loadClockTheme((code) => this.applyTheme(code))
     this.tick()
   },
 
@@ -142,6 +155,25 @@ export default {
   onSwipe(e) {
     if (e.direction === 'left') router.push({ uri: '/pages/dhikrmenu' })
     else if (e.direction === 'right') router.back()
+  },
+
+  // A long press switches to the next color theme, also picked in Settings
+  nextTheme() {
+    const code = CLOCK_THEME_ORDER[(CLOCK_THEME_ORDER.indexOf(this.theme) + 1) % CLOCK_THEME_ORDER.length]
+    saveClockTheme(code)
+    this.applyTheme(code)
+    try {
+      vibrator.vibrate({ mode: 'short' })
+    } catch (e) {}
+    try {
+      prompt.showToast({ message: this.t.clockTheme + ': ' + this.t.clockThemes[code] })
+    } catch (e) {}
+  },
+
+  applyTheme(code) {
+    this.theme = code
+    this.c = CLOCK_THEMES[code]
+    this.refresh()
   },
 
   tick() {
@@ -189,7 +221,8 @@ export default {
       let style = 'upcoming'
       if (k === next.key || (next.key === 'imsak' && k === 'fajr')) style = 'next'
       else if (!next.tomorrow && next.times[k] <= next.nowMinutes) style = 'past'
-      return { label: t.prayers[k], time: formatMinutes(next.times[k]), style }
+      const bg = style === 'next' ? 'background-color: ' + this.c.accent + ';' : ''
+      return { label: t.prayers[k], time: formatMinutes(next.times[k]), style, bg }
     })
 
     this.updateBattery()
@@ -239,7 +272,6 @@ export default {
 }
 
 .colon {
-  color: #34d399;
   margin: 0 2px 6px 2px;
 }
 
@@ -254,7 +286,6 @@ export default {
 .seconds-fill {
   height: 4px;
   border-radius: 2px;
-  background-color: #34d399;
 }
 
 /* Plain centered text rather than a pill, so long month names fit on one line */
@@ -277,7 +308,6 @@ export default {
   padding: 12px 14px;
   margin-bottom: 8px;
   border-radius: 24px;
-  background-color: #0d3b2c;
 }
 
 .hero-row {
@@ -289,7 +319,6 @@ export default {
 .hero-label {
   font-size: 18px;
   font-weight: bold;
-  color: #34d399;
 }
 
 .hero-time {
@@ -303,18 +332,15 @@ export default {
   height: 6px;
   margin: 8px 0 6px 0;
   border-radius: 3px;
-  background-color: #145c44;
 }
 
 .hero-fill {
   height: 6px;
   border-radius: 3px;
-  background-color: #34d399;
 }
 
 .countdown {
   font-size: 14px;
-  color: #8ee6c0;
 }
 
 .schedule {
@@ -334,11 +360,7 @@ export default {
 }
 
 /* Strong contrast throughout so the schedule stays readable in sunlight:
-   the next prayer is a solid green row with black text */
-.next {
-  background-color: #34d399;
-}
-
+   the next prayer is a solid row in the theme's accent with black text */
 .dot {
   width: 6px;
   height: 6px;

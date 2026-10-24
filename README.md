@@ -36,7 +36,7 @@
 
 ## Features
 
-- **Clock**: a watch-face-style page with the time, Gregorian and Hijri date, the next prayer with a countdown and progress bar, and today's five prayers. The screen turns off as usual; turn on Clock screen › Always on in Settings to keep it on so the prayer-time buzz arrives on time; swipe left for shortcuts to Post-prayer Dhikr, Morning & Evening Dhikr and Qibla
+- **Clock**: a watch-face-style page with the time, Gregorian and Hijri date, the next prayer with a countdown and progress bar, and today's five prayers. The screen turns off as usual; turn on Clock screen › Always on in Settings to keep it on so the prayer-time buzz arrives on time; swipe left for shortcuts to Post-prayer Dhikr, Morning & Evening Dhikr and Qibla; long-press to switch the color theme (green, blue, gold, purple, rose, mono), also under Settings › Clock theme
 - **Islam**
   - **Today**: Gregorian and Hijri date, next prayer, and sunnah fasts for today and tomorrow
   - **Post-prayer Dhikr**: guided counter following [Rumaysho](https://rumaysho.com/1997-dzikir-setelah-shalat.html)

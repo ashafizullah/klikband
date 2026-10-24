@@ -33,6 +33,17 @@
         <div class="radio {{$item.code === clockScreen ? 'radio-active' : ''}} {{w}}radio"></div>
       </div>
     </div>
+
+    <text class="section section-next {{w}}section {{w}}section-next {{r}}fit">{{clockThemeLabel}}</text>
+    <div class="group {{w}}group {{r}}fit">
+      <div class="option {{w}}option" for="{{clockThemes}}" onclick="selectClockTheme($item.code)">
+        <div class="swatch-row">
+          <div class="swatch {{w}}swatch" style="background-color: {{$item.accent}};"></div>
+          <text class="option-label {{w}}option-label">{{$item.label}}</text>
+        </div>
+        <div class="radio {{$item.code === clockTheme ? 'radio-active' : ''}} {{w}}radio"></div>
+      </div>
+    </div>
   </scroll>
 </template>
 
@@ -40,7 +51,16 @@
 import router from '@system.router'
 import { LANGUAGES, SCRIPTS, STRINGS, loadLanguage, saveLanguage, loadScript, saveScript } from '../../common/i18n.js'
 import { CITIES, loadCity } from '../../common/cities.js'
-import { loadLayout, CLOCK_SCREENS, loadClockScreen, saveClockScreen } from '../../common/screen.js'
+import {
+  loadLayout,
+  CLOCK_SCREENS,
+  loadClockScreen,
+  saveClockScreen,
+  CLOCK_THEMES,
+  CLOCK_THEME_ORDER,
+  loadClockTheme,
+  saveClockTheme
+} from '../../common/screen.js'
 
 export default {
   private: {
@@ -58,6 +78,9 @@ export default {
     clockScreenLabel: STRINGS.id.clockScreen,
     clockScreens: [],
     clockScreen: 'auto',
+    clockThemeLabel: STRINGS.id.clockTheme,
+    clockThemes: [],
+    clockTheme: 'green',
     cityName: CITIES[0].name
   },
 
@@ -70,6 +93,7 @@ export default {
     loadLanguage((lang) => this.apply(lang))
     loadScript((code) => (this.script = code))
     loadClockScreen((code) => (this.clockScreen = code))
+    loadClockTheme((code) => (this.clockTheme = code))
   },
 
   // Also runs when returning from the city picker
@@ -96,6 +120,11 @@ export default {
     this.clockScreen = code
   },
 
+  selectClockTheme(code) {
+    saveClockTheme(code)
+    this.clockTheme = code
+  },
+
   apply(lang) {
     this.active = lang
     this.title = STRINGS[lang].settings
@@ -105,6 +134,12 @@ export default {
     this.scripts = SCRIPTS.map((code) => ({ code, label: STRINGS[lang].scripts[code] }))
     this.clockScreenLabel = STRINGS[lang].clockScreen
     this.clockScreens = CLOCK_SCREENS.map((code) => ({ code, label: STRINGS[lang].clockScreens[code] }))
+    this.clockThemeLabel = STRINGS[lang].clockTheme
+    this.clockThemes = CLOCK_THEME_ORDER.map((code) => ({
+      code,
+      label: STRINGS[lang].clockThemes[code],
+      accent: CLOCK_THEMES[code].accent
+    }))
   }
 }
 </script>
@@ -158,6 +193,18 @@ export default {
   color: #ffffff;
 }
 
+.swatch-row {
+  flex-direction: row;
+  align-items: center;
+}
+
+.swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 7px;
+  margin-right: 10px;
+}
+
 .chevron {
   font-size: 22px;
   color: #8e8e93;
@@ -209,6 +256,13 @@ export default {
 
 .w-option-label {
   font-size: 11px;
+}
+
+.w-swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  margin-right: 6px;
 }
 
 .w-chevron {

@@ -36,7 +36,7 @@
 
 ## Fitur
 
-- **Jam**: halaman bergaya watch face berisi jam, tanggal Masehi dan Hijriah, sholat berikutnya dengan hitung mundur dan bar progres, serta jadwal 5 waktu hari ini. Layar mati seperti biasa; pilih Layar Jam › Nyala terus di Pengaturan agar layar tetap menyala dan getaran waktu sholat datang tepat waktu; geser ke kiri untuk pintasan ke Dzikir Sholat, Dzikir Pagi Petang dan Arah Kiblat
+- **Jam**: halaman bergaya watch face berisi jam, tanggal Masehi dan Hijriah, sholat berikutnya dengan hitung mundur dan bar progres, serta jadwal 5 waktu hari ini. Layar mati seperti biasa; pilih Layar Jam › Nyala terus di Pengaturan agar layar tetap menyala dan getaran waktu sholat datang tepat waktu; geser ke kiri untuk pintasan ke Dzikir Sholat, Dzikir Pagi Petang dan Arah Kiblat; tekan lama untuk ganti tema warna (hijau, biru, emas, ungu, merah muda, monokrom), juga di Pengaturan › Tema Jam
 - **Islam**
   - **Hari Ini**: tanggal Masehi dan Hijriah, sholat berikutnya, serta puasa sunnah hari ini dan besok
   - **Dzikir Sholat**: penghitung berpanduan sesuai [Rumaysho](https://rumaysho.com/1997-dzikir-setelah-shalat.html)

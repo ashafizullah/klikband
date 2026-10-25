@@ -141,3 +141,8 @@ Untuk mengganti kota bawaan, ubah entri pertama di `src/common/cities.js`.
 ## Lisensi
 
 [MIT](LICENSE). Gambar teks Arab dibuat dengan font [Amiri](https://github.com/aliftype/amiri) (SIL Open Font License, `tools/fonts/OFL.txt`). Teks Al-Qur'an: Tanzil Quran Text (Simple), © Tanzil Project, CC BY 3.0 dengan [ketentuan Tanzil](https://tanzil.net/docs/text_license) (hanya salinan apa adanya, sumber disebut dengan tautan ke [tanzil.net](https://tanzil.net)); KlikBand hanya menambahkan nomor ayat.
+
+<p>
+  <a href="https://github.com/ashafizullah"><img src="https://github.com/ashafizullah.png?size=64" width="32" height="32" alt="" align="left" style="border-radius:50%"></a>
+  &nbsp;Dibuat oleh <a href="https://github.com/ashafizullah"><b>Adam Suchi Hafizullah</b></a>
+</p>

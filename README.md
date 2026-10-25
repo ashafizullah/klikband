@@ -144,7 +144,7 @@ KlikBand is free. If it saves you time, **[buy me an AI token on Trakteer](https
 
 ## License
 
-[MIT](LICENSE). The Arabic images are drawn with the [Amiri](https://github.com/aliftype/amiri) font (SIL Open Font License, `tools/fonts/OFL.txt`). Qur'an text: Tanzil Quran Text (Simple), © Tanzil Project, CC BY 3.0 with [Tanzil's terms](https://tanzil.net/docs/text_license) (verbatim copies only, source credited with a link to [tanzil.net](https://tanzil.net)); KlikBand only adds verse numbers.
+[MIT](LICENSE). The Arabic images are drawn with the [Amiri](https://github.com/aliftype/amiri) font (SIL Open Font License, `tools/fonts/OFL.txt`). Qur'an text: Tanzil Quran Text (Simple), © Tanzil Project, CC BY 3.0 with [Tanzil's terms](https://tanzil.net/docs/text_license) (verbatim copies only, source credited with a link to [tanzil.net](https://tanzil.net)); KlikBand only adds verse numbers. The icons in `src/common/icons/` and `kaaba.png` are original artwork made for KlikBand.
 
 <p>
   <a href="https://github.com/ashafizullah"><img src="https://github.com/ashafizullah.png?size=64" width="32" height="32" alt="" align="left" style="border-radius:50%"></a>

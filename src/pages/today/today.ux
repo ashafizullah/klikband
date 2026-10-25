@@ -31,7 +31,7 @@
 
     <div class="card {{w}}card {{r}}fit">
       <text class="section {{w}}section">{{t.fasting}}</text>
-      <!-- On a fast day: the time left until Imsak or iftar -->
+      <!-- In Ramadan: the time left until Imsak or iftar -->
       <div if="{{fastLabel}}" class="fast-timer {{w}}fast-timer">
         <text class="fast-moment {{w}}fast-moment">{{fastLabel}}</text>
         <text class="fast-countdown {{w}}fast-countdown">{{fastCountdown}}</text>
@@ -148,11 +148,13 @@ export default {
     this.hDay = String(h.day)
     this.hMonth = t.hijriMonths[h.month - 1]
 
-    // Imsak and iftar are prayer times too (Imsak, Maghrib), so the refresh at
-    // the next prayer moves this on as well
+    // Only Ramadan counts down: a sunnah fast is listed below, but whether
+    // someone keeps it is theirs to say. Imsak and iftar are prayer times too
+    // (Imsak, Maghrib), so the refresh at the next prayer moves this on as well
     const todayKeys = fastsFor(now, h)
     const tomorrowKeys = fastsFor(tomorrow, toHijriWithOffset(tomorrow, this.offset))
-    const fast = fastMoment(now, this.cityData, todayKeys, tomorrowKeys)
+    const ramadan = (keys) => (keys[0] === 'ramadan' ? keys : ['none'])
+    const fast = fastMoment(now, this.cityData, ramadan(todayKeys), ramadan(tomorrowKeys))
     this.fastTarget = fast ? prayerDate(fast.day, fast.minutes).getTime() : 0
     this.fastLabel = fast ? (fast.key === 'iftar' ? t.iftar : t.prayers.imsak) + ' · ' + formatMinutes(fast.minutes) : ''
 

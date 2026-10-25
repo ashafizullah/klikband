@@ -38,7 +38,7 @@
 
 - **Clock**: a watch-face-style page with the time, Gregorian and Hijri date, the next prayer with a countdown and progress bar, and today's five prayers (in Ramadan, Maghrib shows as Iftar), and from Maghrib until Imsak, the coming day's fast. The screen turns off as usual; turn on Clock screen › Always on in Settings to keep it on so the prayer-time buzz arrives on time; swipe left for shortcuts to Post-prayer Dhikr, Morning & Evening Dhikr and Qibla; long-press to switch the color theme (green, blue, gold, purple, rose, mono), also under Settings › Clock theme
 - **Islam**
-  - **Today**: Gregorian and Hijri date, next prayer, and sunnah fasts for today and tomorrow; on a fast day, a countdown to Imsak or iftar; on Fridays, a reminder to recite Al-Kahf
+  - **Today**: Gregorian and Hijri date, next prayer, and sunnah fasts for today and tomorrow; in Ramadan, a countdown to Imsak or iftar; on Fridays, a reminder to recite Al-Kahf
   - **Post-prayer Dhikr**: guided counter following [Rumaysho](https://rumaysho.com/1997-dzikir-setelah-shalat.html)
   - **Morning & Evening Dhikr**: guided counter following [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html)
   - Both show the dhikr in Latin transliteration or in Arabic, with Ayat al-Kursi and the surahs in full, numbered by verse ([Tanzil](https://tanzil.net) text)

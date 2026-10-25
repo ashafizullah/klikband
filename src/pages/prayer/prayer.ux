@@ -40,6 +40,7 @@ import {
   PRAYER_ORDER,
   nextPrayer,
   prayerDate,
+  prayerName,
   formatMinutes,
   sunnahTimes,
   lastThirdOfNight
@@ -108,12 +109,13 @@ export default {
     this.location = this.city.name + ' · ' + TIME_ZONES[this.city.tz]
     this.dateText = formatDate(t, day)
     this.nextKey = next
-    this.nextLabel = t.prayers[next]
+    // The full Friday name fits the band's wide card, not the narrow ones
+    this.nextLabel = prayerName(t, next, day, !!(this.w || this.r))
     this.nextTime = formatMinutes(times[next])
     this.target = prayerDate(day, times[next]).getTime()
     this.tick()
     this.rows = PRAYER_ORDER.map((k) => ({
-      label: t.prayers[k],
+      label: prayerName(t, k, day, true),
       time: formatMinutes(times[k]),
       next: k === next,
       // Past times are dimmed, the next one is highlighted

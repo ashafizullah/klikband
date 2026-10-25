@@ -41,7 +41,7 @@ import router from '@system.router'
 import prompt from '@system.prompt'
 import vibrator from '@system.vibrator'
 import battery from '@system.battery'
-import { prayerTimes, nextPrayer, prayerDate, formatMinutes, PRAYER_ORDER } from '../../common/prayer.js'
+import { prayerTimes, nextPrayer, prayerDate, prayerName, formatMinutes, PRAYER_ORDER } from '../../common/prayer.js'
 import { prayerAlert, LATE_ALERT } from '../../common/alert.js'
 import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
 import { loadCity } from '../../common/cities.js'
@@ -229,7 +229,7 @@ export default {
     const next = nextPrayer(now, this.cityData)
     this.nextKey = next.key
     // In Ramadan, Maghrib is the iftar (always today's, as it comes before Isha)
-    this.nextLabel = next.key === 'maghrib' && h.month === 9 ? t.iftar : t.prayers[next.key]
+    this.nextLabel = next.key === 'maghrib' && h.month === 9 ? t.iftar : prayerName(t, next.key, next.day, true)
     this.nextTime = formatMinutes(next.times[next.key])
     this.target = prayerDate(next.day, next.times[next.key]).getTime()
     this.start = previousStart(now, next, this.cityData).getTime()
@@ -242,7 +242,7 @@ export default {
       if (k === next.key || (next.key === 'imsak' && k === 'fajr')) style = 'next'
       else if (!next.tomorrow && next.times[k] <= next.nowMinutes) style = 'past'
       const bg = style === 'next' ? 'background-color: ' + this.c.accent + ';' : ''
-      return { label: t.prayers[k], time: formatMinutes(next.times[k]), style, bg }
+      return { label: prayerName(t, k, next.day, true), time: formatMinutes(next.times[k]), style, bg }
     })
 
     this.updateBattery()

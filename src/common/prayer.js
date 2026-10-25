@@ -138,6 +138,13 @@ export function prayerDate(day, minutes) {
   return new Date(day.getFullYear(), day.getMonth(), day.getDate(), 0, minutes)
 }
 
+// A prayer's name on `day`: on Fridays Dhuhr is Jumu'ah, named in full unless
+// `short` is set for the places too narrow for it
+export function prayerName(t, key, day, short) {
+  if (key !== 'dhuhr' || day.getDay() !== 5) return t.prayers[key]
+  return short ? t.jumuah : t.jumuahPrayer
+}
+
 export function formatMinutes(m) {
   const h = Math.floor(m / 60) % 24
   const min = m % 60

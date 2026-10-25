@@ -20,6 +20,12 @@ export function fastsFor(date, hijri) {
   return fasts.length ? fasts : ['none']
 }
 
+// The main fast among keys from fastsFor(), without a note in brackets such
+// as "(White Days)", for one-line labels
+export function fastName(t, keys) {
+  return t.fasts[keys[0]].replace(/\s*[(（].*[)）]/, '')
+}
+
 // Whether keys from fastsFor() name a fast to keep
 export function isFastDay(keys) {
   return keys[0] !== 'none' && keys[0] !== 'eid' && keys[0] !== 'tashriq'

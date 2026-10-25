@@ -38,7 +38,7 @@
 
 - **Jam**: halaman bergaya watch face berisi jam, tanggal Masehi dan Hijriah, sholat berikutnya dengan hitung mundur dan bar progres, serta jadwal 5 waktu hari ini (saat Ramadhan, Maghrib tampil sebagai Berbuka), dan dari Maghrib sampai Imsak nama puasa besok. Layar mati seperti biasa; pilih Layar Jam › Nyala terus di Pengaturan agar layar tetap menyala dan getaran waktu sholat datang tepat waktu; geser ke kiri untuk pintasan ke Dzikir Sholat, Dzikir Pagi Petang dan Arah Kiblat; tekan lama untuk ganti tema warna (hijau, biru, emas, ungu, merah muda, monokrom), juga di Pengaturan › Tema Jam
 - **Islam**
-  - **Hari Ini**: tanggal Masehi dan Hijriah, sholat berikutnya, serta puasa sunnah hari ini dan besok; saat Ramadhan ada hitung mundur ke Imsak atau waktu berbuka, dan di hari Jumat pengingat membaca Al-Kahfi
+  - **Hari Ini**: tanggal Masehi dan Hijriah, sholat berikutnya, serta puasa sunnah hari ini dan besok; di hari puasa (Ramadhan atau sunnah) ada hitung mundur ke Imsak atau waktu berbuka beserta nama puasanya, dan di hari Jumat pengingat membaca Al-Kahfi
   - **Dzikir Sholat**: penghitung berpanduan sesuai [Rumaysho](https://rumaysho.com/1997-dzikir-setelah-shalat.html)
   - **Dzikir Pagi Petang**: penghitung berpanduan sesuai [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html)
   - Keduanya menampilkan dzikir dalam transliterasi Latin atau tulisan Arab, dengan Ayat Kursi dan surat-surat ditulis lengkap bernomor ayat (teks [Tanzil](https://tanzil.net))

@@ -46,7 +46,7 @@ import { prayerAlert, LATE_ALERT } from '../../common/alert.js'
 import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
 import { loadCity } from '../../common/cities.js'
 import { toHijriWithOffset, loadHijriOffset } from '../../common/hijri.js'
-import { fastsFor, fastMoment } from '../../common/fasting.js'
+import { fastsFor, fastMoment, fastName } from '../../common/fasting.js'
 import {
   loadLayout,
   keepScreenOn,
@@ -259,9 +259,7 @@ export default {
     const fast = fastMoment(now, this.cityData, todayKeys, tomorrowKeys)
     if (fast && fast.key === 'imsak') {
       const isToday = fast.day === now
-      const name = t.fasts[(isToday ? todayKeys : tomorrowKeys)[0]]
-      // Drops a note in brackets, as in "Ayyamul Bidh (White Days)"
-      this.footerLead = (isToday ? t.todayLabel : t.tomorrowLabel) + ': ' + name.replace(/\s*[(（].*[)）]/, '')
+      this.footerLead = (isToday ? t.todayLabel : t.tomorrowLabel) + ': ' + fastName(t, isToday ? todayKeys : tomorrowKeys)
     } else {
       this.footerLead = this.cityData.name
     }

@@ -31,8 +31,9 @@
 
     <div class="card {{w}}card {{r}}fit">
       <text class="section {{w}}section">{{t.fasting}}</text>
-      <!-- In Ramadan: the time left until Imsak or iftar -->
+      <!-- On a fast day: which fast, and the time left until Imsak or iftar -->
       <div if="{{fastLabel}}" class="fast-timer {{w}}fast-timer">
+        <text class="fast-for {{w}}fast-for">{{fastFor}}</text>
         <text class="fast-moment {{w}}fast-moment">{{fastLabel}}</text>
         <text class="fast-countdown {{w}}fast-countdown">{{fastCountdown}}</text>
       </div>
@@ -55,7 +56,7 @@ import { prayerAlert, LATE_ALERT } from '../../common/alert.js'
 import { STRINGS, loadLanguage, formatDuration } from '../../common/i18n.js'
 import { TIME_ZONES, loadCity } from '../../common/cities.js'
 import { toHijriWithOffset, loadHijriOffset } from '../../common/hijri.js'
-import { fastsFor, isFastDay, fastMoment } from '../../common/fasting.js'
+import { fastsFor, isFastDay, fastMoment, fastName } from '../../common/fasting.js'
 import { keepScreenOn, loadLayout } from '../../common/screen.js'
 import { loadAll } from '../../common/load.js'
 
@@ -87,6 +88,7 @@ export default {
     tomorrowFasts: '',
     tomorrowStyle: '',
     friday: false,
+    fastFor: '',
     fastLabel: '',
     fastCountdown: ''
   },
@@ -148,14 +150,15 @@ export default {
     this.hDay = String(h.day)
     this.hMonth = t.hijriMonths[h.month - 1]
 
-    // Only Ramadan counts down: a sunnah fast is listed below, but whether
-    // someone keeps it is theirs to say. Imsak and iftar are prayer times too
-    // (Imsak, Maghrib), so the refresh at the next prayer moves this on as well
+    // The countdown names its fast, so on a sunnah fast day it reads as being
+    // for that fast rather than saying the wearer is fasting. Imsak and iftar
+    // are prayer times too (Imsak, Maghrib), so the refresh at the next prayer
+    // moves this on as well
     const todayKeys = fastsFor(now, h)
     const tomorrowKeys = fastsFor(tomorrow, toHijriWithOffset(tomorrow, this.offset))
-    const ramadan = (keys) => (keys[0] === 'ramadan' ? keys : ['none'])
-    const fast = fastMoment(now, this.cityData, ramadan(todayKeys), ramadan(tomorrowKeys))
+    const fast = fastMoment(now, this.cityData, todayKeys, tomorrowKeys)
     this.fastTarget = fast ? prayerDate(fast.day, fast.minutes).getTime() : 0
+    this.fastFor = fast ? fastName(t, fast.day === now ? todayKeys : tomorrowKeys) : ''
     this.fastLabel = fast ? (fast.key === 'iftar' ? t.iftar : t.prayers.imsak) + ' · ' + formatMinutes(fast.minutes) : ''
 
     const next = nextPrayer(now, this.cityData)
@@ -328,6 +331,11 @@ export default {
   background-color: #0d3b2c;
 }
 
+.fast-for {
+  font-size: 13px;
+  color: #8ee6c0;
+}
+
 .fast-moment {
   font-size: 18px;
   font-weight: bold;
@@ -454,6 +462,10 @@ export default {
   padding: 4px 0;
   margin-bottom: 5px;
   border-radius: 9px;
+}
+
+.w-fast-for {
+  font-size: 8px;
 }
 
 .w-fast-moment {

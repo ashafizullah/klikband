@@ -2,9 +2,10 @@
 // https://almanhaj.or.id/83989-doa-doa-nabi-shallallahu-alaihi-wa-sallam.html
 // Indonesian meanings follow the article; the article has no transliteration,
 // so the Latin is ours. The Arabic follows the article with its typos fixed and
-// was checked against Hisnul Muslim; Rabbana atina is the Tanzil Qur'an text
-// (Al-Baqarah 201, CC BY 3.0). `source` is who narrated it ('' when the article
-// gives none).
+// was checked against Hisnul Muslim; Rabbana atina is the Qur'an text of
+// Al-Baqarah 201 from Tanzil Quran Text (Simple Plain, Version 1.1), (C) Tanzil
+// Project, CC BY 3.0, used verbatim: https://tanzil.net. `source` is who
+// narrated it ('' when the article gives none).
 export default [
   {
     source: 'Bukhari & Muslim',
@@ -20,7 +21,7 @@ export default [
   {
     source: 'Bukhari & Muslim',
     latin: "Robbanaa aatinaa fid dunyaa hasanah, wa fil aakhiroti hasanah, wa qinaa 'adzaaban naar",
-    arabic: 'رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ',
+    arabic: 'رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ',
     meaning: {
       id: 'Ya Tuhan kami, berilah kami kebaikan di dunia dan kebaikan di akhirat dan peliharalah kami dari siksa neraka. (Doa yang paling sering dibaca Nabi)',
       en: 'Our Lord, give us good in this world and good in the Hereafter, and protect us from the punishment of the Fire. (The dua the Prophet made most often)',

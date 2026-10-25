@@ -144,7 +144,7 @@ KlikBand 免费。如果它帮你节省了时间，欢迎 **[在 Trakteer 请我
 
 ## 许可证
 
-[MIT](LICENSE)。阿拉伯文图片使用 [Amiri](https://github.com/aliftype/amiri) 字体绘制（SIL Open Font License，`tools/fonts/OFL.txt`）。古兰经经文：Tanzil Quran Text (Simple)，© Tanzil Project，CC BY 3.0，并遵循 [Tanzil 使用条款](https://tanzil.net/docs/text_license)（仅限原样复制，注明来源并链接 [tanzil.net](https://tanzil.net)）；KlikBand 只添加了节号。`src/common/icons/` 中的图标和 `kaaba.png` 是为 KlikBand 原创的作品。
+[MIT](LICENSE)。阿拉伯文图片使用 [Amiri](https://github.com/aliftype/amiri) 字体绘制（SIL Open Font License，`tools/fonts/OFL.txt`）。古兰经经文：Tanzil Quran Text (Simple Plain, Version 1.1)，© Tanzil Project，CC BY 3.0，并遵循 [Tanzil 使用条款](https://tanzil.net/docs/text_license)（仅限原样复制，注明来源并链接 [tanzil.net](https://tanzil.net)）；KlikBand 只添加了节号。`src/common/icons/` 中的图标和 `kaaba.png` 是为 KlikBand 原创的作品。
 
 <p>
   <a href="https://github.com/ashafizullah"><img src="https://github.com/ashafizullah.png?size=64" width="32" height="32" alt="" align="left" style="border-radius:50%"></a>

@@ -32,7 +32,7 @@
       </div>
     </div>
 
-    <text class="footer {{w}}footer">{{footer}}</text>
+    <text class="footer {{w}}footer" style="font-size: {{footerSize}}px;">{{footer}}</text>
   </scroll>
 </template>
 
@@ -46,6 +46,7 @@ import { prayerAlert, LATE_ALERT } from '../../common/alert.js'
 import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
 import { loadCity } from '../../common/cities.js'
 import { toHijriWithOffset, loadHijriOffset } from '../../common/hijri.js'
+import { fastsFor, fastMoment } from '../../common/fasting.js'
 import {
   loadLayout,
   keepScreenOn,
@@ -70,6 +71,10 @@ const PRAYER_WIDTH = { '': 148, 'w-': 62, 'r-': 52 }
 // so long month names don't push "H" onto a second line
 const HIJRI_SIZES = { '': [15, 14, 13, 12], 'w-': [10, 9, 8] }
 const HIJRI_WIDTH = 176
+
+// Footer sizes and widths, the same way: the bottom of a round face is narrower
+const FOOTER_SIZES = { '': [13, 12, 11], 'w-': [8, 7] }
+const FOOTER_WIDTH = { '': 176, 'w-': 176, 'r-': 140 }
 
 const pad = (n) => (n < 10 ? '0' : '') + n
 
@@ -102,7 +107,8 @@ export default {
     prayerBar: 0,
     countdown: '',
     schedule: [],
-    footer: ''
+    footer: '',
+    footerSize: 13
   },
 
   onInit() {
@@ -245,8 +251,32 @@ export default {
       return { label: prayerName(t, k, next.day, true), time: formatMinutes(next.times[k]), style, bg }
     })
 
+    // From Maghrib before a fast until its Imsak, the footer names the fast
+    // instead of the city
+    const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
+    const todayKeys = fastsFor(now, h)
+    const tomorrowKeys = fastsFor(tomorrow, toHijriWithOffset(tomorrow, this.offset))
+    const fast = fastMoment(now, this.cityData, todayKeys, tomorrowKeys)
+    if (fast && fast.key === 'imsak') {
+      const isToday = fast.day === now
+      const name = t.fasts[(isToday ? todayKeys : tomorrowKeys)[0]]
+      // Drops a note in brackets, as in "Ayyamul Bidh (White Days)"
+      this.footerLead = (isToday ? t.todayLabel : t.tomorrowLabel) + ': ' + name.replace(/\s*[(（].*[)）]/, '')
+    } else {
+      this.footerLead = this.cityData.name
+    }
     this.updateBattery()
-    this.footer = this.cityData.name + (this.batteryText ? ' · ' + this.batteryText : '')
+    this.showFooter()
+  },
+
+  // The footer lead, with the battery level when it fits, at the largest size that fits
+  showFooter() {
+    const sizes = FOOTER_SIZES[this.w]
+    const width = FOOTER_WIDTH[this.r || this.w]
+    const full = this.footerLead + (this.batteryText ? ' · ' + this.batteryText : '')
+    const fits = (text) => sizes.find((size) => textWidth(text, size) <= width)
+    this.footer = fits(full) ? full : this.footerLead
+    this.footerSize = fits(this.footer) || sizes[sizes.length - 1]
   },
 
   // Only where the battery API exists (not on Smart Band 9 / 9 Pro)
@@ -255,7 +285,7 @@ export default {
       battery.getStatus({
         success: (status) => {
           this.batteryText = Math.round(status.level * 100) + '%'
-          this.footer = this.cityData.name + ' · ' + this.batteryText
+          this.showFooter()
         }
       })
     } catch (e) {}

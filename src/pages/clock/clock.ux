@@ -14,7 +14,7 @@
     <div class="panels {{w}}panels {{r}}fit">
       <div class="hero {{w}}hero {{r}}hero" style="background-color: {{c.heroBg}};">
         <div class="hero-row {{w}}hero-row">
-          <text class="hero-label {{w}}hero-label" style="color: {{c.accent}};">{{nextLabel}}</text>
+          <text class="hero-label {{w}}hero-label" style="color: {{c.accent}}; {{labelSize}}">{{nextLabel}}</text>
           <text class="hero-time {{w}}hero-time">{{nextTime}}</text>
         </div>
         <div class="hero-track {{w}}hero-track {{r}}hero-track" style="background-color: {{c.heroTrack}};">
@@ -72,6 +72,9 @@ const PRAYER_WIDTH = { '': 148, 'w-': 62, 'r-': 52 }
 const HIJRI_SIZES = { '': [15, 14, 13, 12], 'w-': [10, 9, 8] }
 const HIJRI_WIDTH = 176
 
+// Widest hero label (px, by textWidth) that stays at 18px beside the time on the band
+const LABEL_WIDTH = 66
+
 // Footer sizes and widths, the same way: the bottom of a round face is narrower
 const FOOTER_SIZES = { '': [13, 12, 11], 'w-': [8, 7] }
 const FOOTER_WIDTH = { '': 176, 'w-': 176, 'r-': 140 }
@@ -103,6 +106,7 @@ export default {
     hijri: '',
     hijriSize: 15,
     nextLabel: '',
+    labelSize: '',
     nextTime: '',
     prayerBar: 0,
     countdown: '',
@@ -236,6 +240,9 @@ export default {
     this.nextKey = next.key
     // In Ramadan, Maghrib is the iftar (always today's, as it comes before Isha)
     this.nextLabel = next.key === 'maghrib' && h.month === 9 ? t.iftar : prayerName(t, next.key, next.day, true)
+    // On the band the label shares a line with the 30px time: longer names
+    // such as Maghrib and Berbuka step down to 16px to keep a gap between them
+    this.labelSize = !this.w && textWidth(this.nextLabel, 18) > LABEL_WIDTH ? 'font-size: 16px;' : ''
     this.nextTime = formatMinutes(next.times[next.key])
     this.target = prayerDate(next.day, next.times[next.key]).getTime()
     this.start = previousStart(now, next, this.cityData).getTime()

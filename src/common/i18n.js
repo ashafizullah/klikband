@@ -193,7 +193,7 @@ export const STRINGS = {
     iftar: 'Berbuka',
     jumuah: 'Jumat',
     jumuahPrayer: 'Sholat Jumat',
-    alKahf: 'Hari Jumat: sunnah membaca surat Al-Kahfi',
+    alKahf: 'Hari Jumat: sunnah membaca Al-Kahfi',
     sunnahTimes: 'Sholat Sunnah',
     dhuha: 'Dhuha',
     lastThird: 'Sepertiga malam',

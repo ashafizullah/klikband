@@ -114,14 +114,22 @@ export default {
     this.nextTime = formatMinutes(times[next])
     this.target = prayerDate(day, times[next]).getTime()
     this.tick()
-    this.rows = PRAYER_ORDER.map((k) => ({
+    const rows = PRAYER_ORDER.map((k) => ({
       label: prayerName(t, k, day, true),
       time: formatMinutes(times[k]),
       next: k === next,
       // Past times are dimmed, the next one is highlighted
       style: k === next ? 'text-next' : !tomorrow && times[k] <= nowMinutes ? 'text-past' : ''
     }))
-    this.cards = this.extraCards(day, tomorrow, nowMinutes)
+    const cards = this.extraCards(day, tomorrow, nowMinutes)
+    // The lists change only a few times a day, so the refresh every minute
+    // redraws them only then
+    const key = JSON.stringify([rows, cards])
+    if (key !== this.listsKey) {
+      this.listsKey = key
+      this.rows = rows
+      this.cards = cards
+    }
   },
 
   // The shown day's Dhuha and not-allowed times, and tonight's last third

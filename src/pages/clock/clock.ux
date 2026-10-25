@@ -243,13 +243,19 @@ export default {
 
     // Passed prayers are dimmed and the next one is highlighted; after Isha
     // the list shows tomorrow, so nothing is dimmed
-    this.schedule = DAILY.map((k) => {
+    const schedule = DAILY.map((k) => {
       let style = 'upcoming'
       if (k === next.key || (next.key === 'imsak' && k === 'fajr')) style = 'next'
       else if (!next.tomorrow && next.times[k] <= next.nowMinutes) style = 'past'
       const bg = style === 'next' ? 'background-color: ' + this.c.accent + ';' : ''
       return { label: prayerName(t, k, next.day, true), time: formatMinutes(next.times[k]), style, bg }
     })
+    // It changes only at a prayer time or a new theme, so it is redrawn only then
+    const key = JSON.stringify(schedule)
+    if (key !== this.scheduleKey) {
+      this.scheduleKey = key
+      this.schedule = schedule
+    }
 
     // From Maghrib before a fast until its Imsak, the footer names the fast
     // instead of the city

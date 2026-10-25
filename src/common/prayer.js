@@ -60,7 +60,24 @@ export function sunDirection(date, location) {
 
 // Returns minutes since local midnight for each prayer time.
 // location: { lat, lng, tz } from common/cities.js
+// Pages ask for the same day several times a minute, so the last few days are
+// kept; the returned object is shared and must not be changed.
+const CACHE_SIZE = 4
+const cache = {}
+const cacheOrder = []
+
 export function prayerTimes(date, location) {
+  const key = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + ' ' +
+    location.lat + ',' + location.lng + ',' + location.tz
+  if (!cache[key]) {
+    if (cacheOrder.length >= CACHE_SIZE) delete cache[cacheOrder.shift()]
+    cacheOrder.push(key)
+    cache[key] = computeTimes(date, location)
+  }
+  return cache[key]
+}
+
+function computeTimes(date, location) {
   const jd = julianDay(date.getFullYear(), date.getMonth() + 1, date.getDate()) - location.lng / 360
   const { decl, eqt } = sunPosition(jd + 0.5)
   const lat = rad(location.lat)

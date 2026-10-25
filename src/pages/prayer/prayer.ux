@@ -23,7 +23,7 @@
 
     <!-- Voluntary prayer windows and the times prayer is not allowed: the one
          under way is highlighted, green or red -->
-    <div class="extras {{w}}extras {{r}}fit">
+    <div class="extras {{w}}extras {{r}}fit {{r}}extras">
       <div class="card {{w}}card {{r}}card" for="{{card in cards}}">
         <text class="section {{w}}section">{{card.title}}</text>
         <div class="slot {{w}}slot slot-{{slot.style}}" for="{{slot in card.rows}}">
@@ -401,13 +401,13 @@ export default {
 }
 
 .w-section {
-  font-size: 9px;
-  padding: 0 5px;
+  font-size: 8px;
+  padding: 0 4px;
   margin-bottom: 2px;
 }
 
 .w-slot {
-  padding: 3px 5px;
+  padding: 3px 4px;
   border-radius: 9px;
 }
 
@@ -436,7 +436,12 @@ export default {
   padding: 0 5px;
 }
 
+.r-extras {
+  flex-direction: column;
+}
+
 .r-card {
   width: 160px;
+  margin-bottom: 6px;
 }
 </style>

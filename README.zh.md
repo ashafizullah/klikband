@@ -140,4 +140,4 @@ tools/
 
 ## 许可证
 
-[MIT](LICENSE)。阿拉伯文图片使用 [Amiri](https://github.com/aliftype/amiri) 字体绘制（SIL Open Font License，`tools/fonts/OFL.txt`）。古兰经经文来自 [Tanzil](https://tanzil.net)（CC BY 3.0）。
+[MIT](LICENSE)。阿拉伯文图片使用 [Amiri](https://github.com/aliftype/amiri) 字体绘制（SIL Open Font License，`tools/fonts/OFL.txt`）。古兰经经文：Tanzil Quran Text (Simple)，© Tanzil Project，CC BY 3.0，并遵循 [Tanzil 使用条款](https://tanzil.net/docs/text_license)（仅限原样复制，注明来源并链接 [tanzil.net](https://tanzil.net)）；KlikBand 只添加了节号。

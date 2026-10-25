@@ -3,7 +3,8 @@
 // https://rumaysho.com/1997-dzikir-setelah-shalat.html
 // Each step: Latin and Arabic text, repetitions, meaning per language, and an optional note.
 // The Arabic follows the article, with its typos fixed against Hisnul Muslim.
-// Qur'an text: Tanzil Quran Text (Simple), CC BY 3.0, https://tanzil.net
+// Qur'an text: Tanzil Quran Text (Simple), Copyright (C) Tanzil Project, CC BY 3.0,
+// used verbatim (verse numbers added) under Tanzil's terms: https://tanzil.net
 export default [
   {
     latin: 'Astaghfirullah',

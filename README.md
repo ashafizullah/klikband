@@ -140,4 +140,4 @@ To change the default city, edit the first entry in `src/common/cities.js`.
 
 ## License
 
-[MIT](LICENSE). The Arabic images are drawn with the [Amiri](https://github.com/aliftype/amiri) font (SIL Open Font License, `tools/fonts/OFL.txt`). Qur'an text from [Tanzil](https://tanzil.net) (CC BY 3.0).
+[MIT](LICENSE). The Arabic images are drawn with the [Amiri](https://github.com/aliftype/amiri) font (SIL Open Font License, `tools/fonts/OFL.txt`). Qur'an text: Tanzil Quran Text (Simple), © Tanzil Project, CC BY 3.0 with [Tanzil's terms](https://tanzil.net/docs/text_license) (verbatim copies only, source credited with a link to [tanzil.net](https://tanzil.net)); KlikBand only adds verse numbers.

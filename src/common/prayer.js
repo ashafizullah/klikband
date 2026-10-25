@@ -1,5 +1,7 @@
 // Prayer times using the Indonesian Ministry of Religious Affairs (Kemenag) method:
 // Fajr 20°, Isha 18°, Shafi'i Asr. Computed on the band, no internet needed.
+// Sun position: the US Naval Observatory's "Approximate Solar Coordinates" formulas;
+// Julian day: Meeus, Astronomical Algorithms.
 
 const IHTIYAT = 2 // safety margin in minutes, as used by Kemenag
 const FAJR_ANGLE = 20

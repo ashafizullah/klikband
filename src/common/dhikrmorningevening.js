@@ -1,8 +1,8 @@
 // Morning and evening dhikr, in the order and counts given by
 // https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html
 // The article has Arabic and Indonesian only; the Arabic follows the article, the Latin
-// transliteration follows Hisnul Muslim. Qur'an text: Tanzil Quran Text (Simple), CC BY 3.0,
-// https://tanzil.net
+// transliteration follows Hisnul Muslim. Qur'an text: Tanzil Quran Text (Simple), Copyright (C) Tanzil
+// Project, CC BY 3.0, used verbatim (verse numbers added) under Tanzil's terms: https://tanzil.net
 // `only` limits a step to 'morning' or 'evening'; `evening` overrides text for the evening set.
 const ITEMS = [
   {

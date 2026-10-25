@@ -31,6 +31,11 @@
 
     <div class="card {{w}}card {{r}}fit">
       <text class="section {{w}}section">{{t.fasting}}</text>
+      <!-- On a fast day: the time left until Imsak or iftar -->
+      <div if="{{fastLabel}}" class="fast-timer {{w}}fast-timer">
+        <text class="fast-moment {{w}}fast-moment">{{fastLabel}}</text>
+        <text class="fast-countdown {{w}}fast-countdown">{{fastCountdown}}</text>
+      </div>
       <text class="when {{w}}when">{{t.todayLabel}}</text>
       <text class="fast {{w}}fast {{todayStyle}}">{{todayFasts}}</text>
       <div class="divider {{w}}divider"></div>
@@ -46,14 +51,14 @@ import { prayerAlert, LATE_ALERT } from '../../common/alert.js'
 import { STRINGS, loadLanguage, formatDuration } from '../../common/i18n.js'
 import { TIME_ZONES, loadCity } from '../../common/cities.js'
 import { toHijriWithOffset, loadHijriOffset } from '../../common/hijri.js'
-import { fastsFor } from '../../common/fasting.js'
+import { fastsFor, isFastDay, fastMoment } from '../../common/fasting.js'
 import { keepScreenOn, loadLayout } from '../../common/screen.js'
 import { loadAll } from '../../common/load.js'
 
 // Style for a fasting line: highlighted when there is a fast, red when fasting is not allowed
 function fastStyle(keys) {
   if (keys[0] === 'none') return 'fast-none'
-  if (keys[0] === 'eid' || keys[0] === 'tashriq') return 'fast-forbidden'
+  if (!isFastDay(keys)) return 'fast-forbidden'
   return ''
 }
 
@@ -76,7 +81,9 @@ export default {
     todayFasts: '',
     todayStyle: '',
     tomorrowFasts: '',
-    tomorrowStyle: ''
+    tomorrowStyle: '',
+    fastLabel: '',
+    fastCountdown: ''
   },
 
   onInit() {
@@ -111,7 +118,14 @@ export default {
     this.ticks = (this.ticks || 0) + 1
     if (seconds <= 0 && seconds > -LATE_ALERT) prayerAlert(this.t, this.nextKey)
     if (seconds <= 0 || this.ticks % 60 === 0) this.refresh()
-    else this.countdown = formatDuration(this.t, seconds)
+    else this.updateCountdowns(seconds)
+  },
+
+  updateCountdowns(seconds) {
+    this.countdown = formatDuration(this.t, seconds)
+    if (this.fastTarget) {
+      this.fastCountdown = formatDuration(this.t, Math.max(0, Math.ceil((this.fastTarget - Date.now()) / 1000)))
+    }
   },
 
   refresh() {
@@ -128,6 +142,14 @@ export default {
     this.hDay = String(h.day)
     this.hMonth = t.hijriMonths[h.month - 1]
 
+    // Imsak and iftar are prayer times too (Imsak, Maghrib), so the refresh at
+    // the next prayer moves this on as well
+    const todayKeys = fastsFor(now, h)
+    const tomorrowKeys = fastsFor(tomorrow, toHijriWithOffset(tomorrow, this.offset))
+    const fast = fastMoment(now, this.cityData, todayKeys, tomorrowKeys)
+    this.fastTarget = fast ? prayerDate(fast.day, fast.minutes).getTime() : 0
+    this.fastLabel = fast ? (fast.key === 'iftar' ? t.iftar : t.prayers.imsak) + ' · ' + formatMinutes(fast.minutes) : ''
+
     const next = nextPrayer(now, this.cityData)
     this.nextKey = next.key
     this.nextLabel = t.prayers[next.key]
@@ -136,8 +158,6 @@ export default {
     this.tick()
     this.city = this.cityData.name + ' · ' + TIME_ZONES[this.cityData.tz]
 
-    const todayKeys = fastsFor(now, h)
-    const tomorrowKeys = fastsFor(tomorrow, toHijriWithOffset(tomorrow, this.offset))
     this.todayFasts = todayKeys.map((k) => t.fasts[k]).join(', ')
     this.todayStyle = fastStyle(todayKeys)
     this.tomorrowFasts = tomorrowKeys.map((k) => t.fasts[k]).join(', ')
@@ -291,6 +311,26 @@ export default {
   color: #ff6b6b;
 }
 
+.fast-timer {
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 0;
+  margin-bottom: 8px;
+  border-radius: 16px;
+  background-color: #0d3b2c;
+}
+
+.fast-moment {
+  font-size: 18px;
+  font-weight: bold;
+  color: #34d399;
+}
+
+.fast-countdown {
+  font-size: 14px;
+  color: #ffffff;
+}
+
 .divider {
   height: 1px;
   margin: 8px 0;
@@ -387,6 +427,20 @@ export default {
 
 .w-fast {
   font-size: 10px;
+}
+
+.w-fast-timer {
+  padding: 4px 0;
+  margin-bottom: 5px;
+  border-radius: 9px;
+}
+
+.w-fast-moment {
+  font-size: 11px;
+}
+
+.w-fast-countdown {
+  font-size: 9px;
 }
 
 .w-divider {

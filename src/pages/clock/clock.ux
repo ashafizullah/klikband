@@ -228,7 +228,8 @@ export default {
 
     const next = nextPrayer(now, this.cityData)
     this.nextKey = next.key
-    this.nextLabel = t.prayers[next.key]
+    // In Ramadan, Maghrib is the iftar (always today's, as it comes before Isha)
+    this.nextLabel = next.key === 'maghrib' && h.month === 9 ? t.iftar : t.prayers[next.key]
     this.nextTime = formatMinutes(next.times[next.key])
     this.target = prayerDate(next.day, next.times[next.key]).getTime()
     this.start = previousStart(now, next, this.cityData).getTime()

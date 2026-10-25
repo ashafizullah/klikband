@@ -20,11 +20,30 @@
         </div>
       </div>
     </div>
+
+    <!-- Voluntary prayer windows and the times prayer is not allowed: the one
+         under way is highlighted, green or red -->
+    <div class="extras {{w}}extras {{r}}fit">
+      <div class="card {{w}}card {{r}}card" for="{{card in cards}}">
+        <text class="section {{w}}section">{{card.title}}</text>
+        <div class="slot {{w}}slot slot-{{slot.style}}" for="{{slot in card.rows}}">
+          <text class="slot-label {{w}}slot-label">{{slot.label}}</text>
+          <text class="slot-time {{w}}slot-time time-{{slot.style}}">{{slot.time}}</text>
+        </div>
+      </div>
+    </div>
   </scroll>
 </template>
 
 <script>
-import { PRAYER_ORDER, nextPrayer, prayerDate, formatMinutes } from '../../common/prayer.js'
+import {
+  PRAYER_ORDER,
+  nextPrayer,
+  prayerDate,
+  formatMinutes,
+  sunnahTimes,
+  lastThirdOfNight
+} from '../../common/prayer.js'
 import { prayerAlert, LATE_ALERT } from '../../common/alert.js'
 import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
 import { TIME_ZONES, loadCity } from '../../common/cities.js'
@@ -42,7 +61,8 @@ export default {
     nextLabel: '',
     nextTime: '',
     countdown: '',
-    rows: []
+    rows: [],
+    cards: []
   },
 
   onInit() {
@@ -99,6 +119,37 @@ export default {
       // Past times are dimmed, the next one is highlighted
       style: k === next ? 'text-next' : !tomorrow && times[k] <= nowMinutes ? 'text-past' : ''
     }))
+    this.cards = this.extraCards(day, tomorrow, nowMinutes)
+  },
+
+  // The shown day's Dhuha and not-allowed times, and tonight's last third
+  extraCards(day, tomorrow, nowMinutes) {
+    const t = this.t
+    const s = sunnahTimes(day, this.city)
+    const night = lastThirdOfNight(new Date(), this.city)
+    const span = (r) => formatMinutes(r[0]) + '–' + formatMinutes(r[1])
+    const until = (r) => t.until.replace('{time}', formatMinutes(r[1]))
+    // `now` in minutes since the window's own midnight
+    const style = (r, now, active) => (now >= r[1] ? 'past' : now >= r[0] ? active : 'plain')
+    const dayStyle = (r, active) => (tomorrow ? 'plain' : style(r, nowMinutes, active))
+    const sinceEvening = Math.floor((Date.now() - night.evening.getTime()) / 60000)
+    return [
+      {
+        title: t.sunnahTimes,
+        rows: [
+          { label: t.dhuha, time: span(s.dhuha), style: dayStyle(s.dhuha, 'good') },
+          { label: t.lastThird, time: span(night.range), style: style(night.range, sinceEvening, 'good') }
+        ]
+      },
+      {
+        title: t.notAllowed,
+        rows: [
+          { label: t.afterFajr, time: until(s.afterFajr), style: dayStyle(s.afterFajr, 'bad') },
+          { label: t.zenith, time: span(s.zenith), style: dayStyle(s.zenith, 'bad') },
+          { label: t.afterAsr, time: until(s.afterAsr), style: dayStyle(s.afterAsr, 'bad') }
+        ]
+      }
+    ]
   }
 }
 </script>
@@ -206,6 +257,66 @@ export default {
   color: #636366;
 }
 
+.extras {
+  flex-direction: column;
+  width: 176px;
+  margin-top: 8px;
+}
+
+.card {
+  flex-direction: column;
+  width: 176px;
+  padding: 12px 6px 6px 6px;
+  margin-bottom: 8px;
+  border-radius: 24px;
+  background-color: #1c1c1e;
+}
+
+.section {
+  font-size: 15px;
+  font-weight: bold;
+  color: #ffffff;
+  padding: 0 12px;
+  margin-bottom: 4px;
+}
+
+.slot {
+  flex-direction: column;
+  padding: 6px 12px;
+  border-radius: 16px;
+}
+
+.slot-good {
+  background-color: #0d3b2c;
+}
+
+.slot-bad {
+  background-color: #3b1414;
+}
+
+.slot-label {
+  font-size: 13px;
+  color: #8e8e93;
+}
+
+.slot-time {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.time-good {
+  color: #34d399;
+}
+
+.time-bad {
+  color: #ff6b6b;
+}
+
+.time-past {
+  color: #636366;
+}
+
 /* Wide screens (Band 9 Pro): the next prayer and the full schedule side by side */
 .w-page {
   height: 274px;
@@ -272,6 +383,40 @@ export default {
   font-size: 10px;
 }
 
+/* Wide screens: the two cards side by side under the schedule */
+.w-extras {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 6px;
+}
+
+.w-card {
+  width: 86px;
+  padding: 6px 3px 3px 3px;
+  margin-bottom: 0;
+  border-radius: 14px;
+}
+
+.w-section {
+  font-size: 9px;
+  padding: 0 5px;
+  margin-bottom: 2px;
+}
+
+.w-slot {
+  padding: 3px 5px;
+  border-radius: 9px;
+}
+
+.w-slot-label {
+  font-size: 7px;
+}
+
+.w-slot-time {
+  font-size: 10px;
+}
+
 /* Round watches: full-width blocks narrow to what the circle shows */
 .r-fit {
   width: 160px;
@@ -287,5 +432,9 @@ export default {
 
 .r-row {
   padding: 0 5px;
+}
+
+.r-card {
+  width: 160px;
 }
 </style>

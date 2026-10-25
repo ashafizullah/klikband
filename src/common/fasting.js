@@ -1,3 +1,5 @@
+import { prayerTimes } from './prayer.js'
+
 // Fasting days from the Hijri date and weekday.
 // Returns keys of STRINGS[lang].fasts for `date`; `hijri` comes from common/hijri.js.
 export function fastsFor(date, hijri) {
@@ -16,4 +18,26 @@ export function fastsFor(date, hijri) {
   if (date.getDay() === 1) fasts.push('monday')
   if (date.getDay() === 4) fasts.push('thursday')
   return fasts.length ? fasts : ['none']
+}
+
+// Whether keys from fastsFor() name a fast to keep
+export function isFastDay(keys) {
+  return keys[0] !== 'none' && keys[0] !== 'eid' && keys[0] !== 'tashriq'
+}
+
+// The moment a fast counts down to: Imsak before it starts, Maghrib (iftar)
+// while fasting, and from Maghrib the evening before a fast, the next Imsak.
+// Returns { key, day, minutes } with `minutes` since `day`'s midnight, or null.
+export function fastMoment(now, location, todayKeys, tomorrowKeys) {
+  const nowMinutes = now.getHours() * 60 + now.getMinutes()
+  const times = prayerTimes(now, location)
+  if (isFastDay(todayKeys) && nowMinutes < times.maghrib) {
+    if (nowMinutes < times.imsak) return { key: 'imsak', day: now, minutes: times.imsak }
+    return { key: 'iftar', day: now, minutes: times.maghrib }
+  }
+  if (isFastDay(tomorrowKeys) && nowMinutes >= times.maghrib) {
+    const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
+    return { key: 'imsak', day: tomorrow, minutes: prayerTimes(tomorrow, location).imsak }
+  }
+  return null
 }

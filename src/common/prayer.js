@@ -6,6 +6,10 @@
 const IHTIYAT = 2 // safety margin in minutes, as used by Kemenag
 const FAJR_ANGLE = 20
 const ISHA_ANGLE = 18
+// Dhuha starts once the sun is this high (degrees), as in Indonesian schedules
+const DHUHA_ALTITUDE = 4.5
+// Minutes before Dhuhr counted as the sun standing at its zenith, when prayer is not allowed
+const ZENITH_MARGIN = 10
 
 const rad = (d) => (d * Math.PI) / 180
 const deg = (r) => (r * 180) / Math.PI
@@ -68,6 +72,7 @@ export function prayerTimes(date, location) {
   const hours = {
     fajr: dhuhr - hourAngle(-FAJR_ANGLE, lat, decl),
     sunrise: dhuhr - sunset,
+    dhuha: dhuhr - hourAngle(DHUHA_ALTITUDE, lat, decl),
     dhuhr: dhuhr,
     asr: dhuhr + hourAngle(asrAlt, lat, decl),
     maghrib: dhuhr + sunset,
@@ -84,6 +89,34 @@ export function prayerTimes(date, location) {
 }
 
 export const PRAYER_ORDER = ['imsak', 'fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha']
+
+// Voluntary prayer windows and the times prayer is not allowed on `date`, in
+// minutes since its midnight. Prayer is not allowed after Fajr prayer until the
+// sun is up, while the sun stands at its zenith, and after Asr prayer until sunset.
+export function sunnahTimes(date, location) {
+  const times = prayerTimes(date, location)
+  const zenith = times.dhuhr - ZENITH_MARGIN
+  return {
+    dhuha: [times.dhuha, zenith],
+    afterFajr: [times.fajr, times.dhuha],
+    zenith: [zenith, times.dhuhr],
+    afterAsr: [times.asr, times.maghrib]
+  }
+}
+
+// The last third of the night under way or coming next, the best time for
+// Tahajjud. The night runs from Maghrib to Fajr, so before today's Fajr it is
+// the night that began yesterday. Returns that evening and the third's start
+// and end in minutes since the evening's midnight (past 1440 after midnight).
+export function lastThirdOfNight(now, location) {
+  const nowMinutes = now.getHours() * 60 + now.getMinutes()
+  const shift = nowMinutes < prayerTimes(now, location).fajr ? -1 : 0
+  const evening = new Date(now.getFullYear(), now.getMonth(), now.getDate() + shift)
+  const morning = new Date(now.getFullYear(), now.getMonth(), now.getDate() + shift + 1)
+  const dusk = prayerTimes(evening, location).maghrib
+  const dawn = prayerTimes(morning, location).fajr + 1440
+  return { evening, range: [dawn - Math.floor((dawn - dusk) / 3), dawn] }
+}
 
 // The next prayer from `now`. After Isha it rolls over to tomorrow's schedule,
 // so `times` always holds the day that contains the next prayer.

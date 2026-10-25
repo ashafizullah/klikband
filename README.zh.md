@@ -138,6 +138,10 @@ tools/
 - 记念词和祈祷词依据所注明的来源，但拉丁转写和翻译可能有误，欢迎指正。
 - KlikBand 是社区项目，与小米无关，也未获小米认可。
 
+## 支持
+
+KlikBand 免费。如果它帮你节省了时间，欢迎 **[在 Trakteer 请我一个 AI token](https://trakteer.id/adamshafizullah/tip)** ☕🤖。
+
 ## 许可证
 
 [MIT](LICENSE)。阿拉伯文图片使用 [Amiri](https://github.com/aliftype/amiri) 字体绘制（SIL Open Font License，`tools/fonts/OFL.txt`）。古兰经经文：Tanzil Quran Text (Simple)，© Tanzil Project，CC BY 3.0，并遵循 [Tanzil 使用条款](https://tanzil.net/docs/text_license)（仅限原样复制，注明来源并链接 [tanzil.net](https://tanzil.net)）；KlikBand 只添加了节号。

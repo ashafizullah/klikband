@@ -188,7 +188,9 @@ fn build() -> ui::Element {
     }
 
     if let Some((place, tz)) = &s.picked {
-        let mut methods = ui::Element::new(ElementType::Div, None).flex().gap(6).prop("style", "flex-wrap: wrap");
+        // Two columns: a flex row does not wrap in AstroBox, and the fourth
+        // button ran out of the card
+        let mut methods = ui::Element::new(ElementType::Grid, None).grid_template_columns("1fr 1fr").gap(6);
         for code in METHODS {
             methods = methods.child(button(tr(l, code), &format!("method:{}", code), *code == *s.method));
         }

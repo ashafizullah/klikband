@@ -124,14 +124,16 @@ echo "== 3. AstroBox store ($STORE)"
 git clone -q --depth 1 --filter=blob:none --sparse "https://github.com/$OWNER/AstroBox-Repo.git" "$WORK/store"
 cd "$WORK/store"
 git remote add upstream "https://github.com/$STORE.git"
-git fetch -q --depth 1 upstream main
+# A shallow clone only tracks main, so other branches are fetched into
+# remote-tracking refs by name
+git fetch -q --depth 1 upstream main:refs/remotes/upstream/main
 BASE=$(git rev-parse upstream/main)
 DIR=tmp/$OWNER/$RESOURCE_REPO
 LISTED=$(git show "upstream/main:index_v2.csv" | grep -c "^$PACKAGE," || true)
 
 if [ "$LISTED" = 0 ]; then
   # Not in the store yet: the first submission (add-klikband) is still open, so update it
-  git fetch -q --depth 1 origin add-klikband
+  git fetch -q --depth 1 origin add-klikband:refs/remotes/origin/add-klikband
   git checkout -q -b add-klikband origin/add-klikband
   git sparse-checkout set tmp
   sed -i '' "s/,$RESOURCE_REPO,[0-9a-f]*,/,$RESOURCE_REPO,$HASH,/" "$DIR/resource.csv"

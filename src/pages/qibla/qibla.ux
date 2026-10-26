@@ -31,9 +31,9 @@
 <script>
 import sensor from '@system.sensor'
 import { qiblaBearing, kaabaDistance, compassPoint, SUN_OVER_KAABA } from '../../common/qibla.js'
-import { sunDirection } from '../../common/prayer.js'
+import { sunDirection, locationOffset } from '../../common/prayer.js'
 import { STRINGS, loadLanguage } from '../../common/i18n.js'
-import { CITIES, TIME_ZONES, loadCity } from '../../common/cities.js'
+import { CITIES, zoneLabel, loadCity } from '../../common/cities.js'
 import { keepScreenOn, loadLayout } from '../../common/screen.js'
 import { loadAll } from '../../common/load.js'
 
@@ -147,7 +147,7 @@ export default {
     const turn = live ? this.heading : 0
     const scale = this.w ? WIDE_SCALE : 1
 
-    this.location = city.name + ' · ' + TIME_ZONES[city.tz]
+    this.location = city.name + ' · ' + zoneLabel(city)
     this.cardinals = t.cardinals.map((label, i) => {
       const p = onRing(i * 90 - turn, LETTER_RING, LETTER_SIZE, scale)
       return { label, x: p.x, y: p.y }
@@ -166,21 +166,21 @@ export default {
     this.sunDates = this.sunOverKaaba()
   },
 
-  // This year's two moments in local time, if the sun is still up then
+  // This year's two moments in local time, if it is daytime there then
   // (in WIT, UTC+9, it is already evening, so they are skipped)
   sunOverKaaba() {
     const t = this.t
-    const tz = this.city.tz
-    if (tz > 8) return []
+    const city = this.city
     const year = new Date().getFullYear()
     const leap = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0
     return SUN_OVER_KAABA.map((s) => {
-      const minutes = s.utcMinutes + tz * 60
       const day = s.day - (leap ? 1 : 0)
-      const time = pad(Math.floor(minutes / 60)) + ':' + pad(minutes % 60) + ' ' + TIME_ZONES[tz]
+      const minutes = s.utcMinutes + Math.round(locationOffset(new Date(year, s.month, day), city) * 60)
+      if (minutes < 6 * 60 || minutes >= 18 * 60) return null
+      const time = pad(Math.floor(minutes / 60)) + ':' + pad(minutes % 60) + ' ' + zoneLabel(city)
       const date = t === STRINGS.zh ? t.months[s.month] + day + '日' : day + ' ' + t.months[s.month]
       return date + ' · ' + time
-    })
+    }).filter((line) => line)
   }
 }
 </script>

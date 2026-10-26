@@ -43,11 +43,13 @@ import {
   prayerName,
   formatMinutes,
   sunnahTimes,
-  lastThirdOfNight
+  lastThirdOfNight,
+  placeNow,
+  realTime
 } from '../../common/prayer.js'
 import { prayerAlert, LATE_ALERT } from '../../common/alert.js'
 import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
-import { TIME_ZONES, loadCity } from '../../common/cities.js'
+import { zoneLabel, loadCity } from '../../common/cities.js'
 import { keepScreenOn, loadLayout } from '../../common/screen.js'
 import { loadAll } from '../../common/load.js'
 
@@ -103,16 +105,18 @@ export default {
   refresh() {
     const t = this.t
     // After Isha this is tomorrow's schedule, so the card and the list match
-    const { key: next, day, times, nowMinutes, tomorrow } = nextPrayer(new Date(), this.city)
+    // In the place's own time (it differs from the band clock only for a place
+    // in another time zone)
+    const { key: next, day, times, nowMinutes, tomorrow } = nextPrayer(placeNow(this.city), this.city)
 
     this.title = t.prayer
-    this.location = this.city.name + ' · ' + TIME_ZONES[this.city.tz]
+    this.location = this.city.name + ' · ' + zoneLabel(this.city)
     this.dateText = formatDate(t, day)
     this.nextKey = next
     // The full Friday name fits the band's wide card, not the narrow ones
     this.nextLabel = prayerName(t, next, day, !!(this.w || this.r))
     this.nextTime = formatMinutes(times[next])
-    this.target = prayerDate(day, times[next]).getTime()
+    this.target = realTime(prayerDate(day, times[next]), this.city)
     this.tick()
     const rows = PRAYER_ORDER.map((k) => ({
       label: prayerName(t, k, day, true),
@@ -136,13 +140,14 @@ export default {
   extraCards(day, tomorrow, nowMinutes) {
     const t = this.t
     const s = sunnahTimes(day, this.city)
-    const night = lastThirdOfNight(new Date(), this.city)
+    const here = placeNow(this.city)
+    const night = lastThirdOfNight(here, this.city)
     const span = (r) => formatMinutes(r[0]) + '–' + formatMinutes(r[1])
     const until = (r) => t.until.replace('{time}', formatMinutes(r[1]))
     // `now` in minutes since the window's own midnight
     const style = (r, now, active) => (now >= r[1] ? 'past' : now >= r[0] ? active : 'plain')
     const dayStyle = (r, active) => (tomorrow ? 'plain' : style(r, nowMinutes, active))
-    const sinceEvening = Math.floor((Date.now() - night.evening.getTime()) / 60000)
+    const sinceEvening = Math.floor((here.getTime() - night.evening.getTime()) / 60000)
     return [
       {
         title: t.sunnahTimes,

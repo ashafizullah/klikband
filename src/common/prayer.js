@@ -1,11 +1,26 @@
-// Prayer times using the Indonesian Ministry of Religious Affairs (Kemenag) method:
-// Fajr 20°, Isha 18°, Shafi'i Asr. Computed on the band, no internet needed.
+// Prayer times, computed on the band with no internet needed. The default is the
+// Indonesian Ministry of Religious Affairs (Kemenag) method: Fajr 20°, Isha 18°,
+// Shafi'i Asr; locations outside Indonesia can use another method below.
 // Sun position: the US Naval Observatory's "Approximate Solar Coordinates" formulas;
 // Julian day: Meeus, Astronomical Algorithms.
 
-const IHTIYAT = 2 // safety margin in minutes, as used by Kemenag
-const FAJR_ANGLE = 20
-const ISHA_ANGLE = 18
+// Fajr and Isha sun angles (degrees below the horizon), or Isha as minutes
+// after Maghrib, and the safety margin in minutes (ihtiyat, used by Kemenag)
+export const CALC_METHODS = {
+  kemenag: { fajr: 20, isha: 18, margin: 2 },
+  mwl: { fajr: 18, isha: 17, margin: 0 },
+  isna: { fajr: 15, isha: 15, margin: 0 },
+  egypt: { fajr: 19.5, isha: 17.5, margin: 0 },
+  ummalqura: { fajr: 18.5, ishaMinutes: 90, margin: 0 },
+  karachi: { fajr: 18, isha: 18, margin: 0 },
+  dubai: { fajr: 18.2, isha: 18.2, margin: 0 }
+}
+export const CALC_METHOD_ORDER = ['kemenag', 'mwl', 'isna', 'egypt', 'ummalqura', 'karachi', 'dubai']
+
+// Asr starts when a shadow is its object's length (Shafi'i, Maliki, Hanbali)
+// or twice that (Hanafi) plus the noon shadow
+export const ASR_SHADOWS = { shafii: 1, hanafi: 2 }
+
 // Dhuha starts once the sun is this high (degrees), as in Indonesian schedules
 const DHUHA_ALTITUDE = 4.5
 // Minutes before Dhuhr counted as the sun standing at its zenith, when prayer is not allowed
@@ -39,9 +54,12 @@ function sunPosition(jd) {
   }
 }
 
-// Hours from solar noon until the sun reaches altitude `alt` (degrees)
-function hourAngle(alt, lat, decl) {
+// Hours from solar noon until the sun reaches altitude `alt` (degrees). Far from
+// the equator the sun may never get that low; then this is NaN when `strict`,
+// and the nearest reachable time otherwise.
+function hourAngle(alt, lat, decl, strict) {
   const cos = (Math.sin(rad(alt)) - Math.sin(lat) * Math.sin(decl)) / (Math.cos(lat) * Math.cos(decl))
+  if (strict && (cos < -1 || cos > 1)) return NaN
   return deg(Math.acos(Math.min(1, Math.max(-1, cos)))) / 15
 }
 
@@ -58,8 +76,46 @@ export function sunDirection(date, location) {
   return { azimuth: Math.round(((az % 360) + 360) % 360), altitude: deg(alt) }
 }
 
+// UTC offset in hours used for `date`. A location sent from the phone carries
+// its offset when it was picked; the band's own clock follows daylight saving
+// there, so its offset is used when it is within an hour of that one.
+export function locationOffset(date, location) {
+  if (!location.custom) return location.tz
+  // At noon, since clocks change in the early hours
+  const noon = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12)
+  const own = -noon.getTimezoneOffset() / 60
+  return isFinite(own) && Math.abs(own - location.tz) <= 1 ? own : location.tz
+}
+
+// A place from the phone may be in another time zone than the band clock (a
+// trip being planned). Its schedule is read in the place's own time: placeNow()
+// is a Date whose local fields show the time there, and realTime() turns such
+// a Date back into the true moment, for countdowns and alerts. Indonesian
+// cities keep the band clock, as before.
+// Within an hour of the place's offset the band is taken to be there (the hour
+// being daylight saving), and its clock is used as is
+function elsewhere(location, date) {
+  if (!location.custom) return false
+  const own = -date.getTimezoneOffset() / 60
+  return isFinite(own) && Math.abs(own - location.tz) > 1
+}
+
+export function placeNow(location) {
+  const now = new Date()
+  if (!elsewhere(location, now)) return now
+  const there = new Date(now.getTime() + location.tz * 3600000)
+  return new Date(there.getUTCFullYear(), there.getUTCMonth(), there.getUTCDate(),
+    there.getUTCHours(), there.getUTCMinutes(), there.getUTCSeconds(), there.getUTCMilliseconds())
+}
+
+export function realTime(placeDate, location) {
+  if (!elsewhere(location, new Date())) return placeDate.getTime()
+  return Date.UTC(placeDate.getFullYear(), placeDate.getMonth(), placeDate.getDate(),
+    placeDate.getHours(), placeDate.getMinutes(), placeDate.getSeconds()) - location.tz * 3600000
+}
+
 // Returns minutes since local midnight for each prayer time.
-// location: { lat, lng, tz } from common/cities.js
+// location: { lat, lng, tz, method, asr } from common/cities.js
 // Pages ask for the same day several times a minute, so the last few days are
 // kept; the returned object is shared and must not be changed.
 const CACHE_SIZE = 4
@@ -67,38 +123,58 @@ const cache = {}
 const cacheOrder = []
 
 export function prayerTimes(date, location) {
+  const tz = locationOffset(date, location)
   const key = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + ' ' +
-    location.lat + ',' + location.lng + ',' + location.tz
+    location.lat + ',' + location.lng + ',' + tz + ',' + location.method + ',' + location.asr
   if (!cache[key]) {
     if (cacheOrder.length >= CACHE_SIZE) delete cache[cacheOrder.shift()]
     cacheOrder.push(key)
-    cache[key] = computeTimes(date, location)
+    cache[key] = computeTimes(date, location, tz)
   }
   return cache[key]
 }
 
-function computeTimes(date, location) {
+function computeTimes(date, location, tz) {
+  const method = CALC_METHODS[location.method] || CALC_METHODS.kemenag
   const jd = julianDay(date.getFullYear(), date.getMonth() + 1, date.getDate()) - location.lng / 360
   const { decl, eqt } = sunPosition(jd + 0.5)
   const lat = rad(location.lat)
-  const dhuhr = 12 + location.tz - location.lng / 15 - eqt
+  const dhuhr = 12 + tz - location.lng / 15 - eqt
 
-  const asrAlt = deg(Math.atan(1 / (1 + Math.tan(Math.abs(lat - decl)))))
+  const shadow = ASR_SHADOWS[location.asr] || ASR_SHADOWS.shafii
+  const asrAlt = deg(Math.atan(1 / (shadow + Math.tan(Math.abs(lat - decl)))))
   const sunset = hourAngle(-0.8333, lat, decl)
 
+  // Far from the equator the sky may not get dark enough for Fajr and Isha by
+  // their angles (summer in northern Europe). Then each is kept within its
+  // share of the night (angle / 60), the twilight-angle rule. Nearer the
+  // equator the angles always fall inside that share, so nothing changes.
+  const night = 24 - 2 * sunset
+  const fajrAngle = hourAngle(-method.fajr, lat, decl, true)
+  const fajrShare = (method.fajr / 60) * night
+  const fajr = !(fajrAngle >= sunset) || fajrAngle - sunset > fajrShare ? sunset + fajrShare : fajrAngle
+  let isha
+  if (method.ishaMinutes) {
+    isha = sunset + method.ishaMinutes / 60
+  } else {
+    const ishaAngle = hourAngle(-method.isha, lat, decl, true)
+    const ishaShare = (method.isha / 60) * night
+    isha = !(ishaAngle >= sunset) || ishaAngle - sunset > ishaShare ? sunset + ishaShare : ishaAngle
+  }
+
   const hours = {
-    fajr: dhuhr - hourAngle(-FAJR_ANGLE, lat, decl),
+    fajr: dhuhr - fajr,
     sunrise: dhuhr - sunset,
     dhuha: dhuhr - hourAngle(DHUHA_ALTITUDE, lat, decl),
     dhuhr: dhuhr,
     asr: dhuhr + hourAngle(asrAlt, lat, decl),
     maghrib: dhuhr + sunset,
-    isha: dhuhr + hourAngle(-ISHA_ANGLE, lat, decl)
+    isha: dhuhr + isha
   }
 
   const minutes = {}
   Object.keys(hours).forEach((k) => {
-    const margin = k === 'sunrise' ? -IHTIYAT : IHTIYAT
+    const margin = k === 'sunrise' ? -method.margin : method.margin
     minutes[k] = Math.ceil(hours[k] * 60 + margin)
   })
   minutes.imsak = minutes.fajr - 10

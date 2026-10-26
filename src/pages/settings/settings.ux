@@ -10,6 +10,22 @@
       </div>
     </div>
 
+    <text class="section section-next {{w}}section {{w}}section-next {{r}}fit">{{calcMethodLabel}}</text>
+    <div class="group {{w}}group {{r}}fit">
+      <div class="option {{w}}option" for="{{calcMethods}}" onclick="selectCalcMethod($item.code)">
+        <text class="option-label {{w}}option-label">{{$item.label}}</text>
+        <div class="radio {{$item.code === calcMethod ? 'radio-active' : ''}} {{w}}radio"></div>
+      </div>
+    </div>
+
+    <text class="section section-next {{w}}section {{w}}section-next {{r}}fit">{{asrMethodLabel}}</text>
+    <div class="group {{w}}group {{r}}fit">
+      <div class="option {{w}}option" for="{{asrMethods}}" onclick="selectAsrMethod($item.code)">
+        <text class="option-label {{w}}option-label">{{$item.label}}</text>
+        <div class="radio {{$item.code === asrMethod ? 'radio-active' : ''}} {{w}}radio"></div>
+      </div>
+    </div>
+
     <text class="section section-next {{w}}section {{w}}section-next {{r}}fit">{{languageLabel}}</text>
     <div class="group {{w}}group {{r}}fit">
       <div class="option {{w}}option" for="{{languages}}" onclick="select($item.code)">
@@ -50,7 +66,8 @@
 <script>
 import router from '@system.router'
 import { LANGUAGES, SCRIPTS, STRINGS, loadLanguage, saveLanguage, loadScript, saveScript } from '../../common/i18n.js'
-import { CITIES, loadCity } from '../../common/cities.js'
+import { CITIES, loadCity, saveCalcMethod, saveAsrMethod } from '../../common/cities.js'
+import { CALC_METHOD_ORDER, ASR_SHADOWS } from '../../common/prayer.js'
 import {
   loadLayout,
   CLOCK_SCREENS,
@@ -81,7 +98,13 @@ export default {
     clockThemeLabel: STRINGS.id.clockTheme,
     clockThemes: [],
     clockTheme: 'green',
-    cityName: CITIES[0].name
+    cityName: CITIES[0].name,
+    calcMethodLabel: STRINGS.id.calcMethod,
+    calcMethods: [],
+    calcMethod: 'kemenag',
+    asrMethodLabel: STRINGS.id.asrMethod,
+    asrMethods: [],
+    asrMethod: 'shafii'
   },
 
   onInit() {
@@ -98,7 +121,11 @@ export default {
 
   // Also runs when returning from the city picker
   onShow() {
-    loadCity((city) => (this.cityName = city.name))
+    loadCity((city) => {
+      this.cityName = city.name
+      this.calcMethod = city.method
+      this.asrMethod = city.asr
+    })
   },
 
   openCities() {
@@ -108,6 +135,16 @@ export default {
   select(code) {
     saveLanguage(code)
     this.apply(code)
+  },
+
+  selectCalcMethod(code) {
+    saveCalcMethod(code)
+    this.calcMethod = code
+  },
+
+  selectAsrMethod(code) {
+    saveAsrMethod(code)
+    this.asrMethod = code
   },
 
   selectScript(code) {
@@ -132,6 +169,10 @@ export default {
     this.cityLabel = STRINGS[lang].city
     this.scriptLabel = STRINGS[lang].script
     this.scripts = SCRIPTS.map((code) => ({ code, label: STRINGS[lang].scripts[code] }))
+    this.calcMethodLabel = STRINGS[lang].calcMethod
+    this.calcMethods = CALC_METHOD_ORDER.map((code) => ({ code, label: STRINGS[lang].calcMethods[code] }))
+    this.asrMethodLabel = STRINGS[lang].asrMethod
+    this.asrMethods = Object.keys(ASR_SHADOWS).map((code) => ({ code, label: STRINGS[lang].asrMethods[code] }))
     this.clockScreenLabel = STRINGS[lang].clockScreen
     this.clockScreens = CLOCK_SCREENS.map((code) => ({ code, label: STRINGS[lang].clockScreens[code] }))
     this.clockThemeLabel = STRINGS[lang].clockTheme

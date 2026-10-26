@@ -42,7 +42,7 @@
   - **礼拜后记念**：按 [Rumaysho](https://rumaysho.com/1997-dzikir-setelah-shalat.html) 顺序引导计数
   - **早晚记念**：按 [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html) 顺序引导计数
   - 两者均可显示拉丁转写或阿拉伯文，宝座经文和各章经文完整显示并标注节号（[Tanzil](https://tanzil.net) 经文）
-  - **礼拜时间**：采用印度尼西亚宗教部（Kemenag）算法，在设备上离线计算，并显示上午拜、夜晚最后三分之一和禁止礼拜时间；主麻日晌礼显示为主麻拜；在时钟、今日或礼拜时间页面打开时，到点振动并显示提示
+  - **礼拜时间**：默认采用印度尼西亚宗教部（Kemenag）算法，也可选其他方法（世界穆斯林联盟、北美伊斯兰协会、埃及、乌姆古拉、卡拉奇、迪拜），晡礼可选沙斐仪或哈乃斐，在设备上离线计算，并显示上午拜、夜晚最后三分之一和禁止礼拜时间；主麻日晌礼显示为主麻拜；在时钟、今日或礼拜时间页面打开时，到点振动并显示提示
   - **朝向**：从所在城市到天房的方向和距离，表盘上显示太阳位置，对准真实太阳即可面向朝向，并列出每年太阳直射天房的日期
   - **赞珠**：点按计数，可设 33/99/100 目标，并有振动提示
   - **伊斯兰历**：算术伊斯兰历，可手动校正 ±2 天
@@ -56,14 +56,14 @@
   - **记分牌**：双方计分：自由计分、羽毛球（21 分，三局两胜）或板式网球/网球（15-30-40、平分、盘、抢七），可撤销
   - **计数器**：最多六个计数器，可选名称（客人、人数、物品、圈数、次数）
   - **计算器**：加减乘除，支持百分比和正负号
-- **设置**：城市（印度尼西亚 47 个城市，WIB/WITA/WIT 时区）、语言（印尼语、英语、中文）和记念与祈祷文字（拉丁字母或阿拉伯文）
+- **设置**：城市（印度尼西亚 47 个城市，WIB/WITA/WIT 时区，或从手机发送的全球任意地点）、计算方法、晡礼时间、语言（印尼语、英语、中文）和记念与祈祷文字（拉丁字母或阿拉伯文）
 - **关于**：应用版本、文本和计算的来源，以及设备信息（存储空间、型号、系统和平台版本）
 
 阅读和计数页面打开时屏幕保持常亮。
 
 ## 限制
 
-小米手环 9 没有 GPS，小米也未在该手环上开放定位（`system.geolocation`）和网络（`system.fetch`）接口。因此 KlikBand 在所有设备上都不使用这两项：所有功能均离线运行，城市需手动选择。
+小米手环 9 没有 GPS，小米也未在该手环上开放定位（`system.geolocation`）和网络（`system.fetch`）接口。因此 KlikBand 在所有设备上都不使用这两项：所有功能均离线运行，城市需手动选择。列表中没有的地点可以通过 AstroBox 插件从手机发送一次（见[来自手机的位置](#来自手机的位置)），纬度最高 65°；更靠近极地时，有些日子没有日出或日落。
 
 界面按小米手环 9 的屏幕（192×490）设计，并会适配所运行设备的屏幕：
 
@@ -87,6 +87,18 @@ KlikBand 通过 **Android** 手机（不支持 iPhone）上的 [Gadgetbridge](ht
 
 <a href="https://youtu.be/WpygHpV-c_4"><img src="https://i.ytimg.com/vi/WpygHpV-c_4/hqdefault.jpg" width="480" alt="Cara Pasang KlikBand di Xiaomi Smart Band"></a>
 
+**另一种方式：[AstroBox](https://astrobox.online)**（Android、iOS、Windows、Mac）。在 AstroBox 中用小米账号或手环钥匙连接手环，然后用 AstroBox 打开 `.rpk` 文件。已在 Mac 上对小米手环 9 试过。
+
+## 来自手机的位置
+
+如需城市列表中没有的地点（全球任意地方），请在 [AstroBox](https://astrobox.online) 中安装 **KlikBand** 插件（[Releases](https://github.com/ashafizullah/klikband/releases/latest) 页面中的 `KlikBand.abp`）：
+
+1. 将手环连接到 AstroBox，并在手环上打开 KlikBand。
+2. 在插件中搜索城市并选择，确认计算方法（已按所在国家选好），然后点击 **发送到手环**。
+3. 手环振动并显示“来自手机的位置”。该地点保存在手环上，并显示在 设置 › 城市 的最上方。
+
+只需一次：之后一切仍离线运行，手环也可以重新连接 Mi Fitness 或 Gadgetbridge。时间按该地的当地时间显示，倒计时和振动则按实际时刻，即使手环时钟仍在其他时区也准确。
+
 ## 构建
 
 需要 Node.js。
@@ -95,6 +107,8 @@ KlikBand 通过 **Android** 手机（不支持 iPhone）上的 [Gadgetbridge](ht
 npm install
 npm run build      # 输出：dist/*.rpk
 ```
+
+AstroBox 插件位于 `plugin/`（Rust，需要 `wasm32-wasip2` 目标）：`plugin/package.sh` 生成 `plugin/dist/KlikBand.abp`。
 
 ## 项目结构
 
@@ -105,7 +119,8 @@ src/
 │   ├── i18n.js          # 界面文字（id、en、zh）和语言设置
 │   ├── prayer.js        # 礼拜时间计算
 │   ├── hijri.js         # 伊斯兰历换算
-│   ├── cities.js        # 城市列表和城市设置
+│   ├── cities.js        # 城市列表、来自手机的位置、计算方法和城市设置
+│   ├── phone.js         # 来自 AstroBox 插件的消息（interconnect）
 │   ├── asmaulhusna.js   # 九十九尊名数据
 │   ├── duas.js          # 先知的祈祷数据
 │   ├── umrah.js         # 副朝指南数据
@@ -121,6 +136,7 @@ src/
 │   ├── text.js          # 长标签滚动显示辅助函数
 │   └── icons/           # 菜单图标
 └── pages/               # 每个页面一个文件夹
+plugin/                  # KlikBand 的 AstroBox 插件（Rust → WebAssembly）
 tools/
 └── arabic-images.py     # 将阿拉伯文记念与祈祷绘制为图片
 ```

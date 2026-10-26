@@ -36,6 +36,9 @@
     },
     {
       "name": "system.battery"
+    },
+    {
+      "name": "system.interconnect"
     }
   ],
   "config": {

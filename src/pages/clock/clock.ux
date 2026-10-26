@@ -41,7 +41,16 @@ import router from '@system.router'
 import prompt from '@system.prompt'
 import vibrator from '@system.vibrator'
 import battery from '@system.battery'
-import { prayerTimes, nextPrayer, prayerDate, prayerName, formatMinutes, PRAYER_ORDER } from '../../common/prayer.js'
+import {
+  prayerTimes,
+  nextPrayer,
+  prayerDate,
+  prayerName,
+  formatMinutes,
+  placeNow,
+  realTime,
+  PRAYER_ORDER
+} from '../../common/prayer.js'
 import { prayerAlert, LATE_ALERT } from '../../common/alert.js'
 import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
 import { loadCity } from '../../common/cities.js'
@@ -236,16 +245,20 @@ export default {
     const sizes = HIJRI_SIZES[this.w]
     this.hijriSize = sizes.find((size) => textWidth(this.hijri, size) <= HIJRI_WIDTH) || sizes[sizes.length - 1]
 
-    const next = nextPrayer(now, this.cityData)
+    // The time, date and Hijri date above follow the band clock; the prayers,
+    // the place's own time (they differ only for a place in another time zone)
+    const here = placeNow(this.cityData)
+    const hHere = toHijriWithOffset(here, this.offset)
+    const next = nextPrayer(here, this.cityData)
     this.nextKey = next.key
     // In Ramadan, Maghrib is the iftar (always today's, as it comes before Isha)
-    this.nextLabel = next.key === 'maghrib' && h.month === 9 ? t.iftar : prayerName(t, next.key, next.day, true)
+    this.nextLabel = next.key === 'maghrib' && hHere.month === 9 ? t.iftar : prayerName(t, next.key, next.day, true)
     // On the band the label shares a line with the 30px time: longer names
     // such as Maghrib and Berbuka step down to 16px to keep a gap between them
     this.labelSize = !this.w && textWidth(this.nextLabel, 18) > LABEL_WIDTH ? 'font-size: 16px;' : ''
     this.nextTime = formatMinutes(next.times[next.key])
-    this.target = prayerDate(next.day, next.times[next.key]).getTime()
-    this.start = previousStart(now, next, this.cityData).getTime()
+    this.target = realTime(prayerDate(next.day, next.times[next.key]), this.cityData)
+    this.start = realTime(previousStart(here, next, this.cityData), this.cityData)
     this.updateSeconds(now)
 
     // Passed prayers are dimmed and the next one is highlighted; after Isha
@@ -266,12 +279,12 @@ export default {
 
     // From Maghrib before a fast until its Imsak, the footer names the fast
     // instead of the city
-    const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
-    const todayKeys = fastsFor(now, h)
+    const tomorrow = new Date(here.getFullYear(), here.getMonth(), here.getDate() + 1)
+    const todayKeys = fastsFor(here, hHere)
     const tomorrowKeys = fastsFor(tomorrow, toHijriWithOffset(tomorrow, this.offset))
-    const fast = fastMoment(now, this.cityData, todayKeys, tomorrowKeys)
+    const fast = fastMoment(here, this.cityData, todayKeys, tomorrowKeys)
     if (fast && fast.key === 'imsak') {
-      const isToday = fast.day === now
+      const isToday = fast.day === here
       this.footerLead = (isToday ? t.todayLabel : t.tomorrowLabel) + ': ' + fastName(t, isToday ? todayKeys : tomorrowKeys)
     } else {
       this.footerLead = this.cityData.name

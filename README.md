@@ -42,7 +42,7 @@
   - **Post-prayer Dhikr**: guided counter following [Rumaysho](https://rumaysho.com/1997-dzikir-setelah-shalat.html)
   - **Morning & Evening Dhikr**: guided counter following [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html)
   - Both show the dhikr in Latin transliteration or in Arabic, with Ayat al-Kursi and the surahs in full, numbered by verse ([Tanzil](https://tanzil.net) text)
-  - **Prayer Times**: Indonesian Ministry of Religious Affairs (Kemenag) method, computed offline on the device, with Duha, the last third of the night and the times prayer is not allowed; on Fridays Dhuhr shows as Jumu'ah; buzzes and shows a message when a prayer time arrives while Clock, Today or Prayer Times is open
+  - **Prayer Times**: Indonesian Ministry of Religious Affairs (Kemenag) method by default, or another (Muslim World League, ISNA, Egypt, Umm al-Qura, Karachi, Dubai), with Shafi'i or Hanafi Asr, computed offline on the device, with Duha, the last third of the night and the times prayer is not allowed; on Fridays Dhuhr shows as Jumu'ah; buzzes and shows a message when a prayer time arrives while Clock, Today or Prayer Times is open
   - **Qibla**: direction and distance to the Kaaba from your city, with the sun drawn on the dial so lining it up with the real sun points you to the Qibla, and the yearly sun-over-Kaaba dates
   - **Tasbih**: tap counter with a 33/99/100 target and vibration
   - **Hijri Date**: arithmetic Hijri calendar with a ±2 day manual correction
@@ -56,14 +56,14 @@
   - **Scoreboard**: two-side counter with free points, badminton (21 points, best of 3) or padel/tennis scoring (15-30-40, deuce, sets, tiebreak), with undo
   - **Counter**: up to six tally counters with preset names (guests, people, items, laps, reps)
   - **Calculator**: + − × ÷ with percent and sign change
-- **Settings**: city (47 Indonesian cities, WIB/WITA/WIT), language (Indonesian, English, 中文) and dhikr and dua text (Latin or Arabic)
+- **Settings**: city (47 Indonesian cities, WIB/WITA/WIT, or any place in the world sent from the phone), calculation method, Asr time, language (Indonesian, English, 中文) and dhikr and dua text (Latin or Arabic)
 - **About**: app version, the sources of the texts and calculations, and device info (storage, model, OS and platform version)
 
 Reading and counting pages keep the screen on while open.
 
 ## Limitations
 
-The Smart Band 9 has no GPS, and Xiaomi does not offer the location (`system.geolocation`) or internet (`system.fetch`) APIs on it. KlikBand therefore uses neither, on any device: everything runs offline, and the city is picked manually.
+The Smart Band 9 has no GPS, and Xiaomi does not offer the location (`system.geolocation`) or internet (`system.fetch`) APIs on it. KlikBand therefore uses neither, on any device: everything runs offline, and the city is picked manually. A place that is not in the list can be sent once from the phone with the AstroBox plugin (see [Location from the phone](#location-from-the-phone)), up to 65° north or south; nearer the poles some days have no sunrise or sunset.
 
 The layout is designed for the Band 9 screen (192×490) and adapts to the screen it runs on:
 
@@ -87,6 +87,18 @@ KlikBand is installed from an **Android** phone (iPhone is not supported) with [
 
 <a href="https://youtu.be/WpygHpV-c_4"><img src="https://i.ytimg.com/vi/WpygHpV-c_4/hqdefault.jpg" width="480" alt="Cara Pasang KlikBand di Xiaomi Smart Band"></a>
 
+**Another way: [AstroBox](https://astrobox.online)** (Android, iOS, Windows, Mac). Connect the band in AstroBox with your Xiaomi account or the band's key, then open the `.rpk` file with AstroBox. Tried on a Smart Band 9 from a Mac.
+
+## Location from the phone
+
+For a place that is not in the city list, anywhere in the world, install the **KlikBand** plugin in [AstroBox](https://astrobox.online) (`KlikBand.abp` on the [Releases](https://github.com/ashafizullah/klikband/releases/latest) page):
+
+1. Connect the band to AstroBox and open KlikBand on the band.
+2. In the plugin, search for the city, pick it, check the calculation method (chosen for its country), and tap **Send to band**.
+3. The band buzzes and shows "Location from phone". The place is kept on the band and listed first in Settings › City.
+
+Once is enough: everything stays offline afterwards, and the band can go back to Mi Fitness or Gadgetbridge. Times are shown in the place's local time, while countdowns and buzzes follow the real moment, so they stay right even if the band clock is still in another time zone.
+
 ## Build
 
 Requires Node.js.
@@ -95,6 +107,8 @@ Requires Node.js.
 npm install
 npm run build      # output: dist/*.rpk
 ```
+
+The AstroBox plugin is in `plugin/` (Rust, needs the `wasm32-wasip2` target): `plugin/package.sh` builds `plugin/dist/KlikBand.abp`.
 
 ## Project structure
 
@@ -105,7 +119,8 @@ src/
 │   ├── i18n.js          # UI strings (id, en, zh) and language setting
 │   ├── prayer.js        # prayer time calculation
 │   ├── hijri.js         # Hijri calendar conversion
-│   ├── cities.js        # city list and city setting
+│   ├── cities.js        # city list, place from the phone, method and city settings
+│   ├── phone.js         # messages from the AstroBox plugin (interconnect)
 │   ├── asmaulhusna.js   # 99 Names data
 │   ├── duas.js          # Prophet's duas data
 │   ├── umrah.js         # umrah guide steps and readings
@@ -121,6 +136,7 @@ src/
 │   ├── text.js          # marquee helpers for long labels
 │   └── icons/           # menu icons
 └── pages/               # one folder per screen
+plugin/                  # KlikBand plugin for AstroBox (Rust → WebAssembly)
 tools/
 └── arabic-images.py     # draws the Arabic dhikr and duas as images
 ```

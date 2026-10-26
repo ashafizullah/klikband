@@ -51,10 +51,10 @@
 </template>
 
 <script>
-import { nextPrayer, prayerDate, prayerName, formatMinutes } from '../../common/prayer.js'
+import { nextPrayer, prayerDate, prayerName, formatMinutes, placeNow, realTime } from '../../common/prayer.js'
 import { prayerAlert, LATE_ALERT } from '../../common/alert.js'
 import { STRINGS, loadLanguage, formatDuration } from '../../common/i18n.js'
-import { TIME_ZONES, loadCity } from '../../common/cities.js'
+import { zoneLabel, loadCity } from '../../common/cities.js'
 import { toHijriWithOffset, loadHijriOffset } from '../../common/hijri.js'
 import { fastsFor, isFastDay, fastMoment, fastName } from '../../common/fasting.js'
 import { keepScreenOn, loadLayout } from '../../common/screen.js'
@@ -137,7 +137,9 @@ export default {
 
   refresh() {
     const t = this.t
-    const now = new Date()
+    // The place's own day and time (they differ from the band clock only for
+    // a place in another time zone)
+    const now = placeNow(this.cityData)
     const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
 
     const h = toHijriWithOffset(now, this.offset)
@@ -157,7 +159,7 @@ export default {
     const todayKeys = fastsFor(now, h)
     const tomorrowKeys = fastsFor(tomorrow, toHijriWithOffset(tomorrow, this.offset))
     const fast = fastMoment(now, this.cityData, todayKeys, tomorrowKeys)
-    this.fastTarget = fast ? prayerDate(fast.day, fast.minutes).getTime() : 0
+    this.fastTarget = fast ? realTime(prayerDate(fast.day, fast.minutes), this.cityData) : 0
     this.fastFor = fast ? fastName(t, fast.day === now ? todayKeys : tomorrowKeys) : ''
     this.fastLabel = fast ? (fast.key === 'iftar' ? t.iftar : t.prayers.imsak) + ' · ' + formatMinutes(fast.minutes) : ''
 
@@ -165,9 +167,9 @@ export default {
     this.nextKey = next.key
     this.nextLabel = prayerName(t, next.key, next.day)
     this.nextTime = formatMinutes(next.times[next.key])
-    this.target = prayerDate(next.day, next.times[next.key]).getTime()
+    this.target = realTime(prayerDate(next.day, next.times[next.key]), this.cityData)
     this.tick()
-    this.city = this.cityData.name + ' · ' + TIME_ZONES[this.cityData.tz]
+    this.city = this.cityData.name + ' · ' + zoneLabel(this.cityData)
 
     this.todayFasts = todayKeys.map((k) => t.fasts[k]).join(', ')
     this.todayStyle = fastStyle(todayKeys)

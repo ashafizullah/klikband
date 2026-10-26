@@ -1,0 +1,13 @@
+{
+    "name": "KlikBand",
+    "icon": "icon.png",
+    "version": "0.1.0",
+    "description": "Send any place in the world to KlikBand on your band, for its prayer times and Qibla. 为手环上的 KlikBand 设置全球任意地点，用于礼拜时间和朝向。",
+    "author": "Adam Suchi Hafizullah",
+    "website": "https://github.com/ashafizullah/klikband",
+    "entry": "klikband_astrobox.wasm",
+    "wasi_version": 2,
+    "api_level": 3,
+    "permissions": ["network", "device", "interconnect", "register_interconnect_recv"],
+    "additional_files": []
+}

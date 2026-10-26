@@ -1,6 +1,8 @@
 // Cities for prayer times: Indonesian province capitals plus a few other cities.
 // tz = hours offset from UTC (WIB 7, WITA 8, WIT 9)
 import storage from '@system.storage'
+import { CALC_METHODS, ASR_SHADOWS, locationOffset } from './prayer.js'
+import { loadAll } from './load.js'
 
 export const CITIES = [
   { name: 'Weleri', lat: -6.9707, lng: 110.0697, tz: 7 },
@@ -54,16 +56,99 @@ export const CITIES = [
 
 export const TIME_ZONES = { 7: 'WIB', 8: 'WITA', 9: 'WIT' }
 
-// The selected city is stored by name; defaults to Weleri
-export function loadCity(cb) {
-  storage.get({
-    key: 'city',
-    default: CITIES[0].name,
-    success: (name) => cb(CITIES.find((c) => c.name === name) || CITIES[0]),
-    fail: () => cb(CITIES[0])
+// A place anywhere in the world can be sent from the phone (the KlikBand
+// plugin for AstroBox). It is kept as JSON and chosen by this stored city name.
+export const PHONE_CITY = '@phone'
+
+// Nearer the poles some days have no sunrise or sunset, so no prayer times
+export const MAX_LATITUDE = 65
+
+function storedText(key, fallback, cb) {
+  storage.get({ key, default: fallback, success: (data) => cb(data || fallback), fail: () => cb(fallback) })
+}
+
+// Called after the place, method or Asr school is saved (common/phone.js keeps
+// a copy, since it has to answer the phone at once)
+const changeListeners = []
+
+export function onPlaceChange(listener) {
+  changeListeners.push(listener)
+}
+
+function store(key, value) {
+  storage.set({ key, value, success: () => changeListeners.forEach((listener) => listener()) })
+}
+
+// The place sent from the phone: { name, lat, lng, tz, custom: true } and the
+// calculation method sent with it (`phoneMethod`), or null
+export function loadPhoneCity(cb) {
+  storedText('phoneCity', '', (text) => {
+    let city = null
+    try {
+      const data = JSON.parse(text)
+      if (validPlace(data)) {
+        city = { name: data.name, lat: data.lat, lng: data.lng, tz: data.tz, custom: true }
+        if (CALC_METHODS[data.method]) city.phoneMethod = data.method
+      }
+    } catch (e) {}
+    cb(city)
   })
 }
 
+export function validPlace(p) {
+  return !!p && typeof p.name === 'string' && p.name.length > 0 && p.name.length <= 40 &&
+    typeof p.lat === 'number' && Math.abs(p.lat) <= MAX_LATITUDE &&
+    typeof p.lng === 'number' && Math.abs(p.lng) <= 180 &&
+    typeof p.tz === 'number' && p.tz >= -12 && p.tz <= 14
+}
+
+// Selects the place, with its method when one was sent
+export function savePhoneCity(place) {
+  const { name, lat, lng, tz } = place
+  const method = CALC_METHODS[place.method] ? place.method : undefined
+  store('phoneCity', JSON.stringify({ name, lat, lng, tz, method }))
+  saveCity(PHONE_CITY)
+  if (method) saveCalcMethod(method)
+}
+
+// Calculation method and Asr school (keys of CALC_METHODS and ASR_SHADOWS in prayer.js)
+export function loadCalcMethod(cb) {
+  storedText('calcMethod', 'kemenag', (code) => cb(CALC_METHODS[code] ? code : 'kemenag'))
+}
+
+export function saveCalcMethod(code) {
+  store('calcMethod', code)
+}
+
+export function loadAsrMethod(cb) {
+  storedText('asrMethod', 'shafii', (code) => cb(ASR_SHADOWS[code] ? code : 'shafii'))
+}
+
+export function saveAsrMethod(code) {
+  store('asrMethod', code)
+}
+
+// The selected place with the calculation method and Asr school it uses.
+// Defaults to Weleri, and to it again if the place from the phone is gone.
+export function loadCity(cb) {
+  loadAll(
+    { name: (done) => storedText('city', CITIES[0].name, done), phone: loadPhoneCity, method: loadCalcMethod, asr: loadAsrMethod },
+    (v) => {
+      const place = (v.name === PHONE_CITY && v.phone) || CITIES.find((c) => c.name === v.name) || CITIES[0]
+      cb(Object.assign({}, place, { method: v.method, asr: v.asr }))
+    }
+  )
+}
+
 export function saveCity(name) {
-  storage.set({ key: 'city', value: name })
+  store('city', name)
+}
+
+// The time zone shown beside a place: WIB, WITA or WIT in Indonesia, UTC±h elsewhere
+export function zoneLabel(place) {
+  if (!place.custom) return TIME_ZONES[place.tz]
+  const tz = locationOffset(new Date(), place)
+  const minutes = Math.round(Math.abs(tz) * 60)
+  const rest = minutes % 60
+  return 'UTC' + (tz < 0 ? '−' : '+') + Math.floor(minutes / 60) + (rest ? ':' + (rest < 10 ? '0' : '') + rest : '')
 }

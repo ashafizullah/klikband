@@ -2,12 +2,12 @@
   <scroll class="page {{w}}page" style="{{frame}}" scroll-y="true">
     <text class="title {{w}}title">{{title}}</text>
     <div class="group {{w}}group {{r}}fit">
-      <div class="option {{w}}option" for="{{items}}" onclick="select($item.name)">
+      <div class="option {{w}}option" for="{{items}}" onclick="select($item.code)">
         <div class="text">
           <text class="name {{w}}name">{{$item.name}}</text>
           <text class="zone {{w}}zone">{{$item.zone}}</text>
         </div>
-        <div class="radio {{$item.name === active ? 'radio-active' : ''}} {{w}}radio"></div>
+        <div class="radio {{$item.code === active ? 'radio-active' : ''}} {{w}}radio"></div>
       </div>
     </div>
   </scroll>
@@ -15,7 +15,7 @@
 
 <script>
 import router from '@system.router'
-import { CITIES, TIME_ZONES, loadCity, saveCity } from '../../common/cities.js'
+import { CITIES, PHONE_CITY, zoneLabel, loadCity, saveCity, loadPhoneCity, saveCalcMethod } from '../../common/cities.js'
 import { STRINGS, loadLanguage } from '../../common/i18n.js'
 import { loadLayout } from '../../common/screen.js'
 
@@ -26,7 +26,7 @@ export default {
     r: '',
     title: STRINGS.id.city,
     active: CITIES[0].name,
-    items: CITIES.map((c) => ({ name: c.name, zone: TIME_ZONES[c.tz] }))
+    items: CITIES.map((c) => ({ code: c.name, name: c.name, zone: zoneLabel(c) }))
   },
 
   onInit() {
@@ -35,13 +35,32 @@ export default {
       this.frame = frame
       this.r = r
     })
-    loadLanguage((lang) => (this.title = STRINGS[lang].city))
-    loadCity((city) => (this.active = city.name))
+    loadLanguage((lang) => {
+      this.t = STRINGS[lang]
+      this.title = this.t.city
+      this.showPhone()
+    })
+    loadCity((city) => (this.active = city.custom ? PHONE_CITY : city.name))
   },
 
-  select(name) {
-    this.active = name
-    saveCity(name)
+  // The place sent from the phone comes first, when there is one
+  showPhone() {
+    loadPhoneCity((place) => {
+      this.phone = place
+      const cities = CITIES.map((c) => ({ code: c.name, name: c.name, zone: zoneLabel(c) }))
+      this.items = place
+        ? [{ code: PHONE_CITY, name: place.name, zone: this.t.fromPhone + ' · ' + zoneLabel(place) }].concat(cities)
+        : cities
+    })
+  },
+
+  // Indonesian cities use the Kemenag method; the place from the phone, the
+  // method sent with it
+  select(code) {
+    this.active = code
+    saveCity(code)
+    if (code !== PHONE_CITY) saveCalcMethod('kemenag')
+    else if (this.phone && this.phone.phoneMethod) saveCalcMethod(this.phone.phoneMethod)
     router.back()
   }
 }

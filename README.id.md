@@ -42,7 +42,7 @@
   - **Dzikir Sholat**: penghitung berpanduan sesuai [Rumaysho](https://rumaysho.com/1997-dzikir-setelah-shalat.html)
   - **Dzikir Pagi Petang**: penghitung berpanduan sesuai [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html)
   - Keduanya menampilkan dzikir dalam transliterasi Latin atau tulisan Arab, dengan Ayat Kursi dan surat-surat ditulis lengkap bernomor ayat (teks [Tanzil](https://tanzil.net))
-  - **Jadwal Sholat**: metode Kemenag RI, dihitung offline di perangkat, lengkap dengan waktu Dhuha, sepertiga malam terakhir dan waktu terlarang sholat; di hari Jumat Dzuhur tampil sebagai Sholat Jumat; bergetar dan menampilkan pesan saat masuk waktu sholat selama halaman Jam, Hari Ini atau Jadwal Sholat terbuka
+  - **Jadwal Sholat**: metode Kemenag RI (bawaan) atau metode lain (Liga Muslim Dunia, ISNA, Mesir, Umm al-Qura, Karachi, Dubai), Asar Syafi'i atau Hanafi, dihitung offline di perangkat, lengkap dengan waktu Dhuha, sepertiga malam terakhir dan waktu terlarang sholat; di hari Jumat Dzuhur tampil sebagai Sholat Jumat; bergetar dan menampilkan pesan saat masuk waktu sholat selama halaman Jam, Hari Ini atau Jadwal Sholat terbuka
   - **Arah Kiblat**: arah dan jarak ke Ka'bah dari kotamu, dengan posisi matahari di kompas sehingga cukup menyamakannya dengan matahari sungguhan untuk menghadap kiblat, plus jadwal Rashdul Qiblat
   - **Tasbih**: penghitung ketuk dengan target 33/99/100 dan getar
   - **Hijriah**: kalender Hijriah aritmetika dengan koreksi manual ±2 hari
@@ -56,14 +56,14 @@
   - **Papan Skor**: penghitung skor dua sisi: poin bebas, badminton (21 poin, best of 3) atau padel/tenis (15-30-40, deuce, set, tiebreak), dengan tombol batal
   - **Penghitung**: hingga enam penghitung dengan nama pilihan (tamu, orang, barang, putaran, repetisi)
   - **Kalkulator**: + − × ÷ dengan persen dan ganti tanda
-- **Pengaturan**: kota (47 kota di Indonesia, WIB/WITA/WIT), bahasa (Indonesia, English, 中文) dan teks dzikir dan doa (Latin atau Arab)
+- **Pengaturan**: kota (47 kota di Indonesia, WIB/WITA/WIT, atau tempat mana pun di dunia yang dikirim dari HP), metode perhitungan, waktu Asar, bahasa (Indonesia, English, 中文) dan teks dzikir dan doa (Latin atau Arab)
 - **Tentang**: versi aplikasi, sumber teks dan perhitungan, serta info perangkat (penyimpanan, model, versi OS dan platform)
 
 Halaman bacaan dan penghitung membuat layar tetap menyala selama dibuka.
 
 ## Batasan
 
-Smart Band 9 tidak punya GPS, dan Xiaomi tidak menyediakan API lokasi (`system.geolocation`) maupun internet (`system.fetch`) di band ini. Karena itu KlikBand tidak memakai keduanya di perangkat mana pun: semua berjalan offline, dan kota dipilih manual.
+Smart Band 9 tidak punya GPS, dan Xiaomi tidak menyediakan API lokasi (`system.geolocation`) maupun internet (`system.fetch`) di band ini. Karena itu KlikBand tidak memakai keduanya di perangkat mana pun: semua berjalan offline, dan kota dipilih manual. Tempat di luar daftar kota bisa dikirim sekali dari HP lewat plugin AstroBox (lihat [Lokasi dari HP](#lokasi-dari-hp)), sampai 65° LU/LS; lebih dekat ke kutub ada hari tanpa matahari terbit atau terbenam.
 
 Tata letaknya dirancang untuk layar Band 9 (192×490) dan menyesuaikan layar perangkatnya:
 
@@ -87,6 +87,18 @@ KlikBand dipasang dari HP **Android** (iPhone belum bisa) lewat [Gadgetbridge](h
 
 <a href="https://youtu.be/WpygHpV-c_4"><img src="https://i.ytimg.com/vi/WpygHpV-c_4/hqdefault.jpg" width="480" alt="Cara Pasang KlikBand di Xiaomi Smart Band"></a>
 
+**Cara lain: [AstroBox](https://astrobox.online)** (Android, iOS, Windows, Mac). Sambungkan band di AstroBox dengan akun Xiaomi atau kunci band, lalu buka file `.rpk` dengan AstroBox. Sudah dicoba di Smart Band 9 dari Mac.
+
+## Lokasi dari HP
+
+Untuk tempat yang tidak ada di daftar kota, di mana pun di dunia, pasang plugin **KlikBand** di [AstroBox](https://astrobox.online) (file `KlikBand.abp` di halaman [Releases](https://github.com/ashafizullah/klikband/releases/latest)):
+
+1. Sambungkan band ke AstroBox dan buka KlikBand di band.
+2. Di plugin, cari nama kota, pilih hasilnya, cek metode perhitungan (sudah dipilihkan sesuai negaranya), lalu ketuk **Send to band**.
+3. Band bergetar dan menampilkan "Lokasi dari HP". Tempat itu tersimpan di band dan muncul paling atas di Pengaturan › Kota.
+
+Cukup sekali; setelah itu semua tetap offline, dan band boleh kembali ke Mi Fitness atau Gadgetbridge. Jadwal ditampilkan dalam jam setempat di tempat itu, sedangkan hitung mundur dan getaran mengikuti waktu sebenarnya, jadi tetap tepat walau jam band masih di zona lain.
+
 ## Build
 
 Butuh Node.js.
@@ -95,6 +107,8 @@ Butuh Node.js.
 npm install
 npm run build      # hasil: dist/*.rpk
 ```
+
+Plugin AstroBox ada di `plugin/` (Rust, butuh target `wasm32-wasip2`): `plugin/package.sh` menghasilkan `plugin/dist/KlikBand.abp`.
 
 ## Struktur proyek
 
@@ -105,7 +119,8 @@ src/
 │   ├── i18n.js          # teks antarmuka (id, en, zh) dan pengaturan bahasa
 │   ├── prayer.js        # perhitungan jadwal sholat
 │   ├── hijri.js         # konversi kalender Hijriah
-│   ├── cities.js        # daftar kota dan pengaturan kota
+│   ├── cities.js        # daftar kota, lokasi dari HP, metode dan pengaturan kota
+│   ├── phone.js         # pesan dari plugin AstroBox (interconnect)
 │   ├── asmaulhusna.js   # data 99 Asmaul Husna
 │   ├── duas.js          # data doa-doa Nabi
 │   ├── umrah.js         # data panduan umrah
@@ -121,6 +136,7 @@ src/
 │   ├── text.js          # bantuan marquee untuk label panjang
 │   └── icons/           # ikon menu
 └── pages/               # satu folder per layar
+plugin/                  # plugin KlikBand untuk AstroBox (Rust → WebAssembly)
 tools/
 └── arabic-images.py     # menggambar dzikir dan doa Arab sebagai gambar
 ```

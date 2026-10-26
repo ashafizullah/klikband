@@ -1,7 +1,10 @@
 <script>
+import { listenToPhone } from './common/phone.js'
+
 export default {
   onCreate() {
     console.log('app created')
+    listenToPhone()
   },
   onDestroy() {
     console.log('app destroyed')

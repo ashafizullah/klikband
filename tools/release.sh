@@ -50,6 +50,9 @@ echo "== 1. KlikBand $VERSION"
 cd "$ROOT"
 [ "$(git branch --show-current)" = main ] || { echo "switch to main first" >&2; exit 1; }
 [ -z "$(git status --porcelain)" ] || { echo "commit or stash your changes first" >&2; exit 1; }
+# Releases are signed with KlikBand's own key (kept out of git, see docs/RELEASING.md);
+# AstroBox refuses packages signed with the toolkit's debug certificate
+[ -f sign/release/private.pem ] && [ -f sign/release/certificate.pem ] || { echo "sign/release/private.pem and certificate.pem are missing" >&2; exit 1; }
 git pull -q --ff-only origin main
 
 CODE=$(python3 -I - "$VERSION" <<'EOF'
@@ -72,9 +75,9 @@ if [ -n "$PLUGIN_VERSION" ]; then
 fi
 
 npm run lint
-npx aiot build
+npx aiot release
 RPK=$WORK/KlikBand-$VERSION.rpk
-cp "dist/$PACKAGE.debug.$VERSION.rpk" "$RPK"
+cp "dist/$PACKAGE.release.$VERSION.rpk" "$RPK"
 ASSETS=$RPK
 [ -n "$PLUGIN_VERSION" ] && cp plugin/dist/KlikBand.abp "$WORK/" && ASSETS="$RPK $WORK/KlikBand.abp"
 
@@ -96,13 +99,15 @@ cd "$RESOURCE_DIR"
 git pull -q --ff-only origin main
 git rm -q --ignore-unmatch KlikBand-*.rpk
 cp "$RPK" .
-python3 -I - "$VERSION" <<'EOF'
+python3 -I - "$VERSION" "$CODE" <<'EOF'
 import json, sys
 p = 'manifest_v2.json'
 m = json.load(open(p))
+# versionCode lets AstroBox offer the update to people who have KlikBand
 for d in m['downloads'].values():
     d['version'] = sys.argv[1]
     d['file_name'] = 'KlikBand-%s.rpk' % sys.argv[1]
+    d['versionCode'] = int(sys.argv[2])
 with open(p, 'w') as f:
     json.dump(m, f, ensure_ascii=False, indent=2)
     f.write('\n')

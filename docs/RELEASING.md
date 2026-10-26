@@ -15,16 +15,25 @@ tools/release.sh 1.26.0 --notes /tmp/notes.md
 tools/release.sh 1.26.0 --notes /tmp/notes.md --plugin 1.1.0   # kalau plugin ikut berubah
 ```
 
-Skrip ini berjalan di macOS (`sed -i ''`) dan butuh `git`, `gh` (sudah login), Node.js, Python 3, serta untuk plugin `cargo` dengan target `wasm32-wasip2`. Repo rilis AstroBox diharapkan ada di `../astrobox-resource-klikband`; kalau di tempat lain, set `RESOURCE_DIR`.
+Skrip ini berjalan di macOS (`sed -i ''`) dan butuh `git`, `gh` (sudah login), Node.js, Python 3, kunci tanda tangan di `sign/release/` (lihat di bawah), serta untuk plugin `cargo` dengan target `wasm32-wasip2`. Repo rilis AstroBox diharapkan ada di `../astrobox-resource-klikband`; kalau di tempat lain, set `RESOURCE_DIR`.
 
 Skrip selalu bertanya dulu sebelum setiap langkah yang menerbitkan sesuatu. Urutannya:
 
-1. Menaikkan `versionName` dan `versionCode` (+1) di `src/manifest.json` (dan versi plugin dengan `--plugin`), lalu lint, build, dan commit "Release x.y.z".
+1. Menaikkan `versionName` dan `versionCode` (+1) di `src/manifest.json` (dan versi plugin dengan `--plugin`), lalu lint, build release (`npx aiot release`, ditandatangani kunci KlikBand), dan commit "Release x.y.z".
 2. Push `main` dan membuat GitHub Release `vx.y.z` dengan rpk (dan `.abp`).
-3. Di repo rilis AstroBox: mengganti rpk, memperbarui `version` dan `file_name` di `manifest_v2.json`, menyalin plugin ke `plugin/`, commit, lalu push.
+3. Di repo rilis AstroBox: mengganti rpk, memperbarui `version`, `file_name` dan `versionCode` di `manifest_v2.json` (`versionCode` dipakai AstroBox untuk menawarkan update ke pengguna), menyalin plugin ke `plugin/`, commit, lalu push.
 4. Di toko AstroBox:
    - Kalau KlikBand **belum** tercantum di `index_v2.csv` (pengajuan pertama, PR [#1688](https://github.com/AstralSightStudios/AstroBox-Repo/pull/1688), masih terbuka), hash commit di branch `add-klikband` fork diperbarui.
    - Kalau **sudah** tercantum, dibuat PR edit baru (`tmp/ashafizullah/astrobox-resource-com.ashafizullah.klikband/resource.csv` dan `request.json` bermode `edit`).
+
+## Kunci tanda tangan
+
+Mulai 1.25.2 semua rilis adalah **build release** yang ditandatangani kunci KlikBand sendiri: `sign/release/private.pem` dan `sign/release/certificate.pem` (folder `sign/` tidak masuk git). AstroBox menolak paket yang ditandatangani sertifikat debug bawaan toolkit.
+
+- **Cadangkan kedua file itu** di tempat aman (misalnya password manager). Kalau hilang, rilis berikutnya ditandatangani kunci lain, dan pengguna mungkin harus uninstall dulu.
+- Jangan pernah membagikan atau meng-commit `private.pem`.
+- Kunci dibuat dengan: `openssl req -newkey rsa:2048 -nodes -keyout sign/release/private.pem -x509 -days 36500 -subj "/CN=KlikBand/O=Adam Suchi Hafizullah/C=ID" -out sign/release/certificate.pem`. Membuat ulang berarti kunci baru, jadi lakukan hanya kalau memang hilang.
+- Pindah dari debug ke release: di emulator Band 10 (firmware 3.1.28) paket release menimpa versi debug dan pengaturan tetap tersimpan.
 
 ## Hal yang perlu diingat
 
@@ -33,7 +42,7 @@ Skrip selalu bertanya dulu sebelum setiap langkah yang menerbitkan sesuatu. Urut
 - **Toko plugin membaca sendiri.** [`AstroBox-NG-Plugin-Repo`](https://github.com/AstralSightStudios/AstroBox-NG-Plugin-Repo) membaca `index.txt` dan `plugin/manifest.json` dari repo rilis setiap 4 jam (setelah PR [#31](https://github.com/AstralSightStudios/AstroBox-NG-Plugin-Repo/pull/31) di-merge). Untuk update plugin tidak perlu PR lagi.
 - **Band 10** sengaja belum didaftarkan di toko AstroBox, karena ada laporan crash yang belum terjawab. Untuk menambahkannya, tambahkan `xmb10` dan `xmb10nfc` di `downloads` di `manifest_v2.json` dan di kolom `devices` pengajuan.
 - **Push ke repo rilis AstroBox kadang dijawab GitHub dengan HTTP 500.** Skrip otomatis mengulang dengan HTTP/1.1; kalau manual, pakai `git -c http.version=HTTP/1.1 push`.
-- **Rpk yang dirilis adalah build debug** (`npm run build`), sama seperti semua rilis sebelumnya. Pindah ke build release bertanda tangan sendiri berarti pengguna lama harus uninstall dulu.
+- **Untuk uji di band**, `npm run build` (debug) tetap boleh dipakai. Tapi setelah memasang build release, build debug bisa jadi ditolak band karena tanda tangannya berbeda.
 
 ## Format pengajuan ke toko AstroBox
 

@@ -12,13 +12,14 @@ import { toHijri } from './hijri.js'
 export const CALC_METHODS = {
   kemenag: { fajr: 20, isha: 18, margin: 2 },
   mwl: { fajr: 18, isha: 17, margin: 0 },
-  isna: { fajr: 15, isha: 15, margin: 0 },
-  egypt: { fajr: 19.5, isha: 17.5, margin: 0 },
   ummalqura: { fajr: 18.5, ishaMinutes: 90, ramadanIshaMinutes: 120, margin: 0 },
-  karachi: { fajr: 18, isha: 18, margin: 0 },
-  dubai: { fajr: 18.2, isha: 18.2, margin: 0 }
+  isna: { fajr: 15, isha: 15, margin: 0 }
 }
-export const CALC_METHOD_ORDER = ['kemenag', 'mwl', 'isna', 'egypt', 'ummalqura', 'karachi', 'dubai']
+export const CALC_METHOD_ORDER = ['kemenag', 'mwl', 'ummalqura', 'isna']
+
+// Methods offered by 1.25.0 and since dropped; a place that used one moves to
+// the Muslim World League, the closest general method
+export const DROPPED_METHODS = ['egypt', 'karachi', 'dubai']
 
 // Asr starts when a shadow is its object's length (Shafi'i, Maliki, Hanbali)
 // or twice that (Hanafi) plus the noon shadow

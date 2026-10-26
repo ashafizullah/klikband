@@ -210,11 +210,8 @@ export const STRINGS = {
     calcMethods: {
       kemenag: 'Kemenag RI · 20°/18°',
       mwl: 'Liga Muslim Dunia',
-      isna: 'ISNA · Amerika Utara',
-      egypt: 'Mesir',
       ummalqura: 'Umm al-Qura · Makkah',
-      karachi: 'Karachi',
-      dubai: 'Dubai'
+      isna: 'ISNA · Amerika Utara'
     },
     asrMethod: 'Waktu Asar',
     asrMethods: { shafii: "Syafi'i, Maliki, Hanbali", hanafi: 'Hanafi' },
@@ -405,11 +402,8 @@ export const STRINGS = {
     calcMethods: {
       kemenag: 'Kemenag (Indonesia) · 20°/18°',
       mwl: 'Muslim World League',
-      isna: 'ISNA · North America',
-      egypt: 'Egypt',
       ummalqura: 'Umm al-Qura · Makkah',
-      karachi: 'Karachi',
-      dubai: 'Dubai'
+      isna: 'ISNA · North America'
     },
     asrMethod: 'Asr time',
     asrMethods: { shafii: "Shafi'i, Maliki, Hanbali", hanafi: 'Hanafi' },
@@ -600,11 +594,8 @@ export const STRINGS = {
     calcMethods: {
       kemenag: '印尼宗教部 · 20°/18°',
       mwl: '世界穆斯林联盟',
-      isna: '北美伊斯兰协会',
-      egypt: '埃及',
       ummalqura: '乌姆古拉 · 麦加',
-      karachi: '卡拉奇',
-      dubai: '迪拜'
+      isna: '北美伊斯兰协会'
     },
     asrMethod: '晡礼时间',
     asrMethods: { shafii: '沙斐仪、马立克、罕百里', hanafi: '哈乃斐' },

@@ -7,7 +7,7 @@ use std::sync::{Mutex, MutexGuard, OnceLock};
 use crate::band;
 use crate::places::{self, MAX_LATITUDE, Place};
 
-pub const METHODS: [&str; 7] = ["kemenag", "mwl", "isna", "egypt", "ummalqura", "karachi", "dubai"];
+pub const METHODS: [&str; 4] = ["kemenag", "mwl", "ummalqura", "isna"];
 
 #[derive(Default)]
 struct State {
@@ -109,15 +109,8 @@ fn tr(lang: &str, key: &str) -> &'static str {
         ("id", "isna") => "ISNA · Amerika Utara",
         ("zh", "isna") => "北美伊斯兰协会",
         (_, "isna") => "ISNA · North America",
-        ("id", "egypt") => "Mesir",
-        ("zh", "egypt") => "埃及",
-        (_, "egypt") => "Egypt",
         ("zh", "ummalqura") => "乌姆古拉 · 麦加",
         (_, "ummalqura") => "Umm al-Qura · Makkah",
-        ("zh", "karachi") => "卡拉奇",
-        (_, "karachi") => "Karachi",
-        ("zh", "dubai") => "迪拜",
-        (_, "dubai") => "Dubai",
         _ => "",
     }
 }

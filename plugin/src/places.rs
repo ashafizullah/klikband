@@ -116,9 +116,6 @@ pub fn suggested_method(country_code: &str) -> &'static str {
     match country_code {
         "ID" | "MY" | "SG" | "BN" => "kemenag",
         "SA" | "YE" => "ummalqura",
-        "AE" => "dubai",
-        "EG" | "SD" | "LY" | "SY" | "LB" | "JO" | "PS" => "egypt",
-        "PK" | "IN" | "BD" | "AF" => "karachi",
         "US" | "CA" => "isna",
         _ => "mwl",
     }

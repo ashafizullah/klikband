@@ -1,7 +1,7 @@
 // Cities for prayer times: Indonesian province capitals plus a few other cities.
 // tz = hours offset from UTC (WIB 7, WITA 8, WIT 9)
 import storage from '@system.storage'
-import { CALC_METHODS, ASR_SHADOWS, locationOffset } from './prayer.js'
+import { CALC_METHODS, DROPPED_METHODS, ASR_SHADOWS, locationOffset } from './prayer.js'
 import { loadAll } from './load.js'
 
 export const CITIES = [
@@ -88,7 +88,8 @@ export function loadPhoneCity(cb) {
       const data = JSON.parse(text)
       if (validPlace(data)) {
         city = { name: data.name, lat: data.lat, lng: data.lng, tz: data.tz, custom: true }
-        if (CALC_METHODS[data.method]) city.phoneMethod = data.method
+        const method = knownMethod(data.method)
+        if (method) city.phoneMethod = method
       }
     } catch (e) {}
     cb(city)
@@ -105,15 +106,20 @@ export function validPlace(p) {
 // Selects the place, with its method when one was sent
 export function savePhoneCity(place) {
   const { name, lat, lng, tz } = place
-  const method = CALC_METHODS[place.method] ? place.method : undefined
+  const method = knownMethod(place.method)
   store('phoneCity', JSON.stringify({ name, lat, lng, tz, method }))
   saveCity(PHONE_CITY)
   if (method) saveCalcMethod(method)
 }
 
 // Calculation method and Asr school (keys of CALC_METHODS and ASR_SHADOWS in prayer.js)
+function knownMethod(code) {
+  if (CALC_METHODS[code]) return code
+  return DROPPED_METHODS.indexOf(code) >= 0 ? 'mwl' : undefined
+}
+
 export function loadCalcMethod(cb) {
-  storedText('calcMethod', 'kemenag', (code) => cb(CALC_METHODS[code] ? code : 'kemenag'))
+  storedText('calcMethod', 'kemenag', (code) => cb(knownMethod(code) || 'kemenag'))
 }
 
 export function saveCalcMethod(code) {

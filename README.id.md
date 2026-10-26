@@ -42,7 +42,7 @@
   - **Dzikir Sholat**: penghitung berpanduan sesuai [Rumaysho](https://rumaysho.com/1997-dzikir-setelah-shalat.html)
   - **Dzikir Pagi Petang**: penghitung berpanduan sesuai [Almanhaj](https://almanhaj.or.id/11518-dzikir-pagi-dan-petang.html)
   - Keduanya menampilkan dzikir dalam transliterasi Latin atau tulisan Arab, dengan Ayat Kursi dan surat-surat ditulis lengkap bernomor ayat (teks [Tanzil](https://tanzil.net))
-  - **Jadwal Sholat**: metode Kemenag RI (bawaan) atau metode lain (Liga Muslim Dunia, ISNA, Mesir, Umm al-Qura, Karachi, Dubai), Asar Syafi'i atau Hanafi, dihitung offline di perangkat, lengkap dengan waktu Dhuha, sepertiga malam terakhir dan waktu terlarang sholat; di hari Jumat Dzuhur tampil sebagai Sholat Jumat; bergetar dan menampilkan pesan saat masuk waktu sholat selama halaman Jam, Hari Ini atau Jadwal Sholat terbuka
+  - **Jadwal Sholat**: metode Kemenag RI (bawaan) atau metode global (Liga Muslim Dunia, Umm al-Qura, ISNA), Asar Syafi'i atau Hanafi, dihitung offline di perangkat, lengkap dengan waktu Dhuha, sepertiga malam terakhir dan waktu terlarang sholat; di hari Jumat Dzuhur tampil sebagai Sholat Jumat; bergetar dan menampilkan pesan saat masuk waktu sholat selama halaman Jam, Hari Ini atau Jadwal Sholat terbuka
   - **Arah Kiblat**: arah dan jarak ke Ka'bah dari kotamu, dengan posisi matahari di kompas sehingga cukup menyamakannya dengan matahari sungguhan untuk menghadap kiblat, plus jadwal Rashdul Qiblat
   - **Tasbih**: penghitung ketuk dengan target 33/99/100 dan getar
   - **Hijriah**: kalender Hijriah aritmetika dengan koreksi manual ±2 hari

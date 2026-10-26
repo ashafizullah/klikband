@@ -1,8 +1,8 @@
 {
   "package": "com.ashafizullah.klikband",
   "name": "KlikBand",
-  "versionName": "1.25.1",
-  "versionCode": 58,
+  "versionName": "1.25.2",
+  "versionCode": 59,
   "minPlatformVersion": 1200,
   "icon": "/common/logo.png",
   "simulationVersion": "default",

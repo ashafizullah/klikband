@@ -4,14 +4,17 @@
 // Sun position: the US Naval Observatory's "Approximate Solar Coordinates" formulas;
 // Julian day: Meeus, Astronomical Algorithms.
 
+import { toHijri } from './hijri.js'
+
 // Fajr and Isha sun angles (degrees below the horizon), or Isha as minutes
-// after Maghrib, and the safety margin in minutes (ihtiyat, used by Kemenag)
+// after Maghrib (longer in Ramadan for Umm al-Qura), and the safety margin in
+// minutes (ihtiyat, used by Kemenag)
 export const CALC_METHODS = {
   kemenag: { fajr: 20, isha: 18, margin: 2 },
   mwl: { fajr: 18, isha: 17, margin: 0 },
   isna: { fajr: 15, isha: 15, margin: 0 },
   egypt: { fajr: 19.5, isha: 17.5, margin: 0 },
-  ummalqura: { fajr: 18.5, ishaMinutes: 90, margin: 0 },
+  ummalqura: { fajr: 18.5, ishaMinutes: 90, ramadanIshaMinutes: 120, margin: 0 },
   karachi: { fajr: 18, isha: 18, margin: 0 },
   dubai: { fajr: 18.2, isha: 18.2, margin: 0 }
 }
@@ -155,7 +158,9 @@ function computeTimes(date, location, tz) {
   const fajr = !(fajrAngle >= sunset) || fajrAngle - sunset > fajrShare ? sunset + fajrShare : fajrAngle
   let isha
   if (method.ishaMinutes) {
-    isha = sunset + method.ishaMinutes / 60
+    // Ramadan by the arithmetic calendar, without the Hijri correction from Settings
+    const ramadan = method.ramadanIshaMinutes && toHijri(date).month === 9
+    isha = sunset + (ramadan ? method.ramadanIshaMinutes : method.ishaMinutes) / 60
   } else {
     const ishaAngle = hourAngle(-method.isha, lat, decl, true)
     const ishaShare = (method.isha / 60) * night

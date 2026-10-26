@@ -8,6 +8,6 @@
     "entry": "klikband_astrobox.wasm",
     "wasi_version": 2,
     "api_level": 3,
-    "permissions": ["network", "device", "interconnect", "register_interconnect_recv"],
+    "permissions": ["network", "device", "interconnect", "register_interconnect_recv", "thirdpartyapp"],
     "additional_files": []
 }

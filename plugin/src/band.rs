@@ -7,6 +7,17 @@ use crate::places::Place;
 
 pub const PACKAGE: &str = "com.ashafizullah.klikband";
 
+// The first KlikBand that answers the plugin (1.25.0)
+const MIN_VERSION_CODE: u32 = 56;
+
+// Why nothing was sent, as a key of the page's texts
+pub enum Problem {
+    NoBand,
+    NotInstalled,
+    TooOld,
+    SendFailed,
+}
+
 // Every connected band, subscribed to KlikBand's replies
 async fn bands() -> Vec<String> {
     let mut addrs = Vec::new();
@@ -17,26 +28,51 @@ async fn bands() -> Vec<String> {
     addrs
 }
 
-async fn send(message: Value) -> Result<usize, String> {
+// KlikBand only hears the phone while it runs, so it is opened on the band
+// first; opening it again when it already runs leaves it as it is
+async fn open_klikband(addr: &str) -> Result<(), Problem> {
+    let Ok(apps) = psys_host::thirdpartyapp::get_thirdparty_app_list(addr).await else {
+        // The list is not essential: try sending anyway
+        return Ok(());
+    };
+    let Some(app) = apps.into_iter().find(|a| a.package_name == PACKAGE) else {
+        return Err(Problem::NotInstalled);
+    };
+    if app.version_code < MIN_VERSION_CODE {
+        return Err(Problem::TooOld);
+    }
+    if psys_host::thirdpartyapp::launch_qa(addr, &app, "").await.is_ok() {
+        // Time for the app to start and listen
+        std::thread::sleep(std::time::Duration::from_millis(1500));
+    }
+    Ok(())
+}
+
+async fn send(message: Value) -> Result<usize, Problem> {
     let addrs = bands().await;
     if addrs.is_empty() {
-        return Err("no band".into());
+        return Err(Problem::NoBand);
     }
     let text = message.to_string();
     let mut sent = 0;
+    let mut problem = Problem::SendFailed;
     for addr in &addrs {
+        if let Err(p) = open_klikband(addr).await {
+            problem = p;
+            continue;
+        }
         if psys_host::interconnect::send_qaic_message(addr, PACKAGE, &text).await.is_ok() {
             sent += 1;
         }
     }
-    if sent == 0 { Err("send failed".into()) } else { Ok(sent) }
+    if sent == 0 { Err(problem) } else { Ok(sent) }
 }
 
-pub async fn ask_state() -> Result<usize, String> {
+pub async fn ask_state() -> Result<usize, Problem> {
     send(json!({ "type": "getState" })).await
 }
 
-pub async fn set_location(place: &Place, tz: f64, method: &str) -> Result<usize, String> {
+pub async fn set_location(place: &Place, tz: f64, method: &str) -> Result<usize, Problem> {
     // The band accepts names up to 40 characters
     let name: String = place.name.chars().take(40).collect();
     send(json!({

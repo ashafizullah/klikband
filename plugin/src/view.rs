@@ -18,6 +18,9 @@ struct State {
     picked: Option<(Place, f64)>,
     method: String,
     band: String,
+    // KlikBand's version and band clock from its last state reply
+    band_version: String,
+    band_clock: String,
     note: String,
 }
 
@@ -73,6 +76,15 @@ fn tr(lang: &str, key: &str) -> &'static str {
         ("id", "send") => "Kirim ke band",
         ("zh", "send") => "发送到手环",
         (_, "send") => "Send to band",
+        ("id", "notInstalled") => "KlikBand belum terpasang di band.",
+        ("zh", "notInstalled") => "手环上尚未安装 KlikBand。",
+        (_, "notInstalled") => "KlikBand is not installed on the band.",
+        ("id", "tooOld") => "Perbarui KlikBand di band ke versi 1.25.0 atau lebih baru.",
+        ("zh", "tooOld") => "请将手环上的 KlikBand 更新到 1.25.0 或更高版本。",
+        (_, "tooOld") => "Update KlikBand on the band to 1.25.0 or later.",
+        ("id", "sendFailed") => "Gagal mengirim ke band.",
+        ("zh", "sendFailed") => "发送到手环失败。",
+        (_, "sendFailed") => "Could not send to the band.",
         ("id", "noBand") => "Tidak ada band yang tersambung ke AstroBox.",
         ("zh", "noBand") => "没有手环连接到 AstroBox。",
         (_, "noBand") => "No band is connected to AstroBox.",
@@ -291,11 +303,31 @@ fn pick(i: usize) {
     }
 }
 
+fn problem_key(problem: band::Problem) -> &'static str {
+    match problem {
+        band::Problem::NoBand => "noBand",
+        band::Problem::NotInstalled => "notInstalled",
+        band::Problem::TooOld => "tooOld",
+        band::Problem::SendFailed => "sendFailed",
+    }
+}
+
+fn band_line(lang: &str, name: &str, tz: f64, method: &str, version: &str, clock: &str) -> String {
+    let mut line = format!("{} · {} · {}", name, places::offset_label(tz), tr(lang, method));
+    if !version.is_empty() {
+        line.push_str(&format!(" · KlikBand {}", version));
+    }
+    if !clock.is_empty() {
+        line.push_str(&format!(" · {} {}", tr(lang, "clock"), clock));
+    }
+    line
+}
+
 async fn check() {
     let lang = state().lang.clone();
     match band::ask_state().await {
         Ok(_) => note(tr(&lang, "waiting").into()),
-        Err(_) => note(tr(&lang, "noBand").into()),
+        Err(p) => note(tr(&lang, problem_key(p)).into()),
     }
 }
 
@@ -307,7 +339,7 @@ async fn send() {
     let Some((place, tz)) = picked else { return };
     match band::set_location(&place, tz, &method).await {
         Ok(_) => note(tr(&lang, "waiting").into()),
-        Err(_) => note(tr(&lang, "noBand").into()),
+        Err(p) => note(tr(&lang, problem_key(p)).into()),
     }
 }
 
@@ -324,20 +356,13 @@ pub fn on_band_reply(payload: &str) {
             let place = reply.pointer("/place/name").and_then(Value::as_str).unwrap_or("?");
             let tz = reply.pointer("/place/tz").and_then(Value::as_f64).unwrap_or(0.0);
             let method = reply.get("method").and_then(Value::as_str).unwrap_or("");
-            let version = reply.get("version").and_then(Value::as_str).unwrap_or("");
+            let version = reply.get("version").and_then(Value::as_str).unwrap_or("").to_string();
             let clock = reply.get("clockOffset").and_then(Value::as_f64).map(places::offset_label).unwrap_or_default();
-            let line = format!(
-                "{} · {} · {} · KlikBand {} · {} {}",
-                place,
-                places::offset_label(tz),
-                tr(&lang, method),
-                version,
-                tr(&lang, "clock"),
-                clock
-            );
             {
                 let mut s = state();
-                s.band = line;
+                s.band = band_line(&lang, place, tz, method, &version, &clock);
+                s.band_version = version;
+                s.band_clock = clock;
                 s.note.clear();
             }
             redraw();
@@ -346,6 +371,13 @@ pub fn on_band_reply(payload: &str) {
             let ok = reply.get("ok").and_then(Value::as_bool).unwrap_or(false);
             let name = reply.get("name").and_then(Value::as_str).unwrap_or("");
             if ok {
+                // What the band now uses is what was sent, so no need to ask it again
+                {
+                    let mut s = state();
+                    if let Some((_, tz)) = s.picked {
+                        s.band = band_line(&lang, name, tz, &s.method, &s.band_version, &s.band_clock);
+                    }
+                }
                 note(format!("{}: {}", tr(&lang, "saved"), name));
             } else {
                 note(tr(&lang, "refused").into());

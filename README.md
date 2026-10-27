@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  A free, open-source quick app for Xiaomi Vela wearables: Xiaomi Smart Band 9, 9 Pro, 8 Pro and 10, REDMI Watch 5, and the round Xiaomi Watch S3, S4 and S5: a clock, prayer times, guided dhikr, tasbih, Hijri date, Islamic holidays, an umrah guide, a calendar, a day counter and a scoreboard. Fully offline, no account.
+  A free, open-source quick app for Xiaomi Vela wearables: Xiaomi Smart Band 9, 9 Pro, 8 Pro, 10, 10 Pro and 11, REDMI Watch 5 and 6, and the round Xiaomi Watch S3, S4 and S5: a clock, prayer times, guided dhikr, tasbih, Hijri date, Islamic holidays, an umrah guide, a calendar, a day counter and a scoreboard. Fully offline, no account.
 </p>
 
 <p align="center">
@@ -70,12 +70,13 @@ The layout is designed for the Band 9 screen (192×490) and adapts to the screen
 | Device | Screen | Layout | Tested |
 |---|---|---|---|
 | Smart Band 9 | 192×490 | band | real device |
-| Smart Band 10 | 212×520 | band | Vela emulator |
+| Smart Band 10, 10 NFC | 212×520 | band | Vela emulator |
 | Smart Band 9 Pro, 8 Pro | 336×480 | wide | Vela emulator (9 Pro) |
 | REDMI Watch 5 | 432×514 | wide | Vela emulator |
-| Watch S3, S4, S4 Sport, S5, S1 Pro | round 466–480 | round | Vela emulator (S4) |
+| Watch S3, S4, S4 Sport, S4 41mm, S5, S5 41mm, S1 Pro | round 466–480 | round | Vela emulator (S4) |
+| Smart Band 10 Pro, Smart Band 11, REDMI Watch 6 | | by screen size | not yet |
 
-Devices marked "Vela emulator" have not been tried on real hardware yet, and installing through Gadgetbridge may differ per model. Reports are welcome.
+Devices marked "Vela emulator" or "not yet" have not been tried on real hardware yet, and installing through Gadgetbridge may differ per model. Reports are welcome.
 
 ## Install on the band
 

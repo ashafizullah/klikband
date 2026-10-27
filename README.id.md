@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  Quick app gratis dan open source untuk perangkat Xiaomi Vela: Xiaomi Smart Band 9, 9 Pro, 8 Pro dan 10, REDMI Watch 5, serta jam bulat Xiaomi Watch S3, S4 dan S5: jam, jadwal sholat, dzikir berpanduan, tasbih, kalender Hijriah, hari besar Islam, panduan umrah, kalender bulanan, hitung hari, dan papan skor. Sepenuhnya offline, tanpa akun.
+  Quick app gratis dan open source untuk perangkat Xiaomi Vela: Xiaomi Smart Band 9, 9 Pro, 8 Pro, 10, 10 Pro dan 11, REDMI Watch 5 dan 6, serta jam bulat Xiaomi Watch S3, S4 dan S5: jam, jadwal sholat, dzikir berpanduan, tasbih, kalender Hijriah, hari besar Islam, panduan umrah, kalender bulanan, hitung hari, dan papan skor. Sepenuhnya offline, tanpa akun.
 </p>
 
 <p align="center">
@@ -70,12 +70,13 @@ Tata letaknya dirancang untuk layar Band 9 (192×490) dan menyesuaikan layar per
 | Perangkat | Layar | Tata letak | Diuji |
 |---|---|---|---|
 | Smart Band 9 | 192×490 | band | perangkat asli |
-| Smart Band 10 | 212×520 | band | emulator Vela |
+| Smart Band 10, 10 NFC | 212×520 | band | emulator Vela |
 | Smart Band 9 Pro, 8 Pro | 336×480 | lebar | emulator Vela (9 Pro) |
 | REDMI Watch 5 | 432×514 | lebar | emulator Vela |
-| Watch S3, S4, S4 Sport, S5, S1 Pro | bulat 466–480 | bulat | emulator Vela (S4) |
+| Watch S3, S4, S4 Sport, S4 41mm, S5, S5 41mm, S1 Pro | bulat 466–480 | bulat | emulator Vela (S4) |
+| Smart Band 10 Pro, Smart Band 11, REDMI Watch 6 | | menyesuaikan layar | belum |
 
-Perangkat bertanda "emulator Vela" belum dicoba di perangkat asli, dan pemasangan lewat Gadgetbridge bisa berbeda tiap model. Laporan sangat diterima.
+Perangkat bertanda "emulator Vela" atau "belum" belum dicoba di perangkat asli, dan pemasangan lewat Gadgetbridge bisa berbeda tiap model. Laporan sangat diterima.
 
 ## Pasang ke band
 

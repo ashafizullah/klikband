@@ -8,14 +8,16 @@ import { toHijri } from './hijri.js'
 
 // Fajr and Isha sun angles (degrees below the horizon), or Isha as minutes
 // after Maghrib (longer in Ramadan for Umm al-Qura), and the safety margin in
-// minutes (ihtiyat, used by Kemenag)
+// minutes (ihtiyat, used by Kemenag and JAKIM; JAKIM adds 2 to Dhuhr). JAKIM's
+// matches Malaysia's official e-solat schedule to a minute on most days.
 export const CALC_METHODS = {
   kemenag: { fajr: 20, isha: 18, margin: 2 },
+  jakim: { fajr: 18, isha: 18, margin: 1, dhuhrMargin: 2 },
   mwl: { fajr: 18, isha: 17, margin: 0 },
   ummalqura: { fajr: 18.5, ishaMinutes: 90, ramadanIshaMinutes: 120, margin: 0 },
   isna: { fajr: 15, isha: 15, margin: 0 }
 }
-export const CALC_METHOD_ORDER = ['kemenag', 'mwl', 'ummalqura', 'isna']
+export const CALC_METHOD_ORDER = ['kemenag', 'jakim', 'mwl', 'ummalqura', 'isna']
 
 // Methods offered by 1.25.0 and since dropped; a place that used one moves to
 // the Muslim World League, the closest general method
@@ -180,7 +182,9 @@ function computeTimes(date, location, tz) {
 
   const minutes = {}
   Object.keys(hours).forEach((k) => {
-    const margin = k === 'sunrise' ? -method.margin : method.margin
+    let margin = method.margin
+    if (k === 'sunrise') margin = -method.margin
+    else if (k === 'dhuhr' && method.dhuhrMargin) margin = method.dhuhrMargin
     minutes[k] = Math.ceil(hours[k] * 60 + margin)
   })
   minutes.imsak = minutes.fajr - 10

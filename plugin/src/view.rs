@@ -7,7 +7,7 @@ use std::sync::{Mutex, MutexGuard, OnceLock};
 use crate::band;
 use crate::places::{self, MAX_LATITUDE, Place};
 
-pub const METHODS: [&str; 4] = ["kemenag", "mwl", "ummalqura", "isna"];
+pub const METHODS: [&str; 5] = ["kemenag", "jakim", "mwl", "ummalqura", "isna"];
 
 #[derive(Default)]
 struct State {
@@ -79,9 +79,9 @@ fn tr(lang: &str, key: &str) -> &'static str {
         ("id", "notInstalled") => "KlikBand belum terpasang di band.",
         ("zh", "notInstalled") => "手环上尚未安装 KlikBand。",
         (_, "notInstalled") => "KlikBand is not installed on the band.",
-        ("id", "tooOld") => "Perbarui KlikBand di band ke versi 1.25.0 atau lebih baru.",
-        ("zh", "tooOld") => "请将手环上的 KlikBand 更新到 1.25.0 或更高版本。",
-        (_, "tooOld") => "Update KlikBand on the band to 1.25.0 or later.",
+        ("id", "tooOld") => "Perbarui KlikBand di band ke versi terbaru.",
+        ("zh", "tooOld") => "请将手环上的 KlikBand 更新到最新版本。",
+        (_, "tooOld") => "Update KlikBand on the band to the latest version.",
         ("id", "sendFailed") => "Gagal mengirim ke band.",
         ("zh", "sendFailed") => "发送到手环失败。",
         (_, "sendFailed") => "Could not send to the band.",
@@ -103,6 +103,9 @@ fn tr(lang: &str, key: &str) -> &'static str {
         ("id", "kemenag") => "Kemenag RI · 20°/18°",
         ("zh", "kemenag") => "印尼宗教部 · 20°/18°",
         (_, "kemenag") => "Kemenag (Indonesia) · 20°/18°",
+        ("id", "jakim") => "JAKIM Malaysia · 18°/18°",
+        ("zh", "jakim") => "马来西亚 JAKIM · 18°/18°",
+        (_, "jakim") => "JAKIM (Malaysia) · 18°/18°",
         ("id", "mwl") => "Liga Muslim Dunia",
         ("zh", "mwl") => "世界穆斯林联盟",
         (_, "mwl") => "Muslim World League",

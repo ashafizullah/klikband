@@ -212,6 +212,7 @@ export const STRINGS = {
     calcMethod: 'Metode perhitungan',
     calcMethods: {
       kemenag: 'Kemenag RI · 20°/18°',
+      jakim: 'JAKIM Malaysia · 18°/18°',
       mwl: 'Liga Muslim Dunia',
       ummalqura: 'Umm al-Qura · Makkah',
       isna: 'ISNA · Amerika Utara'
@@ -407,6 +408,7 @@ export const STRINGS = {
     calcMethod: 'Calculation method',
     calcMethods: {
       kemenag: 'Kemenag (Indonesia) · 20°/18°',
+      jakim: 'JAKIM (Malaysia) · 18°/18°',
       mwl: 'Muslim World League',
       ummalqura: 'Umm al-Qura · Makkah',
       isna: 'ISNA · North America'
@@ -602,6 +604,7 @@ export const STRINGS = {
     calcMethod: '计算方法',
     calcMethods: {
       kemenag: '印尼宗教部 · 20°/18°',
+      jakim: '马来西亚 JAKIM · 18°/18°',
       mwl: '世界穆斯林联盟',
       ummalqura: '乌姆古拉 · 麦加',
       isna: '北美伊斯兰协会'

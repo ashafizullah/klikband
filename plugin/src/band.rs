@@ -9,6 +9,9 @@ pub const PACKAGE: &str = "com.ashafizullah.klikband";
 
 // The first KlikBand that answers the plugin (1.25.0)
 const MIN_VERSION_CODE: u32 = 56;
+// The first that knows the JAKIM method (1.26.0); an older one would keep its
+// own method
+const JAKIM_VERSION_CODE: u32 = 60;
 
 // Why nothing was sent, as a key of the page's texts
 pub enum Problem {
@@ -30,7 +33,7 @@ async fn bands() -> Vec<String> {
 
 // KlikBand only hears the phone while it runs, so it is opened on the band
 // first; opening it again when it already runs leaves it as it is
-async fn open_klikband(addr: &str) -> Result<(), Problem> {
+async fn open_klikband(addr: &str, min_version: u32) -> Result<(), Problem> {
     let Ok(apps) = psys_host::thirdpartyapp::get_thirdparty_app_list(addr).await else {
         // The list is not essential: try sending anyway
         return Ok(());
@@ -38,7 +41,7 @@ async fn open_klikband(addr: &str) -> Result<(), Problem> {
     let Some(app) = apps.into_iter().find(|a| a.package_name == PACKAGE) else {
         return Err(Problem::NotInstalled);
     };
-    if app.version_code < MIN_VERSION_CODE {
+    if app.version_code < min_version {
         return Err(Problem::TooOld);
     }
     if psys_host::thirdpartyapp::launch_qa(addr, &app, "").await.is_ok() {
@@ -48,7 +51,7 @@ async fn open_klikband(addr: &str) -> Result<(), Problem> {
     Ok(())
 }
 
-async fn send(message: Value) -> Result<usize, Problem> {
+async fn send(message: Value, min_version: u32) -> Result<usize, Problem> {
     let addrs = bands().await;
     if addrs.is_empty() {
         return Err(Problem::NoBand);
@@ -57,7 +60,7 @@ async fn send(message: Value) -> Result<usize, Problem> {
     let mut sent = 0;
     let mut problem = Problem::SendFailed;
     for addr in &addrs {
-        if let Err(p) = open_klikband(addr).await {
+        if let Err(p) = open_klikband(addr, min_version).await {
             problem = p;
             continue;
         }
@@ -69,7 +72,7 @@ async fn send(message: Value) -> Result<usize, Problem> {
 }
 
 pub async fn ask_state() -> Result<usize, Problem> {
-    send(json!({ "type": "getState" })).await
+    send(json!({ "type": "getState" }), MIN_VERSION_CODE).await
 }
 
 pub async fn set_location(place: &Place, tz: f64, method: &str) -> Result<usize, Problem> {
@@ -82,7 +85,7 @@ pub async fn set_location(place: &Place, tz: f64, method: &str) -> Result<usize,
         "lng": (place.lng * 10000.0).round() / 10000.0,
         "tz": tz,
         "method": method,
-    }))
+    }), if method == "jakim" { JAKIM_VERSION_CODE } else { MIN_VERSION_CODE })
     .await
 }
 

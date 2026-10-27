@@ -114,7 +114,8 @@ pub fn offset_label(tz: f64) -> String {
 // until it is changed in KlikBand's settings
 pub fn suggested_method(country_code: &str) -> &'static str {
     match country_code {
-        "ID" | "MY" | "SG" | "BN" => "kemenag",
+        "MY" => "jakim",
+        "ID" | "SG" | "BN" => "kemenag",
         "SA" | "YE" => "ummalqura",
         "US" | "CA" => "isna",
         _ => "mwl",

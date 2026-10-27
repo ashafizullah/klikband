@@ -26,6 +26,23 @@ export function saveClockScreen(code) {
   storage.set({ key: 'clockScreen', value: code })
 }
 
+// How times are shown: '24h' (default, 13:05) or '12h' (1:05, with AM/PM
+// beside the Clock's big time)
+export const CLOCK_FORMATS = ['24h', '12h']
+
+export function loadClockFormat(cb) {
+  storage.get({
+    key: 'clockFormat',
+    default: '24h',
+    success: (data) => cb(CLOCK_FORMATS.indexOf(data) >= 0 ? data : '24h'),
+    fail: () => cb('24h')
+  })
+}
+
+export function saveClockFormat(code) {
+  storage.set({ key: 'clockFormat', value: code })
+}
+
 // Clock color themes, in the order a long press on Clock cycles through.
 // accent colors the colon, progress bars and the next prayer's row (with
 // black text, so every accent is light), heroBg and heroTrack the next-prayer

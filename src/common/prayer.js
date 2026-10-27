@@ -244,8 +244,11 @@ export function prayerName(t, key, day, short) {
   return short ? t.jumuah : t.jumuahPrayer
 }
 
-export function formatMinutes(m) {
+export function formatMinutes(m, format) {
   const h = Math.floor(m / 60) % 24
   const min = m % 60
-  return (h < 10 ? '0' : '') + h + ':' + (min < 10 ? '0' : '') + min
+  // The 12-hour clock drops the leading zero and leaves AM/PM out: next to
+  // a prayer's name the time is clear without it
+  const hours = format === '12h' ? String(h % 12 || 12) : (h < 10 ? '0' : '') + h
+  return hours + ':' + (min < 10 ? '0' : '') + min
 }

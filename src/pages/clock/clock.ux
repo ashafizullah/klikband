@@ -2,9 +2,10 @@
   <scroll class="page {{w}}page" style="{{frame}}" scroll-y="true" onswipe="onSwipe" onlongpress="nextTheme">
     <text class="date {{w}}date">{{gregorian}}</text>
     <div class="time-row">
-      <text class="time {{w}}time">{{hours}}</text>
-      <text class="time colon {{w}}colon" style="color: {{c.accent}};">:</text>
-      <text class="time {{w}}time">{{minutes}}</text>
+      <text class="time {{w}}time" style="{{timeSize}}">{{hours}}</text>
+      <text class="time colon {{w}}colon" style="color: {{c.accent}}; {{timeSize}}">:</text>
+      <text class="time {{w}}time" style="{{timeSize}}">{{minutes}}</text>
+      <text class="period {{w}}period" if="{{period}}">{{period}}</text>
     </div>
     <div class="track {{w}}track {{r}}fit">
       <div class="seconds-fill {{w}}seconds-fill" style="width: {{secondsBar}}px; background-color: {{c.accent}};"></div>
@@ -52,7 +53,7 @@ import {
   PRAYER_ORDER
 } from '../../common/prayer.js'
 import { prayerAlert, LATE_ALERT } from '../../common/alert.js'
-import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
+import { STRINGS, loadLanguage, formatDate } from '../../common/i18n.js'
 import { loadCity } from '../../common/cities.js'
 import { toHijriWithOffset, loadHijriOffset } from '../../common/hijri.js'
 import { fastsFor, fastMoment, fastName } from '../../common/fasting.js'
@@ -60,6 +61,7 @@ import {
   loadLayout,
   keepScreenOn,
   loadClockScreen,
+  loadClockFormat,
   CLOCK_THEMES,
   CLOCK_THEME_ORDER,
   loadClockTheme,
@@ -88,7 +90,15 @@ const LABEL_WIDTH = 66
 const FOOTER_SIZES = { '': [13, 12, 11], 'w-': [8, 7] }
 const FOOTER_WIDTH = { '': 176, 'w-': 176, 'r-': 140 }
 
+// Sizes for the band's big time, largest first: with AM/PM beside it, a
+// two-digit hour steps down until the row fits the screen
+const TIME_SIZES = [64, 60, 56, 52, 48]
+const TIME_WIDTH = 176
+
 const pad = (n) => (n < 10 ? '0' : '') + n
+
+// The countdown to the next prayer, as 03:05:09
+const countdownText = (s) => pad(Math.floor(s / 3600)) + ':' + pad(Math.floor(s / 60) % 60) + ':' + pad(s % 60)
 
 // When the stretch leading up to `next` began: the prayer before it,
 // or yesterday's Isha before Imsak
@@ -111,6 +121,8 @@ export default {
     gregorian: '',
     hours: '',
     minutes: '',
+    period: '',
+    timeSize: '',
     secondsBar: 0,
     hijri: '',
     hijriSize: 15,
@@ -132,7 +144,8 @@ export default {
         lang: loadLanguage,
         city: loadCity,
         offset: loadHijriOffset,
-        theme: loadClockTheme
+        theme: loadClockTheme,
+        format: loadClockFormat
       },
       (v) => {
         this.w = v.layout[0]
@@ -142,6 +155,7 @@ export default {
         this.cityData = v.city
         this.offset = v.offset
         this.theme = v.theme
+        this.format = v.format
         this.c = CLOCK_THEMES[v.theme]
         this.ready = true
         this.refresh()
@@ -227,7 +241,7 @@ export default {
   updateSeconds(now) {
     const ms = now.getTime()
     this.secondsBar = Math.round((SECONDS_WIDTH[this.r || this.w] * now.getSeconds()) / 59)
-    this.countdown = formatDuration(this.t, Math.max(0, Math.ceil((this.target - ms) / 1000)))
+    this.countdown = countdownText(Math.max(0, Math.ceil((this.target - ms) / 1000)))
     const span = this.target - this.start
     this.prayerBar = Math.round(PRAYER_WIDTH[this.r || this.w] * Math.min(1, Math.max(0, (ms - this.start) / span)))
   },
@@ -236,8 +250,7 @@ export default {
     const t = this.t
     const now = new Date()
     this.minute = now.getMinutes()
-    this.hours = pad(now.getHours())
-    this.minutes = pad(now.getMinutes())
+    this.showTime(now)
     this.gregorian = formatDate(t, now)
 
     const h = toHijriWithOffset(now, this.offset)
@@ -256,7 +269,7 @@ export default {
     // On the band the label shares a line with the 30px time: longer names
     // such as Maghrib and Berbuka step down to 16px to keep a gap between them
     this.labelSize = !this.w && textWidth(this.nextLabel, 18) > LABEL_WIDTH ? 'font-size: 16px;' : ''
-    this.nextTime = formatMinutes(next.times[next.key])
+    this.nextTime = formatMinutes(next.times[next.key], this.format)
     this.target = realTime(prayerDate(next.day, next.times[next.key]), this.cityData)
     this.start = realTime(previousStart(here, next, this.cityData), this.cityData)
     this.updateSeconds(now)
@@ -268,7 +281,7 @@ export default {
       if (k === next.key || (next.key === 'imsak' && k === 'fajr')) style = 'next'
       else if (!next.tomorrow && next.times[k] <= next.nowMinutes) style = 'past'
       const bg = style === 'next' ? 'background-color: ' + this.c.accent + ';' : ''
-      return { label: prayerName(t, k, next.day, true), time: formatMinutes(next.times[k]), style, bg }
+      return { label: prayerName(t, k, next.day, true), time: formatMinutes(next.times[k], this.format), style, bg }
     })
     // It changes only at a prayer time or a new theme, so it is redrawn only then
     const key = JSON.stringify(schedule)
@@ -291,6 +304,26 @@ export default {
     }
     this.updateBattery()
     this.showFooter()
+  },
+
+  // The big time, on the 12-hour clock with AM/PM beside it
+  showTime(now) {
+    const h = now.getHours()
+    this.minutes = pad(now.getMinutes())
+    if (this.format !== '12h') {
+      this.hours = pad(h)
+      this.period = ''
+      this.timeSize = ''
+      return
+    }
+    this.hours = String(h % 12 || 12)
+    this.period = this.t.periods[h < 12 ? 0 : 1]
+    // Digits ~0.6x the size, the colon and its margins ~0.35x + 4, then AM/PM
+    // at 16px with its margin; wide screens have room at their own size
+    const room = TIME_WIDTH - textWidth(this.period, 16) - 4
+    const fits = (size) => textWidth(this.hours + this.minutes, size) + size * 0.35 + 4 <= room
+    const size = this.w ? 0 : TIME_SIZES.find(fits) || TIME_SIZES[TIME_SIZES.length - 1]
+    this.timeSize = size && size !== TIME_SIZES[0] ? 'font-size: ' + size + 'px;' : ''
   },
 
   // The footer lead, with the battery level when it fits, at the largest size that fits
@@ -347,6 +380,14 @@ export default {
 
 .colon {
   margin: 0 2px 6px 2px;
+}
+
+/* AM/PM, small and level with the top of the digits */
+.period {
+  font-size: 16px;
+  font-weight: bold;
+  color: #8e8e93;
+  margin: 0 0 22px 4px;
 }
 
 .track {
@@ -500,6 +541,11 @@ export default {
 
 .w-colon {
   margin: 0 1px 4px 1px;
+}
+
+.w-period {
+  font-size: 10px;
+  margin: 0 0 14px 3px;
 }
 
 .w-track {

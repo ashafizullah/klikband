@@ -42,6 +42,14 @@
       </div>
     </div>
 
+    <text class="section section-next {{w}}section {{w}}section-next {{r}}fit">{{clockFormatLabel}}</text>
+    <div class="group {{w}}group {{r}}fit">
+      <div class="option {{w}}option" for="{{clockFormats}}" onclick="selectClockFormat($item.code)">
+        <text class="option-label {{w}}option-label">{{$item.label}}</text>
+        <div class="radio {{$item.code === clockFormat ? 'radio-active' : ''}} {{w}}radio"></div>
+      </div>
+    </div>
+
     <text class="section section-next {{w}}section {{w}}section-next {{r}}fit">{{clockScreenLabel}}</text>
     <div class="group {{w}}group {{r}}fit">
       <div class="option {{w}}option" for="{{clockScreens}}" onclick="selectClockScreen($item.code)">
@@ -70,6 +78,9 @@ import { CITIES, loadCity, saveCalcMethod, saveAsrMethod } from '../../common/ci
 import { CALC_METHOD_ORDER, ASR_SHADOWS } from '../../common/prayer.js'
 import {
   loadLayout,
+  CLOCK_FORMATS,
+  loadClockFormat,
+  saveClockFormat,
   CLOCK_SCREENS,
   loadClockScreen,
   saveClockScreen,
@@ -92,6 +103,9 @@ export default {
     scriptLabel: STRINGS.id.script,
     scripts: [],
     script: 'latin',
+    clockFormatLabel: STRINGS.id.clockFormat,
+    clockFormats: [],
+    clockFormat: '24h',
     clockScreenLabel: STRINGS.id.clockScreen,
     clockScreens: [],
     clockScreen: 'auto',
@@ -115,6 +129,7 @@ export default {
     })
     loadLanguage((lang) => this.apply(lang))
     loadScript((code) => (this.script = code))
+    loadClockFormat((code) => (this.clockFormat = code))
     loadClockScreen((code) => (this.clockScreen = code))
     loadClockTheme((code) => (this.clockTheme = code))
   },
@@ -152,6 +167,11 @@ export default {
     this.script = code
   },
 
+  selectClockFormat(code) {
+    saveClockFormat(code)
+    this.clockFormat = code
+  },
+
   selectClockScreen(code) {
     saveClockScreen(code)
     this.clockScreen = code
@@ -173,6 +193,8 @@ export default {
     this.calcMethods = CALC_METHOD_ORDER.map((code) => ({ code, label: STRINGS[lang].calcMethods[code] }))
     this.asrMethodLabel = STRINGS[lang].asrMethod
     this.asrMethods = Object.keys(ASR_SHADOWS).map((code) => ({ code, label: STRINGS[lang].asrMethods[code] }))
+    this.clockFormatLabel = STRINGS[lang].clockFormat
+    this.clockFormats = CLOCK_FORMATS.map((code) => ({ code, label: STRINGS[lang].clockFormats[code] }))
     this.clockScreenLabel = STRINGS[lang].clockScreen
     this.clockScreens = CLOCK_SCREENS.map((code) => ({ code, label: STRINGS[lang].clockScreens[code] }))
     this.clockThemeLabel = STRINGS[lang].clockTheme

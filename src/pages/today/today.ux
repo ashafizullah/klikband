@@ -57,7 +57,7 @@ import { STRINGS, loadLanguage, formatDuration } from '../../common/i18n.js'
 import { zoneLabel, loadCity } from '../../common/cities.js'
 import { toHijriWithOffset, loadHijriOffset } from '../../common/hijri.js'
 import { fastsFor, isFastDay, fastMoment, fastName } from '../../common/fasting.js'
-import { keepScreenOn, loadLayout } from '../../common/screen.js'
+import { keepScreenOn, loadLayout, loadClockFormat } from '../../common/screen.js'
 import { loadAll } from '../../common/load.js'
 
 // Style for a fasting line: highlighted when there is a fast, red when fasting is not allowed
@@ -94,13 +94,14 @@ export default {
   },
 
   onInit() {
-    loadAll({ layout: loadLayout, lang: loadLanguage, city: loadCity, offset: loadHijriOffset }, (v) => {
+    loadAll({ layout: loadLayout, lang: loadLanguage, city: loadCity, offset: loadHijriOffset, format: loadClockFormat }, (v) => {
       this.w = v.layout[0]
       this.frame = v.layout[1]
       this.r = v.layout[2]
       this.t = STRINGS[v.lang]
       this.cityData = v.city
       this.offset = v.offset
+      this.format = v.format
       this.refresh()
       // The countdown ticks every second; the rest only changes at the next prayer
       this.timer = setInterval(() => this.tick(), 1000)
@@ -161,12 +162,12 @@ export default {
     const fast = fastMoment(now, this.cityData, todayKeys, tomorrowKeys)
     this.fastTarget = fast ? realTime(prayerDate(fast.day, fast.minutes), this.cityData) : 0
     this.fastFor = fast ? fastName(t, fast.day === now ? todayKeys : tomorrowKeys) : ''
-    this.fastLabel = fast ? (fast.key === 'iftar' ? t.iftar : t.prayers.imsak) + ' · ' + formatMinutes(fast.minutes) : ''
+    this.fastLabel = fast ? (fast.key === 'iftar' ? t.iftar : t.prayers.imsak) + ' · ' + formatMinutes(fast.minutes, this.format) : ''
 
     const next = nextPrayer(now, this.cityData)
     this.nextKey = next.key
     this.nextLabel = prayerName(t, next.key, next.day)
-    this.nextTime = formatMinutes(next.times[next.key])
+    this.nextTime = formatMinutes(next.times[next.key], this.format)
     this.target = realTime(prayerDate(next.day, next.times[next.key]), this.cityData)
     this.tick()
     this.city = this.cityData.name + ' · ' + zoneLabel(this.cityData)

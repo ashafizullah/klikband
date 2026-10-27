@@ -50,7 +50,7 @@ import {
 import { prayerAlert, LATE_ALERT } from '../../common/alert.js'
 import { STRINGS, loadLanguage, formatDate, formatDuration } from '../../common/i18n.js'
 import { zoneLabel, loadCity } from '../../common/cities.js'
-import { keepScreenOn, loadLayout } from '../../common/screen.js'
+import { keepScreenOn, loadLayout, loadClockFormat } from '../../common/screen.js'
 import { loadAll } from '../../common/load.js'
 
 export default {
@@ -69,12 +69,13 @@ export default {
   },
 
   onInit() {
-    loadAll({ layout: loadLayout, lang: loadLanguage, city: loadCity }, (v) => {
+    loadAll({ layout: loadLayout, lang: loadLanguage, city: loadCity, format: loadClockFormat }, (v) => {
       this.w = v.layout[0]
       this.frame = v.layout[1]
       this.r = v.layout[2]
       this.t = STRINGS[v.lang]
       this.city = v.city
+      this.format = v.format
       this.refresh()
       // The countdown ticks every second; the rest only changes at the next prayer
       this.timer = setInterval(() => this.tick(), 1000)
@@ -115,12 +116,12 @@ export default {
     this.nextKey = next
     // The full Friday name fits the band's wide card, not the narrow ones
     this.nextLabel = prayerName(t, next, day, !!(this.w || this.r))
-    this.nextTime = formatMinutes(times[next])
+    this.nextTime = formatMinutes(times[next], this.format)
     this.target = realTime(prayerDate(day, times[next]), this.city)
     this.tick()
     const rows = PRAYER_ORDER.map((k) => ({
       label: prayerName(t, k, day, true),
-      time: formatMinutes(times[k]),
+      time: formatMinutes(times[k], this.format),
       next: k === next,
       // Past times are dimmed, the next one is highlighted
       style: k === next ? 'text-next' : !tomorrow && times[k] <= nowMinutes ? 'text-past' : ''
@@ -142,8 +143,8 @@ export default {
     const s = sunnahTimes(day, this.city)
     const here = placeNow(this.city)
     const night = lastThirdOfNight(here, this.city)
-    const span = (r) => formatMinutes(r[0]) + '–' + formatMinutes(r[1])
-    const until = (r) => t.until.replace('{time}', formatMinutes(r[1]))
+    const span = (r) => formatMinutes(r[0], this.format) + '–' + formatMinutes(r[1], this.format)
+    const until = (r) => t.until.replace('{time}', formatMinutes(r[1], this.format))
     // `now` in minutes since the window's own midnight
     const style = (r, now, active) => (now >= r[1] ? 'past' : now >= r[0] ? active : 'plain')
     const dayStyle = (r, active) => (tomorrow ? 'plain' : style(r, nowMinutes, active))

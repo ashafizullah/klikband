@@ -7,7 +7,7 @@
           <text class="name {{w}}name">{{$item.name}}</text>
           <text class="zone {{w}}zone">{{$item.zone}}</text>
         </div>
-        <div class="radio {{$item.code === active ? 'radio-active' : ''}} {{w}}radio"></div>
+        <div class="radio {{$item.code === active ? 'radio-active ' + w + 'radio-active' : ''}} {{w}}radio"></div>
       </div>
     </div>
   </scroll>

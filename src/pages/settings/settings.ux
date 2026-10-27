@@ -14,7 +14,7 @@
     <div class="group {{w}}group {{r}}fit">
       <div class="option {{w}}option" for="{{calcMethods}}" onclick="selectCalcMethod($item.code)">
         <text class="option-label {{w}}option-label">{{$item.label}}</text>
-        <div class="radio {{$item.code === calcMethod ? 'radio-active' : ''}} {{w}}radio"></div>
+        <div class="radio {{$item.code === calcMethod ? 'radio-active ' + w + 'radio-active' : ''}} {{w}}radio"></div>
       </div>
     </div>
 
@@ -22,7 +22,7 @@
     <div class="group {{w}}group {{r}}fit">
       <div class="option {{w}}option" for="{{asrMethods}}" onclick="selectAsrMethod($item.code)">
         <text class="option-label {{w}}option-label">{{$item.label}}</text>
-        <div class="radio {{$item.code === asrMethod ? 'radio-active' : ''}} {{w}}radio"></div>
+        <div class="radio {{$item.code === asrMethod ? 'radio-active ' + w + 'radio-active' : ''}} {{w}}radio"></div>
       </div>
     </div>
 
@@ -30,7 +30,7 @@
     <div class="group {{w}}group {{r}}fit">
       <div class="option {{w}}option" for="{{languages}}" onclick="select($item.code)">
         <text class="option-label {{w}}option-label">{{$item.label}}</text>
-        <div class="radio {{$item.code === active ? 'radio-active' : ''}} {{w}}radio"></div>
+        <div class="radio {{$item.code === active ? 'radio-active ' + w + 'radio-active' : ''}} {{w}}radio"></div>
       </div>
     </div>
 
@@ -38,7 +38,7 @@
     <div class="group {{w}}group {{r}}fit">
       <div class="option {{w}}option" for="{{scripts}}" onclick="selectScript($item.code)">
         <text class="option-label {{w}}option-label">{{$item.label}}</text>
-        <div class="radio {{$item.code === script ? 'radio-active' : ''}} {{w}}radio"></div>
+        <div class="radio {{$item.code === script ? 'radio-active ' + w + 'radio-active' : ''}} {{w}}radio"></div>
       </div>
     </div>
 
@@ -46,7 +46,7 @@
     <div class="group {{w}}group {{r}}fit">
       <div class="option {{w}}option" for="{{clockFormats}}" onclick="selectClockFormat($item.code)">
         <text class="option-label {{w}}option-label">{{$item.label}}</text>
-        <div class="radio {{$item.code === clockFormat ? 'radio-active' : ''}} {{w}}radio"></div>
+        <div class="radio {{$item.code === clockFormat ? 'radio-active ' + w + 'radio-active' : ''}} {{w}}radio"></div>
       </div>
     </div>
 
@@ -54,7 +54,7 @@
     <div class="group {{w}}group {{r}}fit">
       <div class="option {{w}}option" for="{{clockScreens}}" onclick="selectClockScreen($item.code)">
         <text class="option-label {{w}}option-label">{{$item.label}}</text>
-        <div class="radio {{$item.code === clockScreen ? 'radio-active' : ''}} {{w}}radio"></div>
+        <div class="radio {{$item.code === clockScreen ? 'radio-active ' + w + 'radio-active' : ''}} {{w}}radio"></div>
       </div>
     </div>
 
@@ -65,7 +65,7 @@
           <div class="swatch {{w}}swatch" style="background-color: {{$item.accent}};"></div>
           <text class="option-label {{w}}option-label">{{$item.label}}</text>
         </div>
-        <div class="radio {{$item.code === clockTheme ? 'radio-active' : ''}} {{w}}radio"></div>
+        <div class="radio {{$item.code === clockTheme ? 'radio-active ' + w + 'radio-active' : ''}} {{w}}radio"></div>
       </div>
     </div>
   </scroll>

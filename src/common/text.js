@@ -6,11 +6,3 @@ export function textWidth(text, fontSize) {
   }
   return width
 }
-
-// Start every marquee with id "m0", "m1", ... on the page
-export function startMarquees(page, count) {
-  for (let i = 0; i < count; i++) {
-    const el = page.$element('m' + i)
-    if (el && el.start) el.start()
-  }
-}

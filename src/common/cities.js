@@ -54,14 +54,14 @@ export const CITIES = [
   { name: 'Merauke', lat: -8.4932, lng: 140.4018, tz: 9 }
 ]
 
-export const TIME_ZONES = { 7: 'WIB', 8: 'WITA', 9: 'WIT' }
+const TIME_ZONES = { 7: 'WIB', 8: 'WITA', 9: 'WIT' }
 
 // A place anywhere in the world can be sent from the phone (the KlikBand
 // plugin for AstroBox). It is kept as JSON and chosen by this stored city name.
 export const PHONE_CITY = '@phone'
 
 // Nearer the poles some days have no sunrise or sunset, so no prayer times
-export const MAX_LATITUDE = 65
+const MAX_LATITUDE = 65
 
 function storedText(key, fallback, cb) {
   storage.get({ key, default: fallback, success: (data) => cb(data || fallback), fail: () => cb(fallback) })
@@ -118,7 +118,7 @@ function knownMethod(code) {
   return DROPPED_METHODS.indexOf(code) >= 0 ? 'mwl' : undefined
 }
 
-export function loadCalcMethod(cb) {
+function loadCalcMethod(cb) {
   storedText('calcMethod', 'kemenag', (code) => cb(knownMethod(code) || 'kemenag'))
 }
 
@@ -126,7 +126,7 @@ export function saveCalcMethod(code) {
   store('calcMethod', code)
 }
 
-export function loadAsrMethod(cb) {
+function loadAsrMethod(cb) {
   storedText('asrMethod', 'shafii', (code) => cb(ASR_SHADOWS[code] ? code : 'shafii'))
 }
 

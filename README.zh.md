@@ -22,7 +22,7 @@
 </p>
 
 <p align="center">
-  <a href="https://trakteer.id/adamshafizullah/tip"><img src="https://img.shields.io/badge/Buy%20me%20an%20AI%20token-Trakteer-C02E2E?style=for-the-badge" alt="Buy me an AI token on Trakteer"></a>
+  <a href="https://trakteer.id/adamshafizullah/tip"><img src="https://img.shields.io/badge/%E8%AF%B7%E6%88%91%E4%B8%80%E4%B8%AA%20AI%20token-Trakteer-C02E2E?style=for-the-badge" alt="在 Trakteer 请我一个 AI token"></a>
 </p>
 
 <p align="center">

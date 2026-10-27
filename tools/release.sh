@@ -2,8 +2,9 @@
 # Releases KlikBand: GitHub Release, the AstroBox store and, with --plugin,
 # the KlikBand plugin for AstroBox. See docs/RELEASING.md.
 #
-# usage: tools/release.sh VERSION --notes NOTES.md [--plugin PLUGIN_VERSION]
-#   e.g. tools/release.sh 1.26.0 --notes /tmp/notes.md --plugin 1.1.0
+# usage: tools/release.sh VERSION [--notes NOTES.md] [--plugin PLUGIN_VERSION]
+#   e.g. tools/release.sh 1.26.0 --plugin 1.1.0
+# The notes default to release-notes/VERSION.md (kept out of git).
 #
 # Asks before each step that publishes something. Needs git, gh, node,
 # python3 and, with --plugin, cargo with the wasm32-wasip2 target.
@@ -27,10 +28,12 @@ while [ $# -gt 0 ]; do
     *) echo "unknown option: $1" >&2; exit 1 ;;
   esac
 done
+[ -n "$NOTES" ] || NOTES=$ROOT/release-notes/$VERSION.md
 if ! echo "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || [ ! -f "$NOTES" ]; then
-  sed -n 2,9p "$0"
+  sed -n 2,10p "$0"
   exit 1
 fi
+NOTES=$(cd "$(dirname "$NOTES")" && pwd)/$(basename "$NOTES")
 
 ask() {
   printf '%s [y/N] ' "$1"
@@ -135,6 +138,9 @@ git fetch -q --depth 1 upstream main:refs/remotes/upstream/main
 BASE=$(git rev-parse upstream/main)
 DIR=tmp/$OWNER/$RESOURCE_REPO
 LISTED=$(git show "upstream/main:index_v2.csv" | grep -c "^$PACKAGE," || true)
+# An edit request still open in the store (an earlier update-klikband-* PR)
+OPEN=$(gh pr list -R "$STORE" --author "$OWNER" --state open --json headRefName \
+  --jq '[.[].headRefName | select(startswith("update-klikband"))][0] // ""')
 
 if [ "$LISTED" = 0 ]; then
   # Not in the store yet: the first submission (add-klikband) is still open, so update it
@@ -145,6 +151,17 @@ if [ "$LISTED" = 0 ]; then
   git commit -q -am "Update KlikBand to $VERSION"
   if ask "Push the open store submission (add-klikband) to $HASH?"; then
     push origin add-klikband
+  fi
+elif [ -n "$OPEN" ]; then
+  # Listed, with an edit request still open: point it at the new commit, since
+  # a second edit from the same catalog row would clash with it
+  git fetch -q --depth 1 origin "$OPEN:refs/remotes/origin/$OPEN"
+  git checkout -q -b "$OPEN" "origin/$OPEN"
+  git sparse-checkout set tmp
+  sed -i '' "s/,$RESOURCE_REPO,[0-9a-f]*,/,$RESOURCE_REPO,$HASH,/" "$DIR/resource.csv"
+  git commit -q -am "Update KlikBand to $VERSION"
+  if ask "Push the open store edit request ($OPEN) to $HASH?"; then
+    push origin "$OPEN"
   fi
 else
   # Listed: an edit request, which names the current row by its digest

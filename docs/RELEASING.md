@@ -8,12 +8,14 @@ Catatan untuk pengelola. Satu rilis memperbarui tiga tempat:
 
 ## Cara cepat
 
-Tulis catatan rilis (bahasa Inggris, seperti rilis sebelumnya) ke sebuah file, lalu:
+Tulis catatan rilis (bahasa Inggris, seperti rilis sebelumnya) di `release-notes/x.y.z.md`. Folder ini di-gitignore, jadi catatannya tetap tersimpan di proyek tanpa ikut ter-commit. Lalu:
 
 ```
-tools/release.sh 1.26.0 --notes /tmp/notes.md
-tools/release.sh 1.26.0 --notes /tmp/notes.md --plugin 1.1.0   # kalau plugin ikut berubah
+tools/release.sh 1.26.0
+tools/release.sh 1.26.0 --plugin 1.1.0   # kalau plugin ikut berubah
 ```
+
+`--notes FILE` tetap bisa dipakai untuk catatan di tempat lain.
 
 Skrip ini berjalan di macOS (`sed -i ''`) dan butuh `git`, `gh` (sudah login), Node.js, Python 3, kunci tanda tangan di `sign/release/` (lihat di bawah), serta untuk plugin `cargo` dengan target `wasm32-wasip2`. Repo rilis AstroBox diharapkan ada di `../astrobox-resource-klikband`; kalau di tempat lain, set `RESOURCE_DIR`.
 
@@ -24,7 +26,8 @@ Skrip selalu bertanya dulu sebelum setiap langkah yang menerbitkan sesuatu. Urut
 3. Di repo rilis AstroBox: mengganti rpk, memperbarui `version`, `file_name` dan `versionCode` di `manifest_v2.json` (`versionCode` dipakai AstroBox untuk menawarkan update ke pengguna), menyalin plugin ke `plugin/`, commit, lalu push.
 4. Di toko AstroBox:
    - Kalau KlikBand **belum** tercantum di `index_v2.csv` (pengajuan pertama, PR [#1688](https://github.com/AstralSightStudios/AstroBox-Repo/pull/1688), masih terbuka), hash commit di branch `add-klikband` fork diperbarui.
-   - Kalau **sudah** tercantum, dibuat PR edit baru (`tmp/ashafizullah/astrobox-resource-com.ashafizullah.klikband/resource.csv` dan `request.json` bermode `edit`).
+   - Kalau **sudah** tercantum dan masih ada PR edit yang terbuka (branch `update-klikband-*` di fork), hash commit di PR itu yang diperbarui. Dua PR edit dari baris katalog yang sama akan saling bentrok.
+   - Kalau **sudah** tercantum dan tidak ada PR terbuka, dibuat PR edit baru (`tmp/ashafizullah/astrobox-resource-com.ashafizullah.klikband/resource.csv` dan `request.json` bermode `edit`).
 
 ## Kunci tanda tangan
 
@@ -40,7 +43,7 @@ Mulai 1.25.2 semua rilis adalah **build release** yang ditandatangani kunci Klik
 - **`versionCode` harus selalu naik.** Band diam-diam melewati pemasangan dengan versionCode yang sama atau lebih rendah, termasuk build uji. Kalau sudah memasang build uji di band, pastikan rilisnya di atas angka itu.
 - **Plugin dan aplikasi saling bergantung.** Plugin menolak KlikBand yang lebih lama dari `MIN_VERSION_CODE` di `plugin/src/band.rs` (sekarang 56 = 1.25.0). Kalau cara KlikBand menjawab plugin berubah (`src/common/phone.js`), naikkan angka ini dan rilis keduanya bersamaan.
 - **Toko plugin membaca sendiri.** [`AstroBox-NG-Plugin-Repo`](https://github.com/AstralSightStudios/AstroBox-NG-Plugin-Repo) membaca `index.txt` dan `plugin/manifest.json` dari repo rilis setiap 4 jam (setelah PR [#31](https://github.com/AstralSightStudios/AstroBox-NG-Plugin-Repo/pull/31) di-merge). Untuk update plugin tidak perlu PR lagi.
-- **Band 10** sengaja belum didaftarkan di toko AstroBox, karena ada laporan crash yang belum terjawab. Untuk menambahkannya, tambahkan `xmb10` dan `xmb10nfc` di `downloads` di `manifest_v2.json` dan di kolom `devices` pengajuan.
+- **Perangkat di toko AstroBox** ditentukan oleh kunci `downloads` di `manifest_v2.json` dan kolom `devices` pengajuan. Sejak Oktober 2026 semua perangkat Vela Xiaomi yang ada di [`devices_v2.json`](https://github.com/AstralSightStudios/AstroBox-Repo/blob/main/devices_v2.json) didaftarkan (16 perangkat, tanpa vivo karena bukan Vela). Kalau AstroBox menambah perangkat Vela baru, tambahkan kodenya di dua tempat itu.
 - **Push ke repo rilis AstroBox kadang dijawab GitHub dengan HTTP 500.** Skrip otomatis mengulang dengan HTTP/1.1; kalau manual, pakai `git -c http.version=HTTP/1.1 push`.
 - **Untuk uji di band**, `npm run build` (debug) tetap boleh dipakai. Tapi setelah memasang build release, build debug bisa jadi ditolak band karena tanda tangannya berbeda.
 

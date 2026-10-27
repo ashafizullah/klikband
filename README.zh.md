@@ -92,6 +92,10 @@
 
 AstroBox 也会推送 KlikBand 的更新，AstroBox 中的 [KlikBand 插件](#来自手机的位置)可以把世界上任何地点发送到手环。也可以从 [Releases](https://github.com/ashafizullah/klikband/releases/latest) 下载 `.rpk` 文件，用 AstroBox 打开。已在 Mac 上对小米手环 9 试过。
 
+🎬 **[视频教程：通过 AstroBox 安装](https://youtu.be/NPjfcj2y5xs)**（印尼语）· [KlikBand 全部视频](https://www.youtube.com/playlist?list=PLTOFDMua_u6Y)
+
+<a href="https://youtu.be/NPjfcj2y5xs"><img src="https://i.ytimg.com/vi/NPjfcj2y5xs/hqdefault.jpg" width="480" alt="Cara Pasang KlikBand di Xiaomi Smart Band lewat AstroBox"></a>
+
 ### 也可以：Gadgetbridge（Android）
 
 KlikBand 也可以通过 **Android** 手机上的 [Gadgetbridge](https://gadgetbridge.org/) 安装。首次安装约需 30–45 分钟，并需要用一次电脑从 Mi Fitness 读取手环钥匙。之后更新只要 1 分钟。所有支持的手环和手表步骤相同。

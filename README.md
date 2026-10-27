@@ -92,6 +92,10 @@ There are two ways. AstroBox is the easier one; Gadgetbridge works too.
 
 AstroBox also offers KlikBand's updates, and its [KlikBand plugin](#location-from-the-phone) sends any place in the world to the band. You can also download the `.rpk` file from [Releases](https://github.com/ashafizullah/klikband/releases/latest) and open it with AstroBox. Tried on a Smart Band 9 from a Mac.
 
+🎬 **[Video tutorial: install with AstroBox](https://youtu.be/NPjfcj2y5xs)** (in Indonesian) · [all KlikBand videos](https://www.youtube.com/playlist?list=PLTOFDMua_u6Y)
+
+<a href="https://youtu.be/NPjfcj2y5xs"><img src="https://i.ytimg.com/vi/NPjfcj2y5xs/hqdefault.jpg" width="480" alt="Cara Pasang KlikBand di Xiaomi Smart Band lewat AstroBox"></a>
+
 ### Also possible: Gadgetbridge (Android)
 
 KlikBand can also be installed from an **Android** phone with [Gadgetbridge](https://gadgetbridge.org/). The first time takes about 30–45 minutes and needs a computer once, to read the band's key from Mi Fitness. Updates take a minute. The steps are the same for every supported band and watch.

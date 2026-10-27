@@ -92,6 +92,10 @@ Ada dua cara. Lewat AstroBox lebih mudah; lewat Gadgetbridge juga bisa.
 
 AstroBox juga menawarkan update KlikBand, dan [plugin KlikBand](#lokasi-dari-hp) di AstroBox bisa mengirim lokasi mana pun di dunia ke band. Bisa juga unduh file `.rpk` dari [Releases](https://github.com/ashafizullah/klikband/releases/latest) lalu buka dengan AstroBox. Sudah dicoba di Smart Band 9 dari Mac.
 
+🎬 **[Video tutorial pemasangan lewat AstroBox](https://youtu.be/NPjfcj2y5xs)** · [semua video KlikBand](https://www.youtube.com/playlist?list=PLTOFDMua_u6Y)
+
+<a href="https://youtu.be/NPjfcj2y5xs"><img src="https://i.ytimg.com/vi/NPjfcj2y5xs/hqdefault.jpg" width="480" alt="Cara Pasang KlikBand di Xiaomi Smart Band lewat AstroBox"></a>
+
 ### Bisa juga: Gadgetbridge (Android)
 
 KlikBand juga bisa dipasang dari HP **Android** lewat [Gadgetbridge](https://gadgetbridge.org/). Pemasangan pertama butuh sekitar 30–45 menit dan sekali memakai komputer, untuk mengambil kunci band dari Mi Fitness. Update berikutnya cukup 1 menit. Langkahnya sama untuk semua band dan jam yang didukung.

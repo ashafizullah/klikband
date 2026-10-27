@@ -17,6 +17,7 @@
   <br>
   <img src="https://img.shields.io/badge/Xiaomi%20Vela-quick%20app-FF6900?logo=xiaomi&logoColor=white" alt="Xiaomi Vela quick app">
   <img src="https://img.shields.io/badge/device-Smart%20Band%20%C2%B7%20REDMI%20Watch%20%C2%B7%20Xiaomi%20Watch-lightgrey" alt="Xiaomi Smart Band, REDMI Watch, Xiaomi Watch">
+  <a href="https://astrobox.online"><img src="https://img.shields.io/badge/install%20via-AstroBox-6366F1" alt="Install via AstroBox"></a>
   <a href="https://gadgetbridge.org/"><img src="https://img.shields.io/badge/install%20via-Gadgetbridge-3DDC84?logo=android&logoColor=white" alt="Install via Gadgetbridge"></a>
   <img src="https://img.shields.io/badge/languages-EN%20%7C%20ID%20%7C%20%E4%B8%AD%E6%96%87-lightgrey" alt="English, Indonesian, Chinese">
 </p>
@@ -80,15 +81,26 @@
 
 ## 安装到手环
 
-KlikBand 通过 **Android** 手机（不支持 iPhone）上的 [Gadgetbridge](https://gadgetbridge.org/) 安装。首次安装约需 30–45 分钟，并需要用一次电脑从 Mi Fitness 读取手环钥匙。之后更新只要 1 分钟。所有支持的手环和手表步骤相同。
+有两种方式。用 AstroBox 更简单；也可以用 Gadgetbridge。
 
-👉 **[分步安装指南](docs/INSTALL.zh.md)**（面向新手，含常见问题和问答）
+### 最简单：AstroBox
+
+[AstroBox](https://astrobox.online) 支持 Android、iPhone、Windows 和 Mac。KlikBand 已上架 AstroBox 资源商店：
+
+1. 安装 AstroBox，用小米账号或手环钥匙连接手环。
+2. 在商店中搜索 **KlikBand** 并安装到手环。
+
+AstroBox 也会推送 KlikBand 的更新，AstroBox 中的 [KlikBand 插件](#来自手机的位置)可以把世界上任何地点发送到手环。也可以从 [Releases](https://github.com/ashafizullah/klikband/releases/latest) 下载 `.rpk` 文件，用 AstroBox 打开。已在 Mac 上对小米手环 9 试过。
+
+### 也可以：Gadgetbridge（Android）
+
+KlikBand 也可以通过 **Android** 手机上的 [Gadgetbridge](https://gadgetbridge.org/) 安装。首次安装约需 30–45 分钟，并需要用一次电脑从 Mi Fitness 读取手环钥匙。之后更新只要 1 分钟。所有支持的手环和手表步骤相同。
+
+👉 **[Gadgetbridge 分步安装指南](docs/INSTALL.zh.md)**（面向新手，含常见问题和问答）
 
 🎬 **[视频教程](https://youtu.be/WpygHpV-c_4)**（印尼语）
 
 <a href="https://youtu.be/WpygHpV-c_4"><img src="https://i.ytimg.com/vi/WpygHpV-c_4/hqdefault.jpg" width="480" alt="Cara Pasang KlikBand di Xiaomi Smart Band"></a>
-
-**另一种方式：[AstroBox](https://astrobox.online)**（Android、iOS、Windows、Mac）。在 AstroBox 中用小米账号或手环钥匙连接手环，然后用 AstroBox 打开 `.rpk` 文件。已在 Mac 上对小米手环 9 试过。
 
 ## 来自手机的位置
 

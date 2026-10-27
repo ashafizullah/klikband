@@ -17,6 +17,7 @@
   <br>
   <img src="https://img.shields.io/badge/Xiaomi%20Vela-quick%20app-FF6900?logo=xiaomi&logoColor=white" alt="Xiaomi Vela quick app">
   <img src="https://img.shields.io/badge/device-Smart%20Band%20%C2%B7%20REDMI%20Watch%20%C2%B7%20Xiaomi%20Watch-lightgrey" alt="Xiaomi Smart Band, REDMI Watch, Xiaomi Watch">
+  <a href="https://astrobox.online"><img src="https://img.shields.io/badge/install%20via-AstroBox-6366F1" alt="Install via AstroBox"></a>
   <a href="https://gadgetbridge.org/"><img src="https://img.shields.io/badge/install%20via-Gadgetbridge-3DDC84?logo=android&logoColor=white" alt="Install via Gadgetbridge"></a>
   <img src="https://img.shields.io/badge/languages-EN%20%7C%20ID%20%7C%20%E4%B8%AD%E6%96%87-lightgrey" alt="English, Indonesian, Chinese">
 </p>
@@ -80,15 +81,26 @@ Devices marked "Vela emulator" or "not yet" have not been tried on real hardware
 
 ## Install on the band
 
-KlikBand is installed from an **Android** phone (iPhone is not supported) with [Gadgetbridge](https://gadgetbridge.org/). The first time takes about 30–45 minutes and needs a computer once, to read the band's key from Mi Fitness. Updates take a minute. The steps are the same for every supported band and watch.
+There are two ways. AstroBox is the easier one; Gadgetbridge works too.
 
-👉 **[Step-by-step install guide](docs/INSTALL.md)** (written for beginners, with troubleshooting and FAQ)
+### Easiest: AstroBox
+
+[AstroBox](https://astrobox.online) runs on Android, iPhone, Windows and Mac. KlikBand is in the AstroBox store:
+
+1. Install AstroBox and connect the band, with your Xiaomi account or the band's key.
+2. Search the store for **KlikBand** and install it on the band.
+
+AstroBox also offers KlikBand's updates, and its [KlikBand plugin](#location-from-the-phone) sends any place in the world to the band. You can also download the `.rpk` file from [Releases](https://github.com/ashafizullah/klikband/releases/latest) and open it with AstroBox. Tried on a Smart Band 9 from a Mac.
+
+### Also possible: Gadgetbridge (Android)
+
+KlikBand can also be installed from an **Android** phone with [Gadgetbridge](https://gadgetbridge.org/). The first time takes about 30–45 minutes and needs a computer once, to read the band's key from Mi Fitness. Updates take a minute. The steps are the same for every supported band and watch.
+
+👉 **[Step-by-step Gadgetbridge guide](docs/INSTALL.md)** (written for beginners, with troubleshooting and FAQ)
 
 🎬 **[Video tutorial](https://youtu.be/WpygHpV-c_4)** (in Indonesian)
 
 <a href="https://youtu.be/WpygHpV-c_4"><img src="https://i.ytimg.com/vi/WpygHpV-c_4/hqdefault.jpg" width="480" alt="Cara Pasang KlikBand di Xiaomi Smart Band"></a>
-
-**Another way: [AstroBox](https://astrobox.online)** (Android, iOS, Windows, Mac). Connect the band in AstroBox with your Xiaomi account or the band's key, then open the `.rpk` file with AstroBox. Tried on a Smart Band 9 from a Mac.
 
 ## Location from the phone
 

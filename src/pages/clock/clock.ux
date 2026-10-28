@@ -21,7 +21,10 @@
         <div class="hero-track {{w}}hero-track {{r}}hero-track" style="background-color: {{c.heroTrack}};">
           <div class="hero-fill {{w}}hero-fill" style="width: {{prayerBar}}px; background-color: {{c.accent}};"></div>
         </div>
-        <text class="countdown {{w}}countdown" style="color: {{c.soft}};">{{countdown}}</text>
+        <div class="status">
+          <div class="blink {{w}}blink" if="{{arrived}}" style="background-color: {{blink}};"></div>
+          <text class="countdown {{w}}countdown" style="color: {{c.soft}};">{{countdown}}</text>
+        </div>
       </div>
 
       <div class="schedule {{w}}schedule {{r}}schedule">
@@ -73,6 +76,10 @@ import { loadAll } from '../../common/load.js'
 // The five daily prayers shown in the schedule
 const DAILY = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']
 
+// Minutes the hero card stays on a prayer after its time arrives, before
+// counting down to the next one
+const HOLD = 10
+
 // Inner widths of the seconds track and the hero card's progress track,
 // on bands, on wide screens and on round watches
 const SECONDS_WIDTH = { '': 120, 'w-': 176, 'r-': 160 }
@@ -112,6 +119,15 @@ function previousStart(now, next, location) {
   return prayerDate(yesterday, prayerTimes(yesterday, location).isha)
 }
 
+// The daily prayer whose time came less than HOLD minutes ago, if any.
+// Prayer times are whole minutes, so the refresh at every new minute ends the hold
+function arrivedPrayer(now, location) {
+  const times = prayerTimes(now, location)
+  const nowMinutes = now.getHours() * 60 + now.getMinutes()
+  const key = DAILY.find((k) => times[k] <= nowMinutes && nowMinutes < times[k] + HOLD)
+  return key && { key, day: now, times, nowMinutes, tomorrow: false }
+}
+
 export default {
   private: {
     w: '',
@@ -131,6 +147,8 @@ export default {
     nextTime: '',
     prayerBar: 0,
     countdown: '',
+    arrived: false,
+    blink: '',
     schedule: [],
     footer: '',
     footerSize: 13
@@ -237,10 +255,17 @@ export default {
     else this.updateSeconds(now)
   },
 
-  // Everything that moves every second: the seconds track, countdown and prayer progress
+  // Everything that moves every second: the seconds track, countdown and prayer
+  // progress, or while a prayer's time has just arrived, a full track and a blinking dot
   updateSeconds(now) {
     const ms = now.getTime()
     this.secondsBar = Math.round((SECONDS_WIDTH[this.r || this.w] * now.getSeconds()) / 59)
+    if (this.arrived) {
+      this.countdown = this.t.prayerArrived
+      this.blink = now.getSeconds() % 2 ? this.c.heroBg : this.c.accent
+      this.prayerBar = PRAYER_WIDTH[this.r || this.w]
+      return
+    }
     this.countdown = countdownText(Math.max(0, Math.ceil((this.target - ms) / 1000)))
     const span = this.target - this.start
     this.prayerBar = Math.round(PRAYER_WIDTH[this.r || this.w] * Math.min(1, Math.max(0, (ms - this.start) / span)))
@@ -264,24 +289,29 @@ export default {
     const hHere = toHijriWithOffset(here, this.offset)
     const next = nextPrayer(here, this.cityData)
     this.nextKey = next.key
+    // The card and schedule stay on a prayer for HOLD minutes after its time
+    // arrives; the alert still waits for the next one
+    const arrived = arrivedPrayer(here, this.cityData)
+    const shown = arrived || next
+    this.arrived = !!arrived
     // In Ramadan, Maghrib is the iftar (always today's, as it comes before Isha)
-    this.nextLabel = next.key === 'maghrib' && hHere.month === 9 ? t.iftar : prayerName(t, next.key, next.day, true)
+    this.nextLabel = shown.key === 'maghrib' && hHere.month === 9 ? t.iftar : prayerName(t, shown.key, shown.day, true)
     // On the band the label shares a line with the 30px time: longer names
     // such as Maghrib and Berbuka step down to 16px to keep a gap between them
     this.labelSize = !this.w && textWidth(this.nextLabel, 18) > LABEL_WIDTH ? 'font-size: 16px;' : ''
-    this.nextTime = formatMinutes(next.times[next.key], this.format)
+    this.nextTime = formatMinutes(shown.times[shown.key], this.format)
     this.target = realTime(prayerDate(next.day, next.times[next.key]), this.cityData)
     this.start = realTime(previousStart(here, next, this.cityData), this.cityData)
     this.updateSeconds(now)
 
-    // Passed prayers are dimmed and the next one is highlighted; after Isha
+    // Passed prayers are dimmed and the shown one is highlighted; after Isha
     // the list shows tomorrow, so nothing is dimmed
     const schedule = DAILY.map((k) => {
       let style = 'upcoming'
-      if (k === next.key || (next.key === 'imsak' && k === 'fajr')) style = 'next'
-      else if (!next.tomorrow && next.times[k] <= next.nowMinutes) style = 'past'
+      if (k === shown.key || (shown.key === 'imsak' && k === 'fajr')) style = 'next'
+      else if (!shown.tomorrow && shown.times[k] <= shown.nowMinutes) style = 'past'
       const bg = style === 'next' ? 'background-color: ' + this.c.accent + ';' : ''
-      return { label: prayerName(t, k, next.day, true), time: formatMinutes(next.times[k], this.format), style, bg }
+      return { label: prayerName(t, k, shown.day, true), time: formatMinutes(shown.times[k], this.format), style, bg }
     })
     // It changes only at a prayer time or a new theme, so it is redrawn only then
     const key = JSON.stringify(schedule)
@@ -454,6 +484,19 @@ export default {
   border-radius: 3px;
 }
 
+.status {
+  flex-direction: row;
+  align-items: center;
+}
+
+/* Blinks beside "It's time" while a prayer's time has just arrived */
+.blink {
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  margin-right: 6px;
+}
+
 .countdown {
   font-size: 14px;
 }
@@ -597,6 +640,13 @@ export default {
 
 .w-hero-fill {
   height: 4px;
+}
+
+.w-blink {
+  width: 4px;
+  height: 4px;
+  border-radius: 2px;
+  margin-right: 3px;
 }
 
 .w-countdown {

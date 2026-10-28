@@ -192,6 +192,7 @@ export const STRINGS = {
       isha: 'Isya'
     },
     prayerTimeNow: 'Masuk waktu {name}',
+    prayerArrived: 'Masuk waktu',
     iftar: 'Berbuka',
     jumuah: 'Jumat',
     jumuahPrayer: 'Sholat Jumat',
@@ -387,6 +388,7 @@ export const STRINGS = {
       isha: 'Isha'
     },
     prayerTimeNow: "It's {name} time",
+    prayerArrived: "It's time",
     iftar: 'Iftar',
     jumuah: "Jumu'ah",
     jumuahPrayer: "Jumu'ah prayer",
@@ -582,6 +584,7 @@ export const STRINGS = {
       isha: '宵礼'
     },
     prayerTimeNow: '{name}时间到了',
+    prayerArrived: '时间到了',
     iftar: '开斋',
     jumuah: '主麻',
     jumuahPrayer: '主麻拜',

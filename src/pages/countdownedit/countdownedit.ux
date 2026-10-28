@@ -58,7 +58,7 @@ export default {
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
       this.render()
-    })
+    }, this)
     loadCountdowns((list) => {
       this.list = list
       if (this.index >= 0 && list[this.index]) this.entry = Object.assign({}, list[this.index])

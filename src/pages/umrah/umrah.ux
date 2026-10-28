@@ -35,7 +35,7 @@ export default {
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
       this.items = UMRAH_STEPS.map((s) => s.title[lang])
-    })
+    }, this)
   },
 
   open(index) {

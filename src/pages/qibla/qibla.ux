@@ -32,7 +32,7 @@
 import sensor from '@system.sensor'
 import { qiblaBearing, kaabaDistance, compassPoint, SUN_OVER_KAABA } from '../../common/qibla.js'
 import { sunDirection, locationOffset } from '../../common/prayer.js'
-import { STRINGS, loadLanguage } from '../../common/i18n.js'
+import { STRINGS, knownLanguage, loadLanguage } from '../../common/i18n.js'
 import { CITIES, zoneLabel, loadCity } from '../../common/cities.js'
 import { keepScreenOn, loadLayout } from '../../common/screen.js'
 import { loadAll } from '../../common/load.js'
@@ -88,10 +88,11 @@ export default {
   },
 
   onInit() {
+    this.t = STRINGS[knownLanguage(this)]
     this.city = CITIES[0]
     // Heading of the top of the band from the compass, when the device has one
     this.heading = null
-    loadAll({ layout: loadLayout, lang: loadLanguage, city: loadCity }, (v) => {
+    loadAll({ layout: loadLayout, lang: (cb) => loadLanguage(cb, this), city: loadCity }, (v) => {
       this.w = v.layout[0]
       this.frame = v.layout[1]
       this.r = v.layout[2]

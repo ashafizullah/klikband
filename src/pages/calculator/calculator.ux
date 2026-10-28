@@ -65,7 +65,7 @@ export default {
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
       this.render()
-    })
+    }, this)
   },
 
   format(entry) {

@@ -42,7 +42,7 @@ export default {
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
       this.render()
-    })
+    }, this)
   },
 
   // Also runs when returning from the editor

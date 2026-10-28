@@ -67,7 +67,7 @@ export default {
       this.lang = lang
       this.t = STRINGS[lang]
       this.render()
-    })
+    }, this)
   },
 
   onShow() {

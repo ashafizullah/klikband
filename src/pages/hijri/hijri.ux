@@ -23,7 +23,7 @@
 
 <script>
 import { toHijriWithOffset, loadHijriOffset, saveHijriOffset } from '../../common/hijri.js'
-import { STRINGS, loadLanguage } from '../../common/i18n.js'
+import { STRINGS, knownLanguage, loadLanguage } from '../../common/i18n.js'
 import { loadLayout } from '../../common/screen.js'
 import { loadAll } from '../../common/load.js'
 
@@ -43,7 +43,8 @@ export default {
   },
 
   onInit() {
-    loadAll({ layout: loadLayout, lang: loadLanguage, offset: loadHijriOffset }, (v) => {
+    this.t = STRINGS[knownLanguage(this)]
+    loadAll({ layout: loadLayout, lang: (cb) => loadLanguage(cb, this), offset: loadHijriOffset }, (v) => {
       this.w = v.layout[0]
       this.frame = v.layout[1]
       this.r = v.layout[2]

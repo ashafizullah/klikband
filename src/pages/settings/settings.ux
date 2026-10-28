@@ -127,7 +127,7 @@ export default {
       this.frame = frame
       this.r = r
     })
-    loadLanguage((lang) => this.apply(lang))
+    loadLanguage((lang) => this.apply(lang), this)
     loadScript((code) => (this.script = code))
     loadClockFormat((code) => (this.clockFormat = code))
     loadClockScreen((code) => (this.clockScreen = code))
@@ -148,7 +148,7 @@ export default {
   },
 
   select(code) {
-    saveLanguage(code)
+    saveLanguage(code, this)
     this.apply(code)
   },
 

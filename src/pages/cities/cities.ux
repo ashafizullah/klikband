@@ -39,7 +39,7 @@ export default {
       this.t = STRINGS[lang]
       this.title = this.t.city
       this.showPhone()
-    })
+    }, this)
     loadCity((city) => (this.active = city.custom ? PHONE_CITY : city.name))
   },
 

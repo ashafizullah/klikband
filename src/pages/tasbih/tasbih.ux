@@ -59,7 +59,7 @@ export default {
       this.r = r
       this.updateBar()
     })
-    loadLanguage((lang) => (this.t = STRINGS[lang]))
+    loadLanguage((lang) => (this.t = STRINGS[lang]), this)
     storage.get({
       key: 'tasbih',
       success: (data) => {

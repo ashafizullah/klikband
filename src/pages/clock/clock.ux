@@ -159,7 +159,7 @@ export default {
     loadAll(
       {
         layout: loadLayout,
-        lang: loadLanguage,
+        lang: (cb) => loadLanguage(cb, this),
         city: loadCity,
         offset: loadHijriOffset,
         theme: loadClockTheme,

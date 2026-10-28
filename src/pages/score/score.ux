@@ -71,7 +71,7 @@ export default {
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
       this.render()
-    })
+    }, this)
     storage.get({
       key: 'score',
       success: (data) => {

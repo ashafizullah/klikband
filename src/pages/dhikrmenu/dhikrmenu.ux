@@ -48,11 +48,11 @@ export default {
       this.frame = frame
       this.r = r
     })
-    loadLanguage((lang) => this.apply(lang))
+    loadLanguage((lang) => this.apply(lang), this)
   },
 
   onShow() {
-    loadLanguage((lang) => this.apply(lang))
+    loadLanguage((lang) => this.apply(lang), this)
   },
 
   apply(lang) {

@@ -59,7 +59,7 @@ export default {
       this.lang = lang
       this.title = STRINGS[lang].asmaulhusna
       this.render()
-    })
+    }, this)
   },
 
   onShow() {

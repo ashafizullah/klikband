@@ -45,7 +45,7 @@ export default {
       this.frame = frame
       this.r = r
     })
-    loadLanguage((lang) => (this.t = STRINGS[lang]))
+    loadLanguage((lang) => (this.t = STRINGS[lang]), this)
   },
 
   openSet(set) {

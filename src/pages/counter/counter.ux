@@ -64,7 +64,7 @@ export default {
     loadLanguage((lang) => {
       this.t = STRINGS[lang]
       this.render()
-    })
+    }, this)
     loadCounters((list) => {
       this.list = list
       if (list[this.index]) this.entry = list[this.index]

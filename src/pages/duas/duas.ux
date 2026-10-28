@@ -29,7 +29,7 @@
 <script>
 import storage from '@system.storage'
 import DUAS from '../../common/duas.js'
-import { STRINGS, loadLanguage, loadScript } from '../../common/i18n.js'
+import { STRINGS, knownLanguage, loadLanguage, loadScript } from '../../common/i18n.js'
 import { DUAS as ARABIC_IMAGES } from '../../common/arabicduas.js'
 import { keepScreenOn, loadLayout } from '../../common/screen.js'
 import { loadAll } from '../../common/load.js'
@@ -54,11 +54,12 @@ export default {
   },
 
   onInit() {
+    this.t = STRINGS[knownLanguage(this)]
     // The Arabic image depends on the layout and the script
     loadAll(
       {
         layout: loadLayout,
-        lang: loadLanguage,
+        lang: (cb) => loadLanguage(cb, this),
         script: loadScript,
         // Reopen at the last dua read
         index: (cb) => storage.get({ key: 'duaIndex', success: cb, fail: () => cb('') })

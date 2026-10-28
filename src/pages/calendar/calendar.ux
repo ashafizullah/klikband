@@ -51,7 +51,7 @@
 <script>
 import { monthGrid, hijriSpan, dayInfo } from '../../common/calendar.js'
 import { loadHijriOffset } from '../../common/hijri.js'
-import { STRINGS, loadLanguage, formatFullDate } from '../../common/i18n.js'
+import { STRINGS, knownLanguage, loadLanguage, formatFullDate } from '../../common/i18n.js'
 import { loadLayout } from '../../common/screen.js'
 import { loadAll } from '../../common/load.js'
 
@@ -74,12 +74,14 @@ export default {
   },
 
   onInit() {
+    this.t = STRINGS[knownLanguage(this)]
+    this.weekdays = this.t.weekdaysShort
     this.offset = 0
     const now = new Date()
     this.year = now.getFullYear()
     this.month = now.getMonth()
     this.selected = now.getDate()
-    loadAll({ layout: loadLayout, lang: loadLanguage, offset: loadHijriOffset }, (v) => {
+    loadAll({ layout: loadLayout, lang: (cb) => loadLanguage(cb, this), offset: loadHijriOffset }, (v) => {
       this.w = v.layout[0]
       this.frame = v.layout[1]
       this.r = v.layout[2]

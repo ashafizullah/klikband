@@ -8,17 +8,48 @@ export const LANGUAGES = [
   { code: 'zh', label: '中文' }
 ]
 
-export function loadLanguage(cb) {
+// Every page is built on its own, and storage answers only after a page's
+// first frame, which would then show in Indonesian. So the language is also
+// kept on the app (app.ux), shared by all pages: a page that passes itself
+// gets it at once, in time for its first frame.
+function appOf(page) {
+  try {
+    return page.$app.$def || null
+  } catch (e) {
+    return null
+  }
+}
+
+// The language the app already knows, or Indonesian before it has read
+// storage. For pages that wait on several loaders before their first
+// complete frame.
+export function knownLanguage(page) {
+  const app = appOf(page)
+  return app && STRINGS[app.language] ? app.language : 'id'
+}
+
+export function loadLanguage(cb, page) {
+  const app = page ? appOf(page) : null
+  if (app && STRINGS[app.language]) {
+    cb(app.language)
+    return
+  }
   storage.get({
     key: 'language',
     default: 'id',
-    success: (data) => cb(STRINGS[data] ? data : 'id'),
+    success: (data) => {
+      const lang = STRINGS[data] ? data : 'id'
+      if (app) app.language = lang
+      cb(lang)
+    },
     fail: () => cb('id')
   })
 }
 
-export function saveLanguage(code) {
+export function saveLanguage(code, page) {
   storage.set({ key: 'language', value: code })
+  const app = page ? appOf(page) : null
+  if (app) app.language = code
 }
 
 // Script the dhikr and dua texts are shown in: 'latin' (default) or 'arabic'

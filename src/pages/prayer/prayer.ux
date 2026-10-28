@@ -69,7 +69,7 @@ export default {
   },
 
   onInit() {
-    loadAll({ layout: loadLayout, lang: loadLanguage, city: loadCity, format: loadClockFormat }, (v) => {
+    loadAll({ layout: loadLayout, lang: (cb) => loadLanguage(cb, this), city: loadCity, format: loadClockFormat }, (v) => {
       this.w = v.layout[0]
       this.frame = v.layout[1]
       this.r = v.layout[2]

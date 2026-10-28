@@ -52,7 +52,7 @@
 import vibrator from '@system.vibrator'
 import PRAYER_DHIKR from '../../common/dhikr.js'
 import { morningEveningDhikr } from '../../common/dhikrmorningevening.js'
-import { STRINGS, loadLanguage, loadScript } from '../../common/i18n.js'
+import { STRINGS, knownLanguage, loadLanguage, loadScript } from '../../common/i18n.js'
 import { DHIKR as ARABIC_IMAGES } from '../../common/arabicdhikr.js'
 import { keepScreenOn, loadLayout } from '../../common/screen.js'
 import { loadAll } from '../../common/load.js'
@@ -93,11 +93,12 @@ export default {
   },
 
   onInit() {
+    this.t = STRINGS[knownLanguage(this)]
     this.config = SETS[this.set] || SETS.prayer
     this.steps = this.config.steps()
     this.total = this.steps.length
     // The Arabic image depends on the layout and the script
-    loadAll({ layout: loadLayout, lang: loadLanguage, script: loadScript }, (v) => {
+    loadAll({ layout: loadLayout, lang: (cb) => loadLanguage(cb, this), script: loadScript }, (v) => {
       this.w = v.layout[0]
       this.frame = v.layout[1]
       this.r = v.layout[2]

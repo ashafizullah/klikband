@@ -50,12 +50,12 @@ export default {
       this.frame = frame
       this.r = r
     })
-    loadLanguage((lang) => this.apply(lang))
+    loadLanguage((lang) => this.apply(lang), this)
   },
 
   // Also runs when returning from Settings, so a language change shows up
   onShow() {
-    loadLanguage((lang) => this.apply(lang))
+    loadLanguage((lang) => this.apply(lang), this)
   },
 
   apply(lang) {

@@ -70,6 +70,8 @@ The computer needs a small Google tool called **adb** to "talk" to the phone.
 
 ## Step 4. Get the band's key (auth key)
 
+> **Shortcut:** [KlikBand Auth Key](../tools/auth-key#readme) reads the key from your Xiaomi account on Windows or Mac, without the logs. If it shows your band's key, copy it, force-stop Mi Fitness as in item 4 below, and go on to step 5.
+
 1. Copy the Mi Fitness logs from the phone to the computer:
 
    ```

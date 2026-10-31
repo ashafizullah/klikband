@@ -90,6 +90,8 @@
 1. 安装 AstroBox，用小米账号或手环钥匙连接手环。
 2. 在商店中搜索 **KlikBand** 并安装到手环。
 
+需要手环钥匙？**[KlikBand Auth Key](tools/auth-key#readme)** 在 Windows 或 Mac 上从你的小米账号读取，无需手机或数据线（[下载](https://github.com/ashafizullah/klikband/releases/tag/auth-key)，界面为印尼语）。
+
 AstroBox 也会推送 KlikBand 的更新，AstroBox 中的 [KlikBand 插件](#来自手机的位置)可以把世界上任何地点发送到手环。也可以从 [Releases](https://github.com/ashafizullah/klikband/releases/latest) 下载 `.rpk` 文件，用 AstroBox 打开。已在 Mac 上对小米手环 9 试过。
 
 🎬 **[视频教程：通过 AstroBox 安装](https://youtu.be/NPjfcj2y5xs)**（印尼语）· [KlikBand 全部视频](https://www.youtube.com/playlist?list=PLTOFDMua_u6Y)
@@ -155,7 +157,8 @@ src/
 └── pages/               # 每个页面一个文件夹
 plugin/                  # KlikBand 的 AstroBox 插件（Rust → WebAssembly）
 tools/
-└── arabic-images.py     # 将阿拉伯文记念与祈祷绘制为图片
+├── arabic-images.py     # 将阿拉伯文记念与祈祷绘制为图片
+└── auth-key/            # KlikBand Auth Key：从小米账号读取手环 auth key（Windows、Mac）
 ```
 
 手表无法连写阿拉伯字母，因此阿拉伯文记念与祈祷以 Amiri 字体绘制的图片显示。修改 `arabic` 文本后，先运行一次 `pip install uharfbuzz freetype-py pillow`，再运行 `python3 tools/arabic-images.py`。

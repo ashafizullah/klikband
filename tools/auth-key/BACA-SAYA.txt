@@ -1,0 +1,24 @@
+KlikBand Auth Key
+
+Melihat auth key band di akun Xiaomi kamu, untuk AstroBox atau Gadgetbridge.
+
+WINDOWS
+1. Pastikan zip sudah diekstrak (klik kanan > Extract All).
+2. Klik dua kali "KlikBand Auth Key.bat".
+   Kalau muncul "Windows protected your PC": klik "More info" > "Run anyway".
+
+MAC
+1. Klik dua kali "KlikBand Auth Key.command".
+2. Kalau macOS bilang tidak bisa dibuka: klik "Selesai", buka Pengaturan Sistem >
+   Privasi & Keamanan, gulir ke bawah, klik "Tetap Buka", lalu buka lagi.
+
+LALU
+- Pertama kali, Python diunduh sekali saja kalau belum ada.
+- Ketik 1, lalu email/nomor HP dan password akun Xiaomi (yang dipakai di Mi Fitness).
+  Password tidak disimpan dan hanya dikirim ke Xiaomi.
+- Kalau Xiaomi mengirim kode verifikasi ke email/SMS, ketik kodenya.
+- Salin "Auth key" ke AstroBox: tambah perangkat > isi auth key.
+- Ketik 0 untuk keluar.
+
+Panduan lengkap dan versi terbaru: https://github.com/ashafizullah/klikband/releases/tag/auth-key
+Tidak resmi: tidak berafiliasi dengan Xiaomi maupun AstroBox.

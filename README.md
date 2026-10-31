@@ -90,6 +90,8 @@ There are two ways. AstroBox is the easier one; Gadgetbridge works too.
 1. Install AstroBox and connect the band, with your Xiaomi account or the band's key.
 2. Search the store for **KlikBand** and install it on the band.
 
+Need the band's key? **[KlikBand Auth Key](tools/auth-key#readme)** reads it from your Xiaomi account on Windows or Mac, no phone or cable needed ([download](https://github.com/ashafizullah/klikband/releases/tag/auth-key)).
+
 AstroBox also offers KlikBand's updates, and its [KlikBand plugin](#location-from-the-phone) sends any place in the world to the band. You can also download the `.rpk` file from [Releases](https://github.com/ashafizullah/klikband/releases/latest) and open it with AstroBox. Tried on a Smart Band 9 from a Mac.
 
 🎬 **[Video tutorial: install with AstroBox](https://youtu.be/NPjfcj2y5xs)** (in Indonesian) · [all KlikBand videos](https://www.youtube.com/playlist?list=PLTOFDMua_u6Y)
@@ -155,7 +157,8 @@ src/
 └── pages/               # one folder per screen
 plugin/                  # KlikBand plugin for AstroBox (Rust → WebAssembly)
 tools/
-└── arabic-images.py     # draws the Arabic dhikr and duas as images
+├── arabic-images.py     # draws the Arabic dhikr and duas as images
+└── auth-key/            # KlikBand Auth Key: a band's auth key from the Xiaomi account (Windows, Mac)
 ```
 
 The watch cannot join Arabic letters, so the Arabic dhikr and duas are shown as images drawn in the Amiri font. After changing an `arabic` text, run `pip install uharfbuzz freetype-py pillow` once, then `python3 tools/arabic-images.py`.

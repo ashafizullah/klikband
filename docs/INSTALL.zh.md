@@ -70,6 +70,8 @@ Mi Fitness ──(取出钥匙)──▶ Gadgetbridge ──(发送 KlikBand)─
 
 ## 第 4 步：取得手环钥匙（auth key）
 
+> **捷径：**[KlikBand Auth Key](../tools/auth-key#readme) 在 Windows 或 Mac 上从你的小米账号读取钥匙，无需日志。如果显示了你的手环钥匙，复制它，按下面第 4 点强行停止 Mi Fitness，然后继续第 5 步。
+
 1. 把 Mi Fitness 的日志从手机复制到电脑：
 
    ```

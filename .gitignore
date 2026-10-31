@@ -8,3 +8,5 @@
 /release-notes/
 /social-media/
 /local-tools/
+/tools/auth-key/dist/
+__pycache__/

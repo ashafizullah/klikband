@@ -90,6 +90,8 @@ Ada dua cara. Lewat AstroBox lebih mudah; lewat Gadgetbridge juga bisa.
 1. Pasang AstroBox lalu sambungkan band, dengan akun Xiaomi atau kunci band.
 2. Cari **KlikBand** di toko lalu pasang ke band.
 
+Perlu kunci band? **[KlikBand Auth Key](tools/auth-key/README.id.md)** mengambilnya dari akun Xiaomi kamu di Windows atau Mac, tanpa HP atau kabel ([unduh](https://github.com/ashafizullah/klikband/releases/tag/auth-key)).
+
 AstroBox juga menawarkan update KlikBand, dan [plugin KlikBand](#lokasi-dari-hp) di AstroBox bisa mengirim lokasi mana pun di dunia ke band. Bisa juga unduh file `.rpk` dari [Releases](https://github.com/ashafizullah/klikband/releases/latest) lalu buka dengan AstroBox. Sudah dicoba di Smart Band 9 dari Mac.
 
 🎬 **[Video tutorial pemasangan lewat AstroBox](https://youtu.be/NPjfcj2y5xs)** · [semua video KlikBand](https://www.youtube.com/playlist?list=PLTOFDMua_u6Y)
@@ -155,7 +157,8 @@ src/
 └── pages/               # satu folder per layar
 plugin/                  # plugin KlikBand untuk AstroBox (Rust → WebAssembly)
 tools/
-└── arabic-images.py     # menggambar dzikir dan doa Arab sebagai gambar
+├── arabic-images.py     # menggambar dzikir dan doa Arab sebagai gambar
+└── auth-key/            # KlikBand Auth Key: auth key band dari akun Xiaomi (Windows, Mac)
 ```
 
 Jam tidak bisa menyambung huruf Arab, jadi dzikir dan doa Arab ditampilkan sebagai gambar dengan font Amiri. Setelah mengubah teks `arabic`, jalankan `pip install uharfbuzz freetype-py pillow` sekali, lalu `python3 tools/arabic-images.py`.

@@ -70,6 +70,8 @@ Komputer butuh alat kecil dari Google bernama **adb** untuk "berbicara" dengan H
 
 ## Langkah 4. Ambil kunci band (auth key)
 
+> **Jalan pintas:** [KlikBand Auth Key](../tools/auth-key/README.id.md) mengambil kunci dari akun Xiaomi kamu di Windows atau Mac, tanpa log. Kalau kunci band kamu muncul, salin, hentikan paksa Mi Fitness seperti poin 4 di bawah, lalu lanjut ke langkah 5.
+
 1. Salin catatan (log) Mi Fitness dari HP ke komputer:
 
    ```

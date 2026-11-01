@@ -143,33 +143,72 @@ class Session:
                                 if 'oken' in c.name or c.name in ('userId', 'cUserId')))
 
 
-def verify_with_code(session, notification_url):
-    """Xiaomi's verification code step: a code sent by email or SMS."""
+def masked_target(kind, *replies):
+    """Where Xiaomi says it sent the code (a masked email or phone number),
+    from any field naming the `kind` ('email' or 'phone'), if it says."""
+    for reply in replies:
+        for key, value in reply.items():
+            if isinstance(value, str) and value and kind in key.lower():
+                return value
+    return ''
+
+
+def verify_with_code(session, notification_url, by_phone=False):
+    """Xiaomi's verification code step: a code sent by email or SMS, with
+    resending or switching to the other one when the code does not arrive."""
     context = urllib.parse.parse_qs(urllib.parse.urlparse(notification_url).query).get('context', [''])[0]
     session.get(notification_url)
     if not context:
         raise LoginError('Xiaomi meminta verifikasi, tapi alamatnya tidak dikenali:\n' + notification_url)
     query = urllib.parse.urlencode({'sid': SID, 'context': context, '_locale': 'en_US'})
-    options = xiaomi_json(session.get('https://account.xiaomi.com/identity/list?' + query)[0]).get('options') or []
+    identity = xiaomi_json(session.get('https://account.xiaomi.com/identity/list?' + query)[0])
     # 8 = email, 4 = phone (SMS)
-    if 8 in options and (4 not in options or input('Kirim kode ke (1) email atau (2) SMS? [1] ').strip() != '2'):
-        kind, flag = 'Email', 8
-    elif 4 in options:
-        kind, flag = 'Phone', 4
-    else:
+    options = [flag for flag in (identity.get('options') or []) if flag in (8, 4)]
+    if not options:
         raise LoginError('Xiaomi meminta verifikasi yang belum didukung alat ini. Buka alamat ini di browser:\n' + notification_url)
-    stamp = urllib.parse.urlencode({'_dc': int(time.time() * 1000), 'sid': SID, 'context': context, 'mask': 0, '_locale': 'en_US'})
-    sent = xiaomi_json(session.post('https://account.xiaomi.com/identity/auth/send%sTicket?%s' % (kind, stamp),
-                                    {'retry': 0, 'icode': '', '_json': 'true', 'ick': session.cookie('ick')}))
-    if sent.get('code') != 0:
-        raise LoginError('Gagal mengirim kode verifikasi: %s' % (sent.get('tips') or sent.get('desc') or sent))
-    code = input('Kode verifikasi dari %s: ' % ('email' if flag == 8 else 'SMS')).strip()
-    stamp = urllib.parse.urlencode({'_flag': flag, '_json': 'true', 'sid': SID, 'context': context, 'mask': 0, '_locale': 'en_US'})
-    verified = xiaomi_json(session.post('https://account.xiaomi.com/identity/auth/verify%s?%s' % (kind, stamp),
-                                        {'_flag': flag, 'ticket': code, 'trust': 'true', '_json': 'true', 'ick': session.cookie('ick')}))
-    if verified.get('code') != 0 or not verified.get('location'):
-        raise LoginError('Kode verifikasi ditolak: %s' % (verified.get('tips') or verified.get('desc') or verified))
-    return verified['location']
+    if len(options) == 1:
+        flag = options[0]
+    else:
+        # A phone number login most likely has the phone at hand
+        default = '2' if by_phone else '1'
+        answer = input('Kirim kode ke (1) email atau (2) SMS? [%s] ' % default).strip() or default
+        flag = 4 if answer == '2' else 8
+
+    retry = 0
+    while True:
+        kind, name = ('Email', 'email') if flag == 8 else ('Phone', 'SMS')
+        stamp = urllib.parse.urlencode({'_dc': int(time.time() * 1000), 'sid': SID, 'context': context, 'mask': 0, '_locale': 'en_US'})
+        sent = xiaomi_json(session.post('https://account.xiaomi.com/identity/auth/send%sTicket?%s' % (kind, stamp),
+                                        {'retry': retry, 'icode': '', '_json': 'true', 'ick': session.cookie('ick')}))
+        if sent.get('code') != 0:
+            raise LoginError('Gagal mengirim kode lewat %s: %s' % (name, sent.get('tips') or sent.get('desc') or sent))
+        target = masked_target(kind.lower(), sent, identity)
+        print('Kode dikirim lewat %s%s. Bisa butuh 1-2 menit.' % (name, ' ke ' + target if target else ''))
+        if flag == 8:
+            print('Tidak ada di kotak masuk? Cek folder Spam/Promosi, atau email yang terdaftar di akun Xiaomi.')
+
+        while True:
+            code = input('Kode verifikasi dari %s (kosongkan lalu Enter kalau kode tidak datang): ' % name).strip()
+            if not code:
+                break
+            stamp = urllib.parse.urlencode({'_flag': flag, '_json': 'true', 'sid': SID, 'context': context, 'mask': 0, '_locale': 'en_US'})
+            verified = xiaomi_json(session.post('https://account.xiaomi.com/identity/auth/verify%s?%s' % (kind, stamp),
+                                                {'_flag': flag, 'ticket': code, 'trust': 'true', '_json': 'true', 'ick': session.cookie('ick')}))
+            if verified.get('code') == 0 and verified.get('location'):
+                return verified['location']
+            print('Kode ditolak: %s. Coba lagi.' % (verified.get('tips') or verified.get('desc') or verified.get('code')))
+
+        other = 4 if flag == 8 else 8
+        choices = '(1) kirim ulang lewat %s' % name
+        if other in options:
+            choices += ', (2) kirim lewat %s' % ('SMS' if other == 4 else 'email')
+        answer = input('Kode tidak datang? %s, (0) batal: ' % choices).strip()
+        if answer == '2' and other in options:
+            flag, retry = other, 0
+        elif answer == '1':
+            retry = 1
+        else:
+            raise LoginError('Verifikasi dibatalkan.')
 
 
 def login():
@@ -193,7 +232,8 @@ def login():
         raise LoginError('Xiaomi meminta captcha. Login sekali di https://account.xiaomi.com lewat browser, lalu coba lagi.')
     if auth.get('notificationUrl'):
         print('Xiaomi meminta verifikasi untuk perangkat baru.')
-        return verified_login(session, auth, verify_with_code(session, auth['notificationUrl']), login_url, did)
+        by_phone = not any(c.isalpha() or c == '@' for c in user)
+        return verified_login(session, auth, verify_with_code(session, auth['notificationUrl'], by_phone), login_url, did)
     if auth.get('code') != 0 or not auth.get('location') or not auth.get('ssecurity'):
         raise LoginError('Login gagal: %s\n(kolom: %s)' % (
             auth.get('description') or auth.get('desc') or auth.get('code'),

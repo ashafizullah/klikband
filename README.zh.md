@@ -27,7 +27,7 @@
 </p>
 
 <p align="center">
-  <a href="https://klikapps.pages.dev"><b>Klik Apps</b></a> 系列应用之一，免费开源：<a href="https://klikapps.pages.dev">klikapps.pages.dev</a>
+  <a href="https://klikapps.ashafizullah.com"><b>Klik Apps</b></a> 系列应用之一，免费开源：<a href="https://klikapps.ashafizullah.com">klikapps.ashafizullah.com</a>
 </p>
 
 <p align="center">
